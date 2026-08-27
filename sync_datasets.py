@@ -77,6 +77,12 @@ def parse_dataset(wb_stream):
                 if h:
                     v = vals[idx] if idx < len(vals) else None
                     rec[h] = v
+                    # Standardize productive visit headers
+                    if "unproductive visit" in str(h).lower():
+                        if "%" in str(h):
+                            rec["Productive Visit %"] = v
+                        else:
+                            rec["Productive Visits"] = v
             vm_records.append(rec)
 
     # AOM performance table in columns 57 to 65
@@ -117,6 +123,11 @@ def embed_into_html(data, html_file="index.html"):
     compact_json = json.dumps(data, separators=(",", ":"))
     tag_start = '<script id="sample-data" type="application/json">'
     tag_end = '</script>'
+
+    # Also write data.json
+    with open("data.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+    print("✓ Saved data.json")
 
     idx1 = html.find(tag_start)
     if idx1 != -1:
