@@ -1,6 +1,6 @@
 {
-  "lastSynced": "27 Aug 2026, 10:54 PM",
-  "timestamp": "2026-08-27T22:54:32.985593",
+  "lastSynced": "27 Aug 2026, 11:23 PM",
+  "timestamp": "2026-08-27T23:23:26.073779",
   "totalVMs": 34,
   "totalAOMs": 4,
   "vms": [
@@ -1403,46 +1403,46 @@
     {
       "Aom Name": "Irfan Ali",
       "Base Town": "Hyderabad",
-      "Coverage %": 0.8602700175590099,
-      "Cat A Coverage": 23.5,
-      "Achi Mandays %": 20.0,
-      "Productivity": 0.9090909090909092,
-      "First Visit Time Adherence (11:30 AM)": 0.418891707877385,
-      "Final Achievement": 0.45443181818181816,
-      "Rank": 1.0
-    },
-    {
-      "Aom Name": "Najeeb Hydrose",
-      "Base Town": "Cochin",
-      "Coverage %": 0.7934675104972888,
-      "Cat A Coverage": 30.7,
-      "Achi Mandays %": 19.6,
-      "Productivity": 0.890909090909091,
-      "First Visit Time Adherence (11:30 AM)": 0.3857338756613757,
-      "Final Achievement": 0.32046320346320345,
-      "Rank": 2.0
+      "Coverage %": 0.86084142394822,
+      "Cat A Coverage": 1.0,
+      "Achi Mandays %": 0.9090909090909091,
+      "Productivity": 3.76875,
+      "First Visit Time Adherence (11:30 AM)": 0.45443181818181816,
+      "Final Achievement": 0.7692912895010134,
+      "Rank": 1
     },
     {
       "Aom Name": "Pratik Kumar  Pandey",
       "Base Town": "Delhi",
-      "Coverage %": 0.8779849983012089,
-      "Cat A Coverage": 12.777777777777779,
-      "Achi Mandays %": 16.0,
-      "Productivity": 0.7272727272727272,
-      "First Visit Time Adherence (11:30 AM)": 0.40123619194521354,
-      "Final Achievement": 0.20319349097381134,
-      "Rank": 3.0
+      "Coverage %": 0.8661567877629063,
+      "Cat A Coverage": 1.0,
+      "Achi Mandays %": 0.7272727272727273,
+      "Productivity": 3.6458333333333335,
+      "First Visit Time Adherence (11:30 AM)": 0.20319349097381134,
+      "Final Achievement": 0.7177166689793542,
+      "Rank": 2
+    },
+    {
+      "Aom Name": "Najeeb Hydrose",
+      "Base Town": "Cochin",
+      "Coverage %": 0.7823439878234398,
+      "Cat A Coverage": 0.9002932551319648,
+      "Achi Mandays %": 0.8909090909090909,
+      "Productivity": 3.4693877551020407,
+      "First Visit Time Adherence (11:30 AM)": 0.32046320346320345,
+      "Final Achievement": 0.6978301781064105,
+      "Rank": 3
     },
     {
       "Aom Name": "Danish Khan",
       "Base Town": "Mumbai",
-      "Coverage %": 0.8402042677220836,
-      "Cat A Coverage": 23.0,
-      "Achi Mandays %": 18.857142857142858,
-      "Productivity": 0.8571428571428571,
-      "First Visit Time Adherence (11:30 AM)": 0.37719698431069965,
-      "Final Achievement": 0.17714285714285713,
-      "Rank": 4.0
+      "Coverage %": 0.8599033816425121,
+      "Cat A Coverage": 0.9044943820224719,
+      "Achi Mandays %": 0.8571428571428571,
+      "Productivity": 3.772727272727273,
+      "First Visit Time Adherence (11:30 AM)": 0.17714285714285713,
+      "Final Achievement": 0.6734797898881258,
+      "Rank": 4
     }
   ]
 }

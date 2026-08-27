@@ -85,21 +85,67 @@ def parse_dataset(wb_stream):
                             rec["Productive Visits"] = v
             vm_records.append(rec)
 
-    # AOM performance table in columns 57 to 65
-    aom_headers = [cell.v for cell in rows[1][57:66]]
-    aom_records = []
-    for r in rows[2:]:
-        vals = [cell.v for cell in r[57:66]]
-        if any(vals) and vals[0]:
-            rec = {}
-            for idx, h in enumerate(aom_headers):
-                if h:
-                    v = vals[idx] if idx < len(vals) else None
-                    rec[h] = v
-            aom_records.append(rec)
+    # AOM performance summarized from mapped VM performance parameters
+    aom_base_towns = {
+        'Irfan Ali': 'Hyderabad',
+        'Najeeb Hydrose': 'Cochin',
+        'Pratik Kumar  Pandey': 'Delhi',
+        'Pratik Kumar Pandey': 'Delhi',
+        'Danish Khan': 'Mumbai'
+    }
+    aom_dict = {}
+    for r in vm_records:
+        aom = r.get('AOM Name')
+        if not aom:
+            continue
+        if aom not in aom_dict:
+            aom_dict[aom] = {
+                'Aom Name': aom,
+                'Base Town': aom_base_towns.get(aom, r.get('Base Town', '--')),
+                'cov_tgt': 0, 'cov_ach': 0,
+                'cata_tgt': 0, 'cata_ach': 0,
+                'md_tgt': 0, 'md_ach': 0,
+                'visits_ach': 0,
+                'adh_sum': 0,
+                'final_sum': 0,
+                'count': 0
+            }
+        acc = aom_dict[aom]
+        acc['count'] += 1
+        acc['cov_tgt'] += float(r.get('Coverage Target') or 0)
+        acc['cov_ach'] += float(r.get('Coverage Achievement') or 0)
+        acc['cata_tgt'] += float(r.get('Cat A Target') or 0)
+        acc['cata_ach'] += float(r.get('Cat A 1st visit') or 0)
+        acc['md_tgt'] += float(r.get('Target Man-days') or 0)
+        acc['md_ach'] += float(r.get('Man-days Achieved') or 0)
+        acc['visits_ach'] += float(r.get('Visits Achieved') or 0)
+        acc['adh_sum'] += float(r.get('First Visit Time Adherence (11:30 AM)') or 0)
+        acc['final_sum'] += float(r.get('Final Achievement') or 0)
 
-    # Sort AOMs by Rank
-    aom_records.sort(key=lambda x: x.get("Rank") or 999)
+    aom_records = []
+    for aom, acc in aom_dict.items():
+        n = acc['count'] or 1
+        cov_pct = acc['cov_ach'] / acc['cov_tgt'] if acc['cov_tgt'] else 0
+        cata_pct = acc['cata_ach'] / acc['cata_tgt'] if acc['cata_tgt'] else 0
+        md_pct = acc['md_ach'] / acc['md_tgt'] if acc['md_tgt'] else 0
+        prod = acc['visits_ach'] / acc['md_ach'] if acc['md_ach'] else 0
+        adh = acc['adh_sum'] / n
+        final_ach = acc['final_sum'] / n
+        aom_records.append({
+            'Aom Name': aom,
+            'Base Town': acc['Base Town'],
+            'Coverage %': cov_pct,
+            'Cat A Coverage': cata_pct,
+            'Achi Mandays %': md_pct,
+            'Productivity': prod,
+            'First Visit Time Adherence (11:30 AM)': adh,
+            'Final Achievement': final_ach
+        })
+
+    # Sort by Final Achievement descending and assign ranks
+    aom_records.sort(key=lambda x: x['Final Achievement'], reverse=True)
+    for idx, item in enumerate(aom_records):
+        item['Rank'] = idx + 1
 
     return {
         "lastSynced": datetime.datetime.now().strftime("%d %b %Y, %I:%M %p"),
