@@ -1,6 +1,6 @@
 {
-  "lastSynced": "27 Aug 2026, 11:23 PM",
-  "timestamp": "2026-08-27T23:23:26.073779",
+  "lastSynced": "28 Aug 2026, 02:07 AM",
+  "timestamp": "2026-08-28T02:07:53.335089",
   "totalVMs": 34,
   "totalAOMs": 4,
   "vms": [
@@ -42,8 +42,8 @@
       "Time spent in Market": 0.3197685185185185,
       "Working Hrs": 0.4449060185185185,
       "First Visit Time Adherence (11:30 AM)": 0.32,
-      "Final Achievement": 0.7896552315608919,
-      "Rank": 8.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Danish Khan",
@@ -83,8 +83,8 @@
       "Time spent in Market": 0.2876548721340389,
       "Working Hrs": 0.3786680555555556,
       "First Visit Time Adherence (11:30 AM)": 0.08,
-      "Final Achievement": 0.7686827577269488,
-      "Rank": 14.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Danish Khan",
@@ -124,8 +124,8 @@
       "Time spent in Market": 0.23211500974658877,
       "Working Hrs": 0.37394629629629633,
       "First Visit Time Adherence (11:30 AM)": 0.16,
-      "Final Achievement": 0.7625516178736518,
-      "Rank": 16.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Danish Khan",
@@ -165,8 +165,8 @@
       "Time spent in Market": 0.34570138888888896,
       "Working Hrs": 0.35520277777777787,
       "First Visit Time Adherence (11:30 AM)": 0.44,
-      "Final Achievement": 0.8138321678321678,
-      "Rank": 4.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Danish Khan",
@@ -206,8 +206,8 @@
       "Time spent in Market": 0.2801231060606061,
       "Working Hrs": 0.3834828317901235,
       "First Visit Time Adherence (11:30 AM)": 0.0,
-      "Final Achievement": 0.7403636363636364,
-      "Rank": 19.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Danish Khan",
@@ -247,8 +247,8 @@
       "Time spent in Market": "",
       "Working Hrs": "",
       "First Visit Time Adherence (11:30 AM)": 0.0,
-      "Final Achievement": 0.05080558539205156,
-      "Rank": 34.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Danish Khan",
@@ -288,8 +288,8 @@
       "Time spent in Market": 0.3360196208112875,
       "Working Hrs": 0.326975925925926,
       "First Visit Time Adherence (11:30 AM)": 0.24,
-      "Final Achievement": 0.7884675324675325,
-      "Rank": 9.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Irfan Ali",
@@ -329,8 +329,8 @@
       "Time spent in Market": 0.37563078703703706,
       "Working Hrs": 0.4417550925925926,
       "First Visit Time Adherence (11:30 AM)": 0.64,
-      "Final Achievement": 0.8377344497607656,
-      "Rank": 1.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Irfan Ali",
@@ -370,8 +370,8 @@
       "Time spent in Market": 0.31828277290448354,
       "Working Hrs": 0.4463680555555556,
       "First Visit Time Adherence (11:30 AM)": 0.12,
-      "Final Achievement": 0.705229020979021,
-      "Rank": 24.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Irfan Ali",
@@ -411,8 +411,8 @@
       "Time spent in Market": 0.3849407679738563,
       "Working Hrs": 0.40055,
       "First Visit Time Adherence (11:30 AM)": 0.64,
-      "Final Achievement": 0.8127156527682843,
-      "Rank": 5.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Irfan Ali",
@@ -452,8 +452,8 @@
       "Time spent in Market": 0.3895075231481482,
       "Working Hrs": 0.44121805555555554,
       "First Visit Time Adherence (11:30 AM)": 0.64,
-      "Final Achievement": 0.8103249709039182,
-      "Rank": 6.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Irfan Ali",
@@ -493,8 +493,8 @@
       "Time spent in Market": 0.3471789717348928,
       "Working Hrs": 0.4117958333333334,
       "First Visit Time Adherence (11:30 AM)": 0.4,
-      "Final Achievement": 0.722780303030303,
-      "Rank": 23.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Irfan Ali",
@@ -534,8 +534,8 @@
       "Time spent in Market": 0.3573119212962963,
       "Working Hrs": 0.4071972222222222,
       "First Visit Time Adherence (11:30 AM)": 0.4,
-      "Final Achievement": 0.7735120784222196,
-      "Rank": 11.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Irfan Ali",
@@ -575,8 +575,8 @@
       "Time spent in Market": 0.3856880787037037,
       "Working Hrs": 0.4169753086419754,
       "First Visit Time Adherence (11:30 AM)": 0.75,
-      "Final Achievement": 0.834642857142857,
-      "Rank": 2.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Irfan Ali",
@@ -616,8 +616,8 @@
       "Time spent in Market": 0.27422968106995893,
       "Working Hrs": 0.3852740951178452,
       "First Visit Time Adherence (11:30 AM)": 0.045454545454545456,
-      "Final Achievement": 0.6573909830007391,
-      "Rank": 29.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Pratik Kumar  Pandey",
@@ -657,8 +657,8 @@
       "Time spent in Market": 0.24437195419103316,
       "Working Hrs": 0.3084178743961354,
       "First Visit Time Adherence (11:30 AM)": 0.043478260869565216,
-      "Final Achievement": 0.6379420073867687,
-      "Rank": 30.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Pratik Kumar  Pandey",
@@ -698,8 +698,8 @@
       "Time spent in Market": 0.22292462384259262,
       "Working Hrs": 0.31354793595679015,
       "First Visit Time Adherence (11:30 AM)": 0.0,
-      "Final Achievement": 0.6988034355635736,
-      "Rank": 26.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Pratik Kumar  Pandey",
@@ -739,8 +739,8 @@
       "Time spent in Market": 0.28131944444444457,
       "Working Hrs": 0.3927407407407408,
       "First Visit Time Adherence (11:30 AM)": 0.12,
-      "Final Achievement": 0.6690103445252914,
-      "Rank": 28.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Pratik Kumar  Pandey",
@@ -780,8 +780,8 @@
       "Time spent in Market": 0.27979783950617293,
       "Working Hrs": 0.37344602826510725,
       "First Visit Time Adherence (11:30 AM)": 0.10526315789473684,
-      "Final Achievement": 0.699231032125769,
-      "Rank": 25.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Pratik Kumar  Pandey",
@@ -821,8 +821,8 @@
       "Time spent in Market": 0.3546450617283951,
       "Working Hrs": 0.4298027777777779,
       "First Visit Time Adherence (11:30 AM)": 0.48,
-      "Final Achievement": 0.8041136363636363,
-      "Rank": 7.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Pratik Kumar  Pandey",
@@ -862,8 +862,8 @@
       "Time spent in Market": 0.3322563014403292,
       "Working Hrs": 0.45325046296296306,
       "First Visit Time Adherence (11:30 AM)": 0.2,
-      "Final Achievement": 0.7312200956937799,
-      "Rank": 21.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Pratik Kumar  Pandey",
@@ -903,8 +903,8 @@
       "Time spent in Market": 0.32756700779727105,
       "Working Hrs": 0.4908425925925927,
       "First Visit Time Adherence (11:30 AM)": 0.28,
-      "Final Achievement": 0.7277021709633651,
-      "Rank": 22.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Pratik Kumar  Pandey",
@@ -944,8 +944,8 @@
       "Time spent in Market": 0.3403776803118909,
       "Working Hrs": 0.4647115740740741,
       "First Visit Time Adherence (11:30 AM)": 0.36,
-      "Final Achievement": 0.759366692131398,
-      "Rank": 17.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Pratik Kumar  Pandey",
@@ -985,8 +985,8 @@
       "Time spent in Market": 0.3057598379629629,
       "Working Hrs": 0.38436574074074076,
       "First Visit Time Adherence (11:30 AM)": 0.24,
-      "Final Achievement": 0.732060606060606,
-      "Rank": 20.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Najeeb Hydrose",
@@ -1026,8 +1026,8 @@
       "Time spent in Market": 0.30263062169312177,
       "Working Hrs": 0.2943026620370371,
       "First Visit Time Adherence (11:30 AM)": 0.25,
-      "Final Achievement": 0.5677032988108938,
-      "Rank": 31.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Najeeb Hydrose",
@@ -1067,8 +1067,8 @@
       "Time spent in Market": 0.295979938271605,
       "Working Hrs": 0.4100381944444445,
       "First Visit Time Adherence (11:30 AM)": 0.35,
-      "Final Achievement": 0.7697587976539589,
-      "Rank": 13.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Najeeb Hydrose",
@@ -1108,8 +1108,8 @@
       "Time spent in Market": 0.3904533179012346,
       "Working Hrs": 0.4684771825396826,
       "First Visit Time Adherence (11:30 AM)": 0.7619047619047619,
-      "Final Achievement": 0.8271473956151376,
-      "Rank": 3.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Najeeb Hydrose",
@@ -1149,8 +1149,8 @@
       "Time spent in Market": 0.30902488425925934,
       "Working Hrs": 0.3511763888888889,
       "First Visit Time Adherence (11:30 AM)": 0.28,
-      "Final Achievement": 0.4838407761828814,
-      "Rank": 33.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Najeeb Hydrose",
@@ -1190,8 +1190,8 @@
       "Time spent in Market": 0.3291943158436214,
       "Working Hrs": 0.420400925925926,
       "First Visit Time Adherence (11:30 AM)": 0.16,
-      "Final Achievement": 0.7574199134199134,
-      "Rank": 18.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Najeeb Hydrose",
@@ -1231,8 +1231,8 @@
       "Time spent in Market": 0.3427061631944445,
       "Working Hrs": 0.37627685185185195,
       "First Visit Time Adherence (11:30 AM)": 0.32,
-      "Final Achievement": 0.7646746411483253,
-      "Rank": 15.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Najeeb Hydrose",
@@ -1272,8 +1272,8 @@
       "Time spent in Market": 0.371832358674464,
       "Working Hrs": 0.40550138888888887,
       "First Visit Time Adherence (11:30 AM)": 0.48,
-      "Final Achievement": 0.7699258976317799,
-      "Rank": 12.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Najeeb Hydrose",
@@ -1313,8 +1313,8 @@
       "Time spent in Market": 0.37516865079365086,
       "Working Hrs": 0.3448859953703704,
       "First Visit Time Adherence (11:30 AM)": 0.25,
-      "Final Achievement": 0.5636875610948191,
-      "Rank": 32.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Najeeb Hydrose",
@@ -1354,8 +1354,8 @@
       "Time spent in Market": 0.26420199805068234,
       "Working Hrs": 0.3907467592592593,
       "First Visit Time Adherence (11:30 AM)": 0.08,
-      "Final Achievement": 0.6909587737843552,
-      "Rank": 27.0
+      "Display Reported": null,
+      "POSM Deployed": null
     },
     {
       "AOM Name": "Najeeb Hydrose",
@@ -1395,11 +1395,22 @@
       "Time spent in Market": 0.3479183201058202,
       "Working Hrs": 0.3955324074074074,
       "First Visit Time Adherence (11:30 AM)": 0.2727272727272727,
-      "Final Achievement": 0.7831847257220392,
-      "Rank": 10.0
+      "Display Reported": null,
+      "POSM Deployed": null
     }
   ],
   "aoms": [
+    {
+      "Aom Name": "Danish Khan",
+      "Base Town": "Mumbai",
+      "Coverage %": 0.8599033816425121,
+      "Cat A Coverage": 0.9044943820224719,
+      "Achi Mandays %": 0.8571428571428571,
+      "Productivity": 3.772727272727273,
+      "First Visit Time Adherence (11:30 AM)": 0.17714285714285713,
+      "Final Achievement": 0.0,
+      "Rank": 1
+    },
     {
       "Aom Name": "Irfan Ali",
       "Base Town": "Hyderabad",
@@ -1408,8 +1419,8 @@
       "Achi Mandays %": 0.9090909090909091,
       "Productivity": 3.76875,
       "First Visit Time Adherence (11:30 AM)": 0.45443181818181816,
-      "Final Achievement": 0.7692912895010134,
-      "Rank": 1
+      "Final Achievement": 0.0,
+      "Rank": 2
     },
     {
       "Aom Name": "Pratik Kumar  Pandey",
@@ -1419,8 +1430,8 @@
       "Achi Mandays %": 0.7272727272727273,
       "Productivity": 3.6458333333333335,
       "First Visit Time Adherence (11:30 AM)": 0.20319349097381134,
-      "Final Achievement": 0.7177166689793542,
-      "Rank": 2
+      "Final Achievement": 0.0,
+      "Rank": 3
     },
     {
       "Aom Name": "Najeeb Hydrose",
@@ -1430,18 +1441,7 @@
       "Achi Mandays %": 0.8909090909090909,
       "Productivity": 3.4693877551020407,
       "First Visit Time Adherence (11:30 AM)": 0.32046320346320345,
-      "Final Achievement": 0.6978301781064105,
-      "Rank": 3
-    },
-    {
-      "Aom Name": "Danish Khan",
-      "Base Town": "Mumbai",
-      "Coverage %": 0.8599033816425121,
-      "Cat A Coverage": 0.9044943820224719,
-      "Achi Mandays %": 0.8571428571428571,
-      "Productivity": 3.772727272727273,
-      "First Visit Time Adherence (11:30 AM)": 0.17714285714285713,
-      "Final Achievement": 0.6734797898881258,
+      "Final Achievement": 0.0,
       "Rank": 4
     }
   ]
