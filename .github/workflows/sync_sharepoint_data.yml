@@ -24,7 +24,7 @@ jobs:
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pyxlsb
+          pip install pyxlsb openpyxl
 
       - name: Run SharePoint Data Synchronizer
         run: |
@@ -34,7 +34,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html data.json
+          git add index.html data.json qc.html data_qc.json
           if git diff --staged --quiet; then
             echo "No data changes detected. Everything is up to date."
           else

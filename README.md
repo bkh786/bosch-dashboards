@@ -68,24 +68,48 @@ A real-time, interactive program performance dashboard for the **Bosch Visual Me
 
 ---
 
+## 🔍 Quality Check (QC) Performance Dashboard (`qc.html`)
+
+A dedicated quality audit analytics dashboard parsing live data from the master SharePoint workbook (`QC Tracker` sheet).
+
+### Key Features:
+- **13 Evaluated Parameters**:
+  - *Display Audit*: Ref Section, WM Section, Dishwasher Section, Chimney Section, Inside Snap (360 Images).
+  - *Visibility Audit*: External Visibility, Internal Visibility, Promoter Activity.
+  - *Campaign Audit*: Star Campaign Deployment Images, Images taken correctly (Before & After), POSM Deployment (Guideline Adherence), Correct POSM Remarks Captured, POSM Condition (Damaged POSM identified).
+- **Executive KPIs**: Total Audits, Overall QC Score % (Target benchmark ≥ 80%), Display Audit Score %, Campaign & Visibility Score %, Unique Users Audited, and Rejection Cases.
+- **Dual-Axis Charts**:
+  - AOM-wise QC Score % (Bar) and Audit Count (Line).
+  - Week-wise QC Done (Past 8 Weeks volume and unique users audited).
+  - Parameter-wise Compliance for Display and Campaign/Visibility.
+  - 3 Score Trendline Cards (Overall, Display, Campaign trajectories).
+- **Leaderboards & Coaching Insights**:
+  - Side-by-side Top 5 & Bottom 5 VM rankings with medal badges.
+  - Management Insights (Highlights & Lowlights directly synthesized from Mistakes Reported and AOM Remarks).
+- **Audit Records Explorer**:
+  - Searchable rejection cases table with parameter pass/fail badges, color-coded mistake/AOM tags, and CSV export.
+
+---
+
 ## 🔄 Real-time Update Architecture (Zero File Upload)
 
-The dashboard does **not** use or require any file upload mechanism. Instead, it employs a 3-tier real-time sync architecture:
-1. **Tier 1 — Embedded Dataset**: An initial snapshot is embedded in `index.html` inside `<script id="sample-data">` ensuring 0 ms instantaneous load time with zero lag.
-2. **Tier 2 — Client-Side Live Sync**: On page load (and whenever clicking `Live data connected`, or on the automatic 5-minute timer), the browser queries the SharePoint direct export URL via CORS proxies, re-parses the Excel stream using SheetJS, and refreshes the dashboard state.
-3. **Tier 3 — Automated GitHub Action**: A scheduled workflow (`.github/workflows/sync_sharepoint_data.yml`) runs every 2 hours using `sync_datasets.py` to pull the latest workbook from SharePoint, update `index.html`, and push commits to `main`.
+The dashboards do **not** use or require any file upload mechanism. Instead, they employ a 3-tier real-time sync architecture:
+1. **Tier 1 — Embedded Dataset**: Initial snapshots are embedded directly inside `index.html` and `qc.html` in `<script id="sample-data">` tags, ensuring 0 ms instantaneous load time with zero lag.
+2. **Tier 2 — Client-Side Live Sync**: On page load (and whenever clicking `Live data connected`, or on the automatic 5-minute timer), the browser queries the SharePoint direct export URLs via CORS proxies, re-parses the Excel stream using SheetJS, and refreshes dashboard states.
+3. **Tier 3 — Automated GitHub Action**: A scheduled workflow (`.github/workflows/sync_sharepoint_data.yml`) runs every 2 hours using `sync_datasets.py` to pull the latest workbooks from SharePoint, update `index.html`, `qc.html`, `data.json`, and `data_qc.json`, and push commits to `main`.
 
 ---
 
 ## 💻 Local Development
 
-To run the dashboard locally:
+To run the dashboards locally:
 
 ```bash
 # Start local HTTP server
 python3 -m http.server 8080
 
-# Open in browser: http://localhost:8080
+# Open Program Performance: http://localhost:8080/index.html
+# Open QC Performance:      http://localhost:8080/qc.html
 ```
 
 To manually synchronize live data using Python:
@@ -93,3 +117,4 @@ To manually synchronize live data using Python:
 ```bash
 python3 sync_datasets.py
 ```
+

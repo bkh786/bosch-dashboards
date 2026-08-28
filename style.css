@@ -1004,3 +1004,262 @@ body {
 .footer-links a:hover {
   color: var(--bosch-red);
 }
+
+/* =====================================================================
+   QC PERFORMANCE DASHBOARD EXTENSIONS (style.css)
+   Harmonized with Bosch Design System & Corporate Theme
+   ===================================================================== */
+
+/* Grid Utility Layouts */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+@media (max-width: 1080px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+@media (max-width: 1100px) {
+  .grid-3 { grid-template-columns: 1fr; }
+}
+
+/* Filter Chips */
+.active-filters-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--surface-border-subtle);
+}
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-hover);
+  border: 1px solid var(--surface-border);
+  color: var(--ink-soft);
+  font-size: 11.5px;
+  padding: 3px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.filter-chip:hover {
+  border-color: var(--bosch-red);
+  color: var(--ink);
+  background: var(--surface);
+}
+.filter-chip b {
+  color: var(--ink);
+}
+
+/* Dark Line Graph Cards (For Trend Analytics) */
+.dark-line-card {
+  background: #060a14 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+body.light-theme .dark-line-card {
+  background: #0f172a !important;
+  border-color: rgba(15, 23, 42, 0.2) !important;
+}
+.dark-line-card .chart-card-title {
+  color: #f8fafc;
+}
+.dark-line-card .chart-card-subtitle {
+  color: #94a3b8;
+}
+
+/* Management Insights Cards (Highlights & Lowlights) */
+.quad-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+@media (max-width: 900px) {
+  .quad-grid { grid-template-columns: 1fr; }
+}
+
+.quad-card {
+  background: var(--surface-solid);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+.quad-card h3 {
+  margin: 0 0 14px 0;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.quad-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.quad-highlight h3 {
+  color: var(--accent-green);
+}
+.quad-lowlight h3 {
+  color: var(--bosch-red);
+}
+
+.insight-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.insight-list::-webkit-scrollbar {
+  width: 5px;
+}
+.insight-list::-webkit-scrollbar-thumb {
+  background: var(--surface-border);
+  border-radius: 3px;
+}
+.insight-list li {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--surface-border-subtle);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.insight-list li b {
+  color: var(--ink);
+  font-weight: 600;
+}
+.quad-lowlight .insight-list li {
+  border-left: 3px solid var(--bosch-red);
+}
+.quad-highlight .insight-list li {
+  border-left: 3px solid var(--accent-green);
+}
+
+/* Parameter Status Badges */
+.param-badge-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 220px;
+}
+.param-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.param-badge.pass {
+  background: rgba(16, 185, 129, 0.16);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+.param-badge.fail {
+  background: rgba(226, 26, 34, 0.16);
+  color: var(--bosch-red);
+  border: 1px solid rgba(226, 26, 34, 0.35);
+}
+
+/* Status Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+.badge.green {
+  background: rgba(16, 185, 129, 0.16);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+.badge.red {
+  background: rgba(226, 26, 34, 0.16);
+  color: var(--bosch-red);
+  border: 1px solid rgba(226, 26, 34, 0.35);
+}
+.badge.amber {
+  background: rgba(245, 158, 11, 0.16);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+/* Table Remarks Formatting */
+.remarks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 320px;
+}
+.remark-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+.remark-tag {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.remark-tag.mistake {
+  background: rgba(226, 26, 34, 0.18);
+  color: var(--bosch-red);
+  border: 1px solid rgba(226, 26, 34, 0.3);
+}
+.remark-tag.trainer, .remark-tag.aom {
+  background: rgba(2, 132, 199, 0.18);
+  color: #38bdf8;
+  border: 1px solid rgba(2, 132, 199, 0.3);
+}
+.remark-text {
+  color: var(--ink-soft);
+  word-break: break-word;
+}
+
+/* Error Banner */
+.err-banner {
+  display: none;
+  background: rgba(226, 26, 34, 0.18);
+  border: 1px solid var(--bosch-red);
+  color: #ffffff;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
