@@ -156,6 +156,7 @@ def parse_program_dataset(wb_stream):
     return {
         "lastSynced": datetime.datetime.now().strftime("%d %b %Y, %I:%M %p"),
         "timestamp": datetime.datetime.now().isoformat(),
+        "dataUpdatedUpto": "26 Aug 2026",
         "totalVMs": len(vm_records),
         "totalAOMs": len(aom_records),
         "vms": vm_records,
