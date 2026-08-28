@@ -73,10 +73,10 @@ A real-time, interactive program performance dashboard for the **Bosch Visual Me
 A dedicated quality audit analytics dashboard parsing live data from the master SharePoint workbook (`QC Tracker` sheet).
 
 ### Key Features:
-- **13 Evaluated Parameters**:
+- **12 Evaluated Parameters**:
   - *Display Audit*: Ref Section, WM Section, Dishwasher Section, Chimney Section, Inside Snap (360 Images).
   - *Visibility Audit*: External Visibility, Internal Visibility, Promoter Activity.
-  - *Campaign Audit*: Star Campaign Deployment Images, Images taken correctly (Before & After), POSM Deployment (Guideline Adherence), Correct POSM Remarks Captured, POSM Condition (Damaged POSM identified).
+  - *Campaign Audit*: Images taken correctly (Before & After), POSM Deployment (Guideline Adherence), Correct POSM Remarks Captured, POSM Condition (Damaged POSM identified).
 - **Executive KPIs**: Total Audits, Overall QC Score % (Target benchmark ≥ 80%), Display Audit Score %, Campaign & Visibility Score %, Unique Users Audited, and Rejection Cases.
 - **Dual-Axis Charts**:
   - AOM-wise QC Score % (Bar) and Audit Count (Line).

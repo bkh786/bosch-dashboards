@@ -178,7 +178,7 @@
             <div class="chart-card-header">
               <div>
                 <h3 class="chart-card-title">Campaign &amp; POSM Audit</h3>
-                <span class="chart-card-subtitle">Star campaign, Before/After photos, POSM deployment &amp; condition</span>
+                <span class="chart-card-subtitle">Before/After photos, POSM deployment &amp; condition</span>
               </div>
               <span class="chart-hint-badge">Campaign &amp; POSM</span>
             </div>
@@ -388,7 +388,6 @@
 
     /* Campaign Audit Parameters */
     const CAMPAIGN_PARAM_NAMES = [
-      'Star Campaign Deployment Images',
       'Images taken correctly (Before & After)',
       'POSM Deployment (Guideline Adherence)',
       'Correct POSM Remarks Captured',
@@ -411,7 +410,6 @@
     };
 
     const CAMPAIGN_SHORT_NAMES = {
-      'Star Campaign Deployment Images': 'Star Camp',
       'Images taken correctly (Before & After)': 'Before/After',
       'POSM Deployment (Guideline Adherence)': 'POSM Deploy',
       'Correct POSM Remarks Captured': 'Remarks',
@@ -1279,7 +1277,7 @@
               backgroundColor: THEME_COLORS.barBlue,
               hoverBackgroundColor: THEME_COLORS.barBlueHover,
               borderRadius: 6,
-              maxBarThickness: 38
+              maxBarThickness: 42
             }]
           },
           options: {
@@ -1532,7 +1530,7 @@
               <div class="kpi-progress-bar" style="width: ${Math.min(100, (k.campScore || 0) * 100)}%; background: var(--accent-purple);"></div>
             </div>
             <div class="kpi-subline">
-              <span class="kpi-sub-item">POSM guidelines &amp; star campaign</span>
+              <span class="kpi-sub-item">POSM guidelines &amp; deployment adherence</span>
             </div>
           </div>
 
