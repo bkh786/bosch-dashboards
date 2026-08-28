@@ -75,11 +75,14 @@ def parse_program_dataset(wb_stream):
     if len(rows) < 2:
         raise ValueError("Sheet does not contain enough rows.")
 
-    headers = [cell.v for cell in rows[1][:39]]
+    header_row = [cell.v for cell in rows[1]]
+    rank_indices = [i for i, h in enumerate(header_row) if h and str(h).strip().lower() == 'rank']
+    vm_col_end = rank_indices[0] + 1 if rank_indices else len(header_row)
+    headers = header_row[:vm_col_end]
     vm_records = []
 
     for r in rows[2:]:
-        vals = [cell.v for cell in r[:39]]
+        vals = [cell.v for cell in r[:vm_col_end]]
         if len(vals) > 3 and vals[0] and vals[3]:
             rec = {}
             for idx, h in enumerate(headers):
@@ -92,6 +95,8 @@ def parse_program_dataset(wb_stream):
                         else:
                             rec["Productive Visits"] = v
             vm_records.append(rec)
+
+    vm_records.sort(key=lambda x: (x.get('Rank') if x.get('Rank') is not None else 999))
 
     aom_base_towns = {
         'Irfan Ali': 'Hyderabad',
