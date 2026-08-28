@@ -16,56 +16,7 @@
   --bosch-blue-light: #008ecf;
   --bosch-dark: #080d1a;
   
-  /* Dark Mode Palette (Default) */
-  --bg-page: #080d1a;
-  --bg-page-gradient: radial-gradient(circle at 20% 0%, #131c2e 0%, #080d1a 70%);
-  
-  --nav-bar-bg: #050811;
-  --nav-tab-active-bg: #141d30;
-  --nav-tab-active-border: #e21a22;
-  --nav-tab-inactive-color: #94a3b8;
-  --nav-tab-hover-bg: rgba(255, 255, 255, 0.06);
-
-  --header-bg: linear-gradient(90deg, #070c18 0%, #10192d 50%, #070c18 100%);
-  --header-border: rgba(255, 255, 255, 0.10);
-
-  --surface: #0f172a;
-  --surface-solid: #131c2e;
-  --surface-hover: #19243c;
-  --surface-border: rgba(255, 255, 255, 0.08);
-  --surface-border-subtle: rgba(255, 255, 255, 0.05);
-
-  --ink: #f8fafc;
-  --ink-soft: #cbd5e1;
-  --ink-faint: #94a3b8;
-  --ink-muted: #64748b;
-
-  --accent-green: #10b981;
-  --accent-green-soft: rgba(16, 185, 129, 0.15);
-  --accent-blue: #0284c7;
-  --accent-blue-soft: rgba(2, 132, 199, 0.15);
-  --accent-amber: #f59e0b;
-  --accent-amber-soft: rgba(245, 158, 11, 0.15);
-  --accent-red: #ef4444;
-  --accent-red-soft: rgba(239, 68, 68, 0.15);
-  --accent-purple: #8b5cf6;
-  --accent-purple-soft: rgba(139, 92, 246, 0.15);
-
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.45);
-  --shadow-header: 0 4px 20px rgba(0, 0, 0, 0.35);
-
-  --radius-lg: 12px;
-  --radius-md: 8px;
-  --radius-sm: 6px;
-
-  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'IBM Plex Mono', monospace;
-}
-
-/* Light Theme */
-body.light-theme {
+  /* Daylight Palette (Default) */
   --bg-page: #f8fafc;
   --bg-page-gradient: linear-gradient(180deg, #f1f5f9 0%, #f8fafc 100%);
   
@@ -89,9 +40,77 @@ body.light-theme {
   --ink-faint: #64748b;
   --ink-muted: #94a3b8;
 
+  --accent-green: #10b981;
+  --accent-green-soft: rgba(16, 185, 129, 0.15);
+  --accent-blue: #0284c7;
+  --accent-blue-soft: rgba(2, 132, 199, 0.15);
+  --accent-amber: #f59e0b;
+  --accent-amber-soft: rgba(245, 158, 11, 0.15);
+  --accent-red: #ef4444;
+  --accent-red-soft: rgba(239, 68, 68, 0.15);
+  --accent-purple: #8b5cf6;
+  --accent-purple-soft: rgba(139, 92, 246, 0.15);
+
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.05);
   --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.09), 0 4px 10px rgba(0, 0, 0, 0.06);
+  --shadow-header: 0 4px 20px rgba(0, 0, 0, 0.25);
+
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 6px;
+
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+/* Light / Daylight Theme explicit class */
+body.light-theme {
+  --bg-page: #f8fafc;
+  --bg-page-gradient: linear-gradient(180deg, #f1f5f9 0%, #f8fafc 100%);
+  --surface: #ffffff;
+  --surface-solid: #ffffff;
+  --surface-hover: #f1f5f9;
+  --surface-border: rgba(15, 23, 42, 0.09);
+  --surface-border-subtle: rgba(15, 23, 42, 0.05);
+  --ink: #0f172a;
+  --ink-soft: #334155;
+  --ink-faint: #64748b;
+  --ink-muted: #94a3b8;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 28px rgba(0, 0, 0, 0.09), 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+/* Dark Theme (Alternative user toggle) */
+body.dark-theme {
+  --bg-page: #080d1a;
+  --bg-page-gradient: radial-gradient(circle at 20% 0%, #131c2e 0%, #080d1a 70%);
+  
+  --nav-bar-bg: #050811;
+  --nav-tab-active-bg: #141d30;
+  --nav-tab-active-border: #e21a22;
+  --nav-tab-inactive-color: #94a3b8;
+  --nav-tab-hover-bg: rgba(255, 255, 255, 0.06);
+
+  --header-bg: linear-gradient(90deg, #070c18 0%, #10192d 50%, #070c18 100%);
+  --header-border: rgba(255, 255, 255, 0.10);
+
+  --surface: #0f172a;
+  --surface-solid: #131c2e;
+  --surface-hover: #19243c;
+  --surface-border: rgba(255, 255, 255, 0.08);
+  --surface-border-subtle: rgba(255, 255, 255, 0.05);
+
+  --ink: #f8fafc;
+  --ink-soft: #cbd5e1;
+  --ink-faint: #94a3b8;
+  --ink-muted: #64748b;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --shadow-header: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 /* Base Reset */
@@ -1063,20 +1082,27 @@ body {
   color: var(--ink);
 }
 
-/* Dark Line Graph Cards (For Trend Analytics) */
+/* Trend Analytics Cards (Adapts to Daylight default & Dark Mode) */
 .dark-line-card {
-  background: #060a14 !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-body.light-theme .dark-line-card {
-  background: #0f172a !important;
-  border-color: rgba(15, 23, 42, 0.2) !important;
+  background: var(--surface-solid) !important;
+  border: 1px solid var(--surface-border) !important;
+  box-shadow: var(--shadow-sm);
 }
 .dark-line-card .chart-card-title {
-  color: #f8fafc;
+  color: var(--ink);
 }
 .dark-line-card .chart-card-subtitle {
+  color: var(--ink-faint);
+}
+body.dark-theme .dark-line-card {
+  background: #060a14 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+body.dark-theme .dark-line-card .chart-card-title {
+  color: #f8fafc;
+}
+body.dark-theme .dark-line-card .chart-card-subtitle {
   color: #94a3b8;
 }
 
