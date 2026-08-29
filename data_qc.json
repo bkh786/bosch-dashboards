@@ -26,6 +26,7 @@
     "Scoring",
     null,
     "Highlights & Scoring",
+    null,
     null
   ],
   [
@@ -55,7 +56,8 @@
     "QC Approved Count",
     "QC Approved % (Out of 10 parameters)",
     "Mistakes Reported",
-    "AOM Remarks"
+    "AOM Remarks",
+    null
   ],
   [
     5488599,
@@ -84,7 +86,8 @@
     10,
     0.8333333333333334,
     "DW Campaign added wrongly",
-    "Photos not taken properly, Posm not available and 360 degree photos not captured by VM."
+    "Photos not taken properly, Posm not available and 360 degree photos not captured by VM.",
+    null
   ],
   [
     5490123,
@@ -113,7 +116,8 @@
     10,
     0.8333333333333334,
     "Promoter activity not done properly",
-    "Bosch Washing Machine FL Topper not carried properly, 360 degree photos less captured by VM."
+    "Bosch Washing Machine FL Topper not carried properly, 360 degree photos less captured by VM.",
+    null
   ],
   [
     5490138,
@@ -142,7 +146,8 @@
     6,
     0.5,
     "All campaigns not captured while doing the reporting",
-    "Against REF display count mention wrong deployment Qty, 360 degree photos less captured by VM. (New VM will give him proper Training)."
+    "Against REF display count mention wrong deployment Qty, 360 degree photos less captured by VM. (New VM will give him proper Training).",
+    null
   ],
   [
     5489995,
@@ -171,7 +176,8 @@
     12,
     1,
     "B Top Load ATL 2.2 WM: 1 display posm not available comment added wrong",
-    "NA"
+    "NA",
+    null
   ],
   [
     5488808,
@@ -200,7 +206,8 @@
     9,
     0.75,
     "B Front Load WM 7 KG - 12 KG _AntiStain: Display count not added, B New INTERNAL STICKER 80 Utensils: Wrong deployment Qty Added",
-    "Competitor ISP count not added, 360 degree photos less captured by VM. "
+    "Competitor ISP count not added, 360 degree photos less captured by VM. ",
+    null
   ],
   [
     5488929,
@@ -229,7 +236,8 @@
     8,
     0.6666666666666666,
     "B New 100% Money Back Side Flange: Posm carried limited Qty, B Freestanding Dishwasher Toppers not deployed missing,  ",
-    "REF category campaigns not added, 360 degree photos less captured by VM. "
+    "REF category campaigns not added, 360 degree photos less captured by VM. ",
+    null
   ],
   [
     5489822,
@@ -258,7 +266,8 @@
     9,
     0.75,
     "360-degree picture was not captured, and the internal visibility picture was also not captured properly",
-    "NA"
+    "NA",
+    null
   ],
   [
     5489716,
@@ -287,7 +296,8 @@
     11,
     0.9166666666666666,
     "Correct POSM remarks was not captured.",
-    "NA"
+    "NA",
+    null
   ],
   [
     5491325,
@@ -316,7 +326,8 @@
     7,
     0.5833333333333334,
     "Campaign image was not captured properly. External and internal visibility pictures were not captured, and the before-and-after pictures were also not captured",
-    "NA"
+    "NA",
+    null
   ],
   [
     5491428,
@@ -345,7 +356,8 @@
     10,
     0.8333333333333334,
     "internal visibility pictures were not captured, and the before-and-after pictures were also not captured.",
-    "NA"
+    "NA",
+    null
   ],
   [
     5488864,
@@ -374,7 +386,8 @@
     7,
     0.5833333333333334,
     "POSM remarks were captured incorrectly. Pillar branding was available, but the quantity was not mentioned.",
-    "NA"
+    "NA",
+    null
   ],
   [
     5488621,
@@ -403,7 +416,8 @@
     9,
     0.75,
     "The 360-degree picture was not captured. The promoter's name was mentioned, but the promoter ID was not mentioned.",
-    "NA"
+    "NA",
+    null
   ],
   [
     5643566,
@@ -430,6 +444,7 @@
     null,
     null,
     0,
+    null,
     null,
     null,
     null
@@ -461,7 +476,8 @@
     9,
     0.75,
     "Internal visibility bosch and LG fixtures not captured and blur photos.",
-    "REF Posm not deployed properly, Before and after images not captured by VM."
+    "REF Posm not deployed properly, Before and after images not captured by VM.",
+    null
   ],
   [
     5489422,
@@ -490,7 +506,8 @@
     9,
     0.75,
     "Display count added wrongly and comment added by mistaken",
-    "REF display count mention wrong deployment Qty, 360 degree photos less captured by VM. (New VM will give him proper Training)."
+    "REF display count mention wrong deployment Qty, 360 degree photos less captured by VM. (New VM will give him proper Training).",
+    null
   ],
   [
     5489848,
@@ -519,6 +536,7 @@
     8,
     0.6666666666666666,
     "Reporting error",
+    null,
     null
   ],
   [
@@ -548,7 +566,8 @@
     11,
     0.9166666666666666,
     "DW Posm not carried properly and Before and after images not captured by VM.",
-    "NA"
+    "NA",
+    null
   ],
   [
     5489850,
@@ -577,7 +596,8 @@
     7,
     0.5833333333333334,
     "Multiple images not captured in display audit, Internal visiblity not captured, Promotor ID number not captured, POSM remark for one produt not captured, Already present POSM deployment was wrong but not corrected",
-    "Have asked VM to capture details properly in application"
+    "Have asked VM to capture details properly in application",
+    null
   ],
   [
     5490480,
@@ -606,7 +626,8 @@
     8,
     0.6666666666666666,
     "External and internal visibility not captured, promotor ID number not captured, one one photo captured in each section",
-    "Have asked VM to capture details properly in application"
+    "Have asked VM to capture details properly in application",
+    null
   ],
   [
     5489442,
@@ -635,6 +656,7 @@
     11,
     0.9166666666666666,
     "One TL product Top sticker detail not captured in application",
+    null,
     null
   ],
   [
@@ -664,6 +686,127 @@
     10,
     0.8333333333333334,
     "Promotor ID number not properly captured, wrong display count captured for Single door REF",
+    null,
+    null
+  ],
+  [
+    5489044,
+    "Electronics Mart India Limited",
+    1095249,
+    "Kiran",
+    "Gold",
+    "A",
+    "Hyderabad",
+    "2026-08-28",
+    "2026-08-29",
+    "Irfan Ali",
+    "South 1",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Rejected",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    11,
+    0.9166666666666666,
+    "FL Topper not carried properly, 360 degree photos less captured by VM.",
+    "Highlighted mistakes with VM, Not repeated again",
+    null
+  ],
+  [
+    5489118,
+    "Vijay Sales Grp",
+    1095249,
+    "Kiran",
+    "Gold",
+    "A",
+    "Hyderabad",
+    "2026-08-28",
+    "2026-08-29",
+    "Irfan Ali",
+    "South 1",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Rejected",
+    "Ok",
+    "Ok",
+    "Ok",
+    11,
+    0.9166666666666666,
+    "Before and after images not captured by VM. less photos captured",
+    null,
+    null
+  ],
+  [
+    5491387,
+    "Girias Investment Pvt Ltd",
+    1101317,
+    "Jaikumar P",
+    "Silver",
+    "B",
+    "Hubli",
+    "2026-08-28",
+    "2026-08-29",
+    "Irfan Ali",
+    "South 1",
+    "Rejected",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Rejected",
+    "Ok",
+    10,
+    0.8333333333333334,
+    "REF Posm not deployed properly and Display count mismatched",
+    null,
+    null
+  ],
+  [
+    5491392,
+    "Prakash Retail Grp",
+    1105185,
+    "Sargilivari Sai Kiran",
+    "Silver",
+    "B",
+    "Udupi",
+    "2026-08-28",
+    "2026-08-29",
+    "Irfan Ali",
+    "South 1",
+    "Rejected",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Rejected",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Ok",
+    "Rejected",
+    "Ok",
+    9,
+    0.75,
+    "Incomplete posm carried while visiting in market, Outlet front photos not captured properly",
+    null,
     null
   ]
 ]
