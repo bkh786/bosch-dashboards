@@ -641,7 +641,7 @@ body {
   background: var(--surface-solid);
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
-  padding: 14px 16px;
+  padding: 0 0 12px 0;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
@@ -653,7 +653,7 @@ body {
 .kpi-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  border-color: rgba(226, 26, 34, 0.35);
+  border-color: rgba(0, 75, 135, 0.35);
 }
 
 .kpi-card::before {
@@ -664,41 +664,65 @@ body {
   right: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--bosch-red), var(--bosch-blue));
-  opacity: 0.8;
+  opacity: 0.9;
+  z-index: 2;
 }
 
+/* Dark Ribbon covering both Primary and Secondary Headers */
 .kpi-top {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 8px;
+  background: linear-gradient(135deg, #0b1e36 0%, #15294a 100%);
+  padding: 10px 14px 9px 14px;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.14);
+  margin-bottom: 4px;
+  position: relative;
+  z-index: 1;
 }
+
+body.dark-theme .kpi-top {
+  background: linear-gradient(135deg, #08111e 0%, #101c2e 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Primary Header text in light color for clear visibility */
 .kpi-label {
   font-size: 12px;
   font-weight: 700;
-  color: var(--ink-soft);
+  color: #f8fafc;
   line-height: 1.3;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
+
+/* Secondary Header tag in light color on dark ribbon */
 .kpi-badge {
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 10px;
+  padding: 2.5px 8px;
+  border-radius: 5px;
   font-family: var(--font-mono);
   white-space: nowrap;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
-.badge-green { background: var(--accent-green-soft); color: var(--accent-green); }
-.badge-blue { background: var(--accent-blue-soft); color: var(--accent-blue); }
-.badge-amber { background: var(--accent-amber-soft); color: var(--accent-amber); }
-.badge-red { background: var(--accent-red-soft); color: var(--accent-red); }
-.badge-purple { background: var(--accent-purple-soft); color: var(--accent-purple); }
+.badge-blue { background: rgba(56, 189, 248, 0.22); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.4); }
+.badge-green { background: rgba(16, 185, 129, 0.22); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
+.badge-amber { background: rgba(245, 158, 11, 0.22); color: #fde047; border: 1px solid rgba(245, 158, 11, 0.4); }
+.badge-red { background: rgba(239, 68, 68, 0.22); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+.badge-purple { background: rgba(139, 92, 246, 0.22); color: #c4b5fd; border: 1px solid rgba(139, 92, 246, 0.4); }
 
 .kpi-value-row {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin: 4px 0 8px;
+  margin: 6px 0 8px;
+  padding: 0 14px;
 }
 .kpi-main-val {
   font-size: 24px;
@@ -720,7 +744,7 @@ body {
   background: var(--surface-hover);
   border-radius: 2px;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin: 0 14px 10px;
 }
 .kpi-progress-bar {
   height: 100%;
@@ -729,18 +753,18 @@ body {
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* KPI Donut Charts */
+/* KPI Donut Charts - Bolder & More Prominent */
 .kpi-donut-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 0 8px;
+  padding: 6px 14px 6px;
 }
 
 .kpi-donut-chart {
   position: relative;
-  width: 78px;
-  height: 78px;
+  width: 86px;
+  height: 86px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -756,7 +780,7 @@ body {
 .kpi-donut-track {
   fill: none;
   stroke: rgba(15, 23, 42, 0.08);
-  stroke-width: 4.5;
+  stroke-width: 6.5;
 }
 
 body.dark-theme .kpi-donut-track {
@@ -765,10 +789,10 @@ body.dark-theme .kpi-donut-track {
 
 .kpi-donut-bar {
   fill: none;
-  stroke-width: 4.5;
+  stroke-width: 6.5;
   stroke-linecap: round;
-  stroke-dasharray: 131.95;
-  stroke-dashoffset: 131.95;
+  stroke-dasharray: 128.8;
+  stroke-dashoffset: 128.8;
   transition: stroke-dashoffset 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -787,7 +811,7 @@ body.dark-theme .kpi-donut-track {
 }
 
 .kpi-donut-center .kpi-main-val {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 800;
   font-family: var(--font-mono);
   color: var(--ink);
@@ -823,19 +847,20 @@ body.dark-theme .donut-purple {
 }
 
 .kpi-card:hover .kpi-donut-bar {
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.18));
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.22));
 }
 
-/* Second Line Subtext (Strictly formatted as requested) */
+/* Second Line Subtext */
 .kpi-subline {
   font-size: 11px;
   color: var(--ink-faint);
   line-height: 1.4;
-  padding-top: 6px;
+  padding: 6px 14px 0;
   border-top: 1px solid var(--surface-border-subtle);
   display: flex;
   flex-wrap: wrap;
   gap: 4px 10px;
+  margin-top: auto;
 }
 .kpi-sub-item b {
   color: var(--ink);
