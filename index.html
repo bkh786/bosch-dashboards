@@ -176,11 +176,10 @@
 
     <!-- KPI TILES SECTION (3 Grouped Rows: 15 Tiles Total) -->
     
-    <!-- 1. OVERALL KPI (Row 1) -->
+    <!-- 1. OVERALL KPI -->
     <div class="kpi-group-section" id="kpi-group-overall">
       <div class="kpi-group-header">
         <div class="kpi-group-title">
-          <span class="kpi-group-pill pill-red">Row 1</span>
           <span>Overall KPI</span>
         </div>
         <span class="kpi-group-subtitle">Core program achievement, visit progress, and field deployments</span>
@@ -290,17 +289,16 @@
             <div class="kpi-progress-bar" id="kpi-bar-8" style="width: 0%; background: var(--accent-purple);"></div>
           </div>
           <div class="kpi-subline" id="kpi-sub-8">
-            <span class="kpi-sub-item">POSM Deployment per visit: <b id="kpi-sub-8-avg">--</b></span>
+            <span class="kpi-sub-item">Avg. POSM per visit: <b id="kpi-sub-8-avg">--</b></span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 2. DETAILED KPIS (Row 2) -->
+    <!-- 2. DETAILED KPIS -->
     <div class="kpi-group-section" id="kpi-group-detailed">
       <div class="kpi-group-header">
         <div class="kpi-group-title">
-          <span class="kpi-group-pill pill-blue">Row 2</span>
           <span>Detailed KPIs</span>
         </div>
         <span class="kpi-group-subtitle">Store category classification and territory coverage</span>
@@ -433,11 +431,10 @@
       </div>
     </div>
 
-    <!-- 3. MANPOWER KPIS (Row 3) -->
+    <!-- 3. MANPOWER KPIS -->
     <div class="kpi-group-section" id="kpi-group-manpower">
       <div class="kpi-group-header">
         <div class="kpi-group-title">
-          <span class="kpi-group-pill pill-green">Row 3</span>
           <span>Manpower KPIs</span>
         </div>
         <span class="kpi-group-subtitle">Workforce field productivity, man-day adherence, and time metrics</span>
@@ -1206,19 +1203,19 @@
       document.getElementById('kpi-sub-6-prod').textContent = formatNum(prodVis);
       document.getElementById('kpi-sub-6-total').textContent = formatNum(visAch);
 
-      // 7. Total Display Reported (calculated dynamically)
+      // 7. Total Display Reported (average = display reported / productive visits)
       const dispRep = vms.reduce((acc, r) => acc + (parseFloat(r['Display Reported']) || 0), 0);
-      const avgDispPerVisit = visAch > 0 ? (dispRep / visAch) : 0;
+      const avgDispPerVisit = prodVis > 0 ? (dispRep / prodVis) : 0;
       document.getElementById('kpi-val-7').textContent = formatNum(dispRep);
-      document.getElementById('kpi-bar-7').style.width = Math.min(100, (avgDispPerVisit / 10.0) * 100) + '%';
+      document.getElementById('kpi-bar-7').style.width = Math.min(100, (avgDispPerVisit / 12.0) * 100) + '%';
       const sub7Avg = document.getElementById('kpi-sub-7-avg');
       if (sub7Avg) sub7Avg.textContent = avgDispPerVisit.toFixed(2);
 
-      // 8. Total POSM Deployed (calculated dynamically)
+      // 8. Total POSM Deployed (average = posm deployed / productive visits)
       const posmDep = vms.reduce((acc, r) => acc + (parseFloat(r['POSM Deployed']) || 0), 0);
-      const avgPosmPerVisit = visAch > 0 ? (posmDep / visAch) : 0;
+      const avgPosmPerVisit = prodVis > 0 ? (posmDep / prodVis) : 0;
       document.getElementById('kpi-val-8').textContent = formatNum(posmDep);
-      document.getElementById('kpi-bar-8').style.width = Math.min(100, (avgPosmPerVisit / 15.0) * 100) + '%';
+      document.getElementById('kpi-bar-8').style.width = Math.min(100, (avgPosmPerVisit / 20.0) * 100) + '%';
       const sub8Avg = document.getElementById('kpi-sub-8-avg');
       if (sub8Avg) sub8Avg.textContent = avgPosmPerVisit.toFixed(2);
 
