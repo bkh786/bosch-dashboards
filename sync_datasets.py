@@ -64,6 +64,25 @@ def fetch_url(url, fallback_paths, label="dataset"):
     print(f"⚠️ Could not download {label} or locate local fallback file.")
     return None
 
+def extract_date_from_val(val):
+    if val is None:
+        return None
+    # Excel serial date (float/int roughly between 2000 and 2080)
+    if isinstance(val, (int, float)) and 35000 <= val <= 65000:
+        d = datetime.date(1899, 12, 30) + datetime.timedelta(days=int(val))
+        return d.strftime("%d %b %Y")
+    if isinstance(val, (datetime.datetime, datetime.date)):
+        return val.strftime("%d %b %Y")
+    val_str = str(val).strip()
+    if not val_str:
+        return None
+    for fmt in ("%d-%b-%y", "%d-%b-%Y", "%d/%m/%Y", "%Y-%m-%d", "%d %b %Y", "%d-%m-%Y"):
+        try:
+            return datetime.datetime.strptime(val_str, fmt).strftime("%d %b %Y")
+        except ValueError:
+            pass
+    return val_str
+
 # ----------------- 1. PROGRAM DATA PARSING -----------------
 def parse_program_dataset(wb_stream):
     with open_workbook(wb_stream) as wb:
@@ -74,6 +93,15 @@ def parse_program_dataset(wb_stream):
 
     if len(rows) < 2:
         raise ValueError("Sheet does not contain enough rows.")
+
+    # Dynamically extract 'Data Updated Upto' date from Row 0, Cell A1
+    data_updated_upto = "28 Aug 2026"
+    if rows and len(rows) > 0 and len(rows[0]) > 0:
+        cell_val = rows[0][0].v
+        parsed_date = extract_date_from_val(cell_val)
+        if parsed_date:
+            data_updated_upto = parsed_date
+            print(f"✓ Detected master data update date: {data_updated_upto}")
 
     header_row = [cell.v for cell in rows[1]]
     rank_indices = [i for i, h in enumerate(header_row) if h and str(h).strip().lower() == 'rank']
@@ -161,7 +189,7 @@ def parse_program_dataset(wb_stream):
     return {
         "lastSynced": datetime.datetime.now().strftime("%d %b %Y, %I:%M %p"),
         "timestamp": datetime.datetime.now().isoformat(),
-        "dataUpdatedUpto": "26 Aug 2026",
+        "dataUpdatedUpto": data_updated_upto,
         "totalVMs": len(vm_records),
         "totalAOMs": len(aom_records),
         "vms": vm_records,
@@ -219,9 +247,31 @@ def embed_into_html(data, html_file, json_file=None):
         idx2 = html.find(tag_end, idx1)
         if idx2 != -1:
             html = html[:idx1 + len(tag_start)] + compact_json + html[idx2:]
+
+            # Also update static <b id="metaDataUpdatedUpto">...</b> tag in HTML
+            date_val = None
+            if isinstance(data, dict) and "dataUpdatedUpto" in data:
+                date_val = data["dataUpdatedUpto"]
+            elif isinstance(data, list):
+                max_d = None
+                for row in data[2:]:
+                    if len(row) > 8 and row[8]:
+                        v = str(row[8])
+                        if len(v) >= 10:
+                            try:
+                                d = datetime.datetime.strptime(v[:10], "%Y-%m-%d")
+                                if not max_d or d > max_d: max_d = d
+                            except: pass
+                if max_d:
+                    date_val = max_d.strftime("%d %b %Y")
+
+            if date_val:
+                import re
+                html = re.sub(r'(<b id="metaDataUpdatedUpto">)[^<]*(</b>)', rf'\g<1>{date_val}\g<2>', html)
+
             with open(html_file, "w", encoding="utf-8") as f:
                 f.write(html)
-            print(f"✓ Embedded live data into {html_file}")
+            print(f"✓ Embedded live data and updated date header in {html_file}")
             return
 
     print(f"⚠️ Could not find sample-data tag in {html_file}")

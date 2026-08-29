@@ -2,8 +2,8 @@ name: Sync SharePoint Live Data
 
 on:
   schedule:
-    # Runs automatically every 2 hours
-    - cron: '0 */2 * * *'
+    # Runs automatically every hour for fresher data synchronization
+    - cron: '0 * * * *'
   workflow_dispatch: # Allows manual 1-click execution from GitHub Actions UI
 
 permissions:

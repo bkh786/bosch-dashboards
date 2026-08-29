@@ -1892,6 +1892,33 @@
       statusBadge.classList.add('syncing');
       statusText.textContent = 'Syncing...';
 
+      // 1. Primary Sync: Fetch pre-processed data_qc.json (Same-origin & GitHub raw fallback)
+      const jsonSources = [
+        `./data_qc.json?_t=${Date.now()}`,
+        `https://raw.githubusercontent.com/bkh786/bosch-dashboards/main/data_qc.json?_t=${Date.now()}`
+      ];
+
+      for (const url of jsonSources) {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (res.ok) {
+            const rows = await res.json();
+            if (Array.isArray(rows) && rows.length > 2) {
+              console.log(`✓ Real-time QC sync active from ${url}`);
+              loadFromRows(rows, 'SharePoint Live (QC Tracker)', true);
+              statusBadge.classList.remove('syncing');
+              statusText.textContent = 'Live data connected';
+              const now = new Date();
+              syncMeta.textContent = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              return;
+            }
+          }
+        } catch(e) {
+          // continue to next fallback
+        }
+      }
+
+      // 2. Secondary Sync: Attempt live SharePoint workbook download via proxies
       const proxyPromises = CORS_PROXIES.map(gen => fetchWithTimeout(gen(SHAREPOINT_EXCEL_URL), 4500));
       proxyPromises.push(fetchWithTimeout(SHAREPOINT_EXCEL_URL, 2500));
 
@@ -1928,10 +1955,13 @@
         }
       }
 
+      // Graceful fallback when remote live sync is unreachable
       statusBadge.classList.remove('syncing');
-      statusText.textContent = 'Live data connected';
-      const now = new Date();
-      syncMeta.textContent = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      if (State.records && State.records.length > 0) {
+        statusText.textContent = 'Cached snapshot active';
+      } else {
+        statusText.textContent = 'Sync offline';
+      }
     }
 
     function loadSampleFallback(){
