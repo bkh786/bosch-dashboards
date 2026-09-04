@@ -1,9 +1,10 @@
 {
-  "lastSynced": "04 Sep 2026, 10:16 AM",
-  "timestamp": "2026-09-04T10:16:03.110287",
+  "lastSynced": "04 Sep 2026, 04:09 PM",
+  "timestamp": "2026-09-04T16:09:31.956684",
   "dataUpdatedUpto": "03 Sep 2026",
-  "totalVMs": 68,
-  "totalAOMs": 7,
+  "currentMonth": "Sep'26",
+  "totalVMs": 34,
+  "totalAOMs": 4,
   "vms": [
     {
       "Month": "Aug'26",
@@ -3000,50 +3001,6 @@
   ],
   "aoms": [
     {
-      "Aom Name": "Pratik Kumar  Pandey",
-      "Base Town": "Delhi",
-      "Coverage %": 0.9579349904397706,
-      "Cat A Coverage": 1.0,
-      "Achi Mandays %": 0.7222222222222222,
-      "Productivity": 3.473372781065089,
-      "First Visit Time Adherence (11:30 AM)": 0.19207818930041154,
-      "Final Achievement": 0.738855869660069,
-      "Rank": 1
-    },
-    {
-      "Aom Name": "Najeeb Hydrose",
-      "Base Town": "Cochin",
-      "Coverage %": 0.8721461187214612,
-      "Cat A Coverage": 0.9266862170087976,
-      "Achi Mandays %": 0.8884615384615384,
-      "Productivity": 3.3766233766233764,
-      "First Visit Time Adherence (11:30 AM)": 0.31592592592592594,
-      "Final Achievement": 0.7271386734152132,
-      "Rank": 2
-    },
-    {
-      "Aom Name": "Danish Khan",
-      "Base Town": "Mumbai",
-      "Coverage %": 0.8913043478260869,
-      "Cat A Coverage": 0.9044943820224719,
-      "Achi Mandays %": 0.8516483516483516,
-      "Productivity": 3.729032258064516,
-      "First Visit Time Adherence (11:30 AM)": 0.16666666666666669,
-      "Final Achievement": 0.679128096011877,
-      "Rank": 3
-    },
-    {
-      "Aom Name": "Irfan Ali",
-      "Base Town": "Hyderabad",
-      "Coverage %": 0.5608214849921012,
-      "Cat A Coverage": 0.631578947368421,
-      "Achi Mandays %": 0.9137931034482759,
-      "Productivity": 3.9150943396226414,
-      "First Visit Time Adherence (11:30 AM)": 0.5251197318007663,
-      "Final Achievement": 0.5946443235425188,
-      "Rank": 4
-    },
-    {
       "Aom Name": "Daanish Khan",
       "Base Town": "Maharashtra",
       "Coverage %": 0.25183374083129584,
@@ -3052,7 +3009,18 @@
       "Productivity": 5.15,
       "First Visit Time Adherence (11:30 AM)": 0.38095238095238093,
       "Final Achievement": 0.44310512489182396,
-      "Rank": 5
+      "Rank": 1
+    },
+    {
+      "Aom Name": "Irfan Ali",
+      "Base Town": "Hyderabad",
+      "Coverage %": 0.1419753086419753,
+      "Cat A Coverage": 0.23121387283236994,
+      "Achi Mandays %": 0.8333333333333334,
+      "Productivity": 4.65,
+      "First Visit Time Adherence (11:30 AM)": 0.5833333333333333,
+      "Final Achievement": 0.3730432147749691,
+      "Rank": 2
     },
     {
       "Aom Name": "Abhijith C",
@@ -3063,7 +3031,7 @@
       "Productivity": 4.653846153846154,
       "First Visit Time Adherence (11:30 AM)": 0.5,
       "Final Achievement": 0.37059072881443006,
-      "Rank": 6
+      "Rank": 3
     },
     {
       "Aom Name": "Yaswant Kumar",
@@ -3074,7 +3042,7 @@
       "Productivity": 3.769230769230769,
       "First Visit Time Adherence (11:30 AM)": 0.2592592592592593,
       "Final Achievement": 0.3572194115059282,
-      "Rank": 7
+      "Rank": 4
     }
   ]
 }

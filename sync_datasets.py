@@ -94,14 +94,30 @@ def parse_program_dataset(wb_stream):
     if len(rows) < 2:
         raise ValueError("Sheet does not contain enough rows.")
 
-    # Dynamically extract 'Data Updated Upto' date from Row 0, Cell A1
+    # Dynamically extract 'Data Updated Upto' date and 'currentMonth' from Row 0, Cell A1
     data_updated_upto = "28 Aug 2026"
+    current_month = "Sep'26"
     if rows and len(rows) > 0 and len(rows[0]) > 0:
         cell_val = rows[0][0].v
         parsed_date = extract_date_from_val(cell_val)
         if parsed_date:
             data_updated_upto = parsed_date
             print(f"✓ Detected master data update date: {data_updated_upto}")
+
+        if isinstance(cell_val, (int, float)) and 35000 <= cell_val <= 65000:
+            d = datetime.date(1899, 12, 30) + datetime.timedelta(days=int(cell_val))
+            current_month = d.strftime("%b'%y")
+        elif isinstance(cell_val, (datetime.datetime, datetime.date)):
+            current_month = cell_val.strftime("%b'%y")
+        elif isinstance(cell_val, str):
+            for fmt in ("%d-%b-%y", "%d-%b-%Y", "%d/%m/%Y", "%Y-%m-%d", "%d %b %Y", "%d-%m-%Y"):
+                try:
+                    d = datetime.datetime.strptime(cell_val.strip(), fmt)
+                    current_month = d.strftime("%b'%y")
+                    break
+                except ValueError:
+                    pass
+    print(f"✓ Derived current month from A1: {current_month}")
 
     header_row = [cell.v for cell in rows[1]]
     rank_indices = [i for i, h in enumerate(header_row) if h and str(h).strip().lower() == 'rank']
@@ -111,7 +127,7 @@ def parse_program_dataset(wb_stream):
 
     for r in rows[2:]:
         vals = [cell.v for cell in r[:vm_col_end]]
-        if len(vals) > 3 and vals[0] and vals[3]:
+        if len(vals) > 4 and vals[0] and (vals[3] or vals[4]):
             rec = {}
             for idx, h in enumerate(headers):
                 if h:
@@ -124,7 +140,16 @@ def parse_program_dataset(wb_stream):
                             rec["Productive Visits"] = v
             vm_records.append(rec)
 
+    # Sort records: preserve Rank if available
     vm_records.sort(key=lambda x: (x.get('Rank') if x.get('Rank') is not None else 999))
+
+    # Verify current_month matches values in data, fallback to first month if needed
+    distinct_months = [r.get('Month') for r in vm_records if r.get('Month')]
+    if current_month not in distinct_months and distinct_months:
+        current_month = distinct_months[0]
+
+    # Calculate AOM records for the current month for baseline/fallback summaries
+    curr_month_vms = [r for r in vm_records if r.get('Month') == current_month] or vm_records
 
     aom_base_towns = {
         'Irfan Ali': 'Hyderabad',
@@ -134,7 +159,7 @@ def parse_program_dataset(wb_stream):
         'Danish Khan': 'Mumbai'
     }
     aom_dict = {}
-    for r in vm_records:
+    for r in curr_month_vms:
         aom = r.get('AOM Name')
         if not aom:
             continue
@@ -190,7 +215,8 @@ def parse_program_dataset(wb_stream):
         "lastSynced": datetime.datetime.now().strftime("%d %b %Y, %I:%M %p"),
         "timestamp": datetime.datetime.now().isoformat(),
         "dataUpdatedUpto": data_updated_upto,
-        "totalVMs": len(vm_records),
+        "currentMonth": current_month,
+        "totalVMs": len(curr_month_vms),
         "totalAOMs": len(aom_records),
         "vms": vm_records,
         "aoms": aom_records
