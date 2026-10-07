@@ -95,8 +95,9 @@ def parse_program_dataset(wb_stream):
         raise ValueError("Sheet does not contain enough rows.")
 
     # Dynamically extract 'Data Updated Upto' date and 'currentMonth' from Row 0, Cell A1
-    data_updated_upto = "28 Aug 2026"
-    current_month = "Sep'26"
+    _now = datetime.datetime.now()
+    data_updated_upto = _now.strftime("%d %b %Y")
+    current_month = _now.strftime("%b'%y")
     if rows and len(rows) > 0 and len(rows[0]) > 0:
         cell_val = rows[0][0].v
         parsed_date = extract_date_from_val(cell_val)
