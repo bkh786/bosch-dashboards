@@ -168,7 +168,8 @@ body {
   z-index: 1000;
   background: var(--bg-page);
   padding-top: 8px;
-  margin-bottom: 20px;
+  padding-bottom: 6px;
+  margin-bottom: 18px;
   box-shadow: var(--shadow-header);
 }
 
@@ -353,6 +354,49 @@ body {
   transform: translateY(-1px);
 }
 
+/* Header Telemetry & Sync Metadata (Vital Points) */
+.hdr-meta-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 6px 13px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.hdr-meta-group:hover {
+  background: rgba(255, 255, 255, 0.13);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.hdr-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(255, 255, 255, 0.72);
+  white-space: nowrap;
+}
+.hdr-meta-item span {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 500;
+}
+.hdr-meta-item b {
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.hdr-meta-item.highlight b {
+  color: #34d399; /* emerald accent */
+}
+.hdr-meta-divider {
+  width: 1px;
+  height: 13px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
 /* Live Data Connected Pill (Click to Sync) */
 .live-status-pill {
   display: inline-flex;
@@ -456,7 +500,8 @@ body {
   border: 1px solid var(--surface-border);
   border-radius: var(--radius-md);
   padding: 8px 14px;
-  margin-bottom: 16px;
+  margin-top: 10px;
+  margin-bottom: 0;
   box-shadow: var(--shadow-sm);
 }
 
