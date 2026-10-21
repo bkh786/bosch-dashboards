@@ -101,59 +101,144 @@
           </button>
         </div>
       </div>
+    </header>
 
-      <!-- COMPACT FILTERS SECTION (Static/pinned on scroll) -->
-      <section class="filters-container compact-filters">
-        <div class="filters-bar-row">
-          <div class="filters-title-compact">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+    <!-- SCROLLABLE FILTERS SECTION (Scrolls with page content to preserve vertical screen space) -->
+    <section class="filters-container compact-filters" id="mainFiltersSection" aria-label="Filters">
+      <div class="filters-bar-row">
+        <div class="filters-title-compact">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          <span>Filters</span>
+        </div>
+
+        <div class="filter-item-compact">
+          <label class="filter-label-inline" for="filterMonth">Month</label>
+          <select id="filterMonth" class="filter-select-compact" onchange="onFilterChange('month')">
+            <option value="">All Months</option>
+          </select>
+        </div>
+
+        <div class="filter-item-compact">
+          <label class="filter-label-inline" for="filterRegion">Region</label>
+          <select id="filterRegion" class="filter-select-compact" onchange="onFilterChange('region')">
+            <option value="">All Regions</option>
+          </select>
+        </div>
+
+        <div class="filter-item-compact">
+          <label class="filter-label-inline" for="filterState">State</label>
+          <select id="filterState" class="filter-select-compact" onchange="onFilterChange('state')">
+            <option value="">All States</option>
+          </select>
+        </div>
+
+        <div class="filter-item-compact">
+          <label class="filter-label-inline" for="filterAOM">AOM</label>
+          <select id="filterAOM" class="filter-select-compact" onchange="onFilterChange('aom')">
+            <option value="">All AOMs</option>
+          </select>
+        </div>
+
+        <div class="filter-item-compact">
+          <label class="filter-label-inline" for="filterVM">VM Name</label>
+          <select id="filterVM" class="filter-select-compact" onchange="onFilterChange('vm')">
+            <option value="">All VMs</option>
+          </select>
+        </div>
+
+        <div class="filters-actions-compact">
+          <span class="filters-count-badge" id="filterRecordCount">34 VMs</span>
+          <button class="btn-clear-filter" onclick="resetBarFilters()" title="Reset other filters (preserves month)">Reset</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXECUTIVE INSIGHTS SECTION (Side-by-side Highlights & Low-lights table) -->
+    <section class="executive-insights-section" id="executiveInsightsSection" aria-label="Executive Insights & Program Health">
+      <!-- Section Header -->
+      <div class="insights-header">
+        <div class="insights-title-block">
+          <div class="insights-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
             </svg>
-            <span>Filters</span>
+            <span>Executive Summary</span>
           </div>
+          <h2 class="insights-title">Program Health &amp; Executive Insights</h2>
+          <p class="insights-subtitle" id="insightsSubtitle">Automated performance synthesis across active VM operations</p>
+        </div>
 
-          <div class="filter-item-compact">
-            <label class="filter-label-inline" for="filterMonth">Month</label>
-            <select id="filterMonth" class="filter-select-compact" onchange="onFilterChange('month')">
-              <option value="">All Months</option>
-            </select>
+        <div class="insights-health-wrapper">
+          <div class="insights-quick-pills" id="insightsQuickPills">
+            <!-- Populated dynamically: Quick KPIs -->
           </div>
-
-          <div class="filter-item-compact">
-            <label class="filter-label-inline" for="filterRegion">Region</label>
-            <select id="filterRegion" class="filter-select-compact" onchange="onFilterChange('region')">
-              <option value="">All Regions</option>
-            </select>
-          </div>
-
-          <div class="filter-item-compact">
-            <label class="filter-label-inline" for="filterState">State</label>
-            <select id="filterState" class="filter-select-compact" onchange="onFilterChange('state')">
-              <option value="">All States</option>
-            </select>
-          </div>
-
-          <div class="filter-item-compact">
-            <label class="filter-label-inline" for="filterAOM">AOM</label>
-            <select id="filterAOM" class="filter-select-compact" onchange="onFilterChange('aom')">
-              <option value="">All AOMs</option>
-            </select>
-          </div>
-
-          <div class="filter-item-compact">
-            <label class="filter-label-inline" for="filterVM">VM Name</label>
-            <select id="filterVM" class="filter-select-compact" onchange="onFilterChange('vm')">
-              <option value="">All VMs</option>
-            </select>
-          </div>
-
-          <div class="filters-actions-compact">
-            <span class="filters-count-badge" id="filterRecordCount">34 VMs</span>
-            <button class="btn-clear-filter" onclick="resetBarFilters()" title="Reset other filters (preserves month)">Reset</button>
+          <div class="health-score-card">
+            <div class="health-score-info">
+              <span class="health-score-label">Health Index</span>
+              <span class="health-score-val" id="healthScoreVal">--</span>
+            </div>
+            <div class="health-status-pill health-healthy" id="healthStatusPill">
+              <span class="health-dot"></span>
+              <span id="healthStatusText">Calculating...</span>
+            </div>
           </div>
         </div>
-      </section>
-    </header>
+      </div>
+
+      <!-- Program Executive Gist Banner -->
+      <div class="insights-gist-banner" id="insightsGistBanner">
+        <!-- Dynamically populated program gist: who is doing great and who is not -->
+      </div>
+
+      <!-- Side-by-Side Comparative Table / Cards -->
+      <div class="insights-side-by-side-table">
+        <!-- Highlights Column (Green) -->
+        <div class="insights-column highlights-col">
+          <div class="insights-col-header">
+            <div class="insights-col-header-left">
+              <span class="insights-col-icon success-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </span>
+              <div>
+                <div class="insights-col-title">Program Highlights</div>
+                <div class="insights-col-sub" id="highlightsSub">Core achievements &amp; green milestones</div>
+              </div>
+            </div>
+            <span class="insights-count-tag count-success" id="highlightsCountTag">3 Key Highlights</span>
+          </div>
+          <ul class="insights-list" id="highlightsList">
+            <!-- Dynamically populated 3 highlight bullet points -->
+          </ul>
+        </div>
+
+        <!-- Low-lights Column (Amber/Red) -->
+        <div class="insights-column lowlights-col">
+          <div class="insights-col-header">
+            <div class="insights-col-header-left">
+              <span class="insights-col-icon warning-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </span>
+              <div>
+                <div class="insights-col-title">Low-lights &amp; Focus Areas</div>
+                <div class="insights-col-sub" id="lowlightsSub">Operational backlogs &amp; action points</div>
+              </div>
+            </div>
+            <span class="insights-count-tag count-warning" id="lowlightsCountTag">3 Action Items</span>
+          </div>
+          <ul class="insights-list" id="lowlightsList">
+            <!-- Dynamically populated 3 lowlight bullet points -->
+          </ul>
+        </div>
+      </div>
+    </section>
 
     <!-- KPI TILES SECTION (15 Tiles) -->
     <div class="section-header">
@@ -1494,11 +1579,446 @@
       if (metaTotalVMsEl) metaTotalVMsEl.textContent = baseTotal;
 
       // Update all dashboard views
+      updateExecutiveInsights();
       updateKPITiles();
       updateCharts();
       updateTopBottom5Tables();
       updateAOMTable();
       updateCompleteRankTable();
+    }
+
+    /* ---------------------- EXECUTIVE INSIGHTS & PROGRAM HEALTH ---------------------- */
+    function updateExecutiveInsights() {
+      const vms = State.filteredVMs || [];
+      const count = vms.length;
+      const currentMonth = State.filters.month || (vms.length > 0 ? vms[0]['Month'] : (State.currentMonth || ''));
+
+      const subtitleEl = document.getElementById('insightsSubtitle');
+      const healthScoreEl = document.getElementById('healthScoreVal');
+      const healthPillEl = document.getElementById('healthStatusPill');
+      const healthTextEl = document.getElementById('healthStatusText');
+      const pillsEl = document.getElementById('insightsQuickPills');
+      const gistEl = document.getElementById('insightsGistBanner');
+      const hlListEl = document.getElementById('highlightsList');
+      const llListEl = document.getElementById('lowlightsList');
+      const hlCountEl = document.getElementById('highlightsCountTag');
+      const llCountEl = document.getElementById('lowlightsCountTag');
+
+      if (!count) {
+        if (subtitleEl) subtitleEl.textContent = 'No VM records match the current filter selection.';
+        if (healthScoreEl) healthScoreEl.textContent = '0%';
+        if (healthPillEl) healthPillEl.className = 'health-status-pill health-attention';
+        if (healthTextEl) healthTextEl.textContent = 'No Data';
+        if (pillsEl) pillsEl.innerHTML = '';
+        if (gistEl) gistEl.innerHTML = '<div class="insight-empty">No performance data matching current filter combination.</div>';
+        if (hlListEl) hlListEl.innerHTML = '<li class="insight-empty">No highlights available for this filter combination.</li>';
+        if (llListEl) llListEl.innerHTML = '<li class="insight-empty">No low-lights found. Please reset filters.</li>';
+        return;
+      }
+
+      // 1. Core aggregations
+      const covTgt = vms.reduce((acc, r) => acc + (parseFloat(r['Coverage Target']) || 0), 0);
+      const covAch = vms.reduce((acc, r) => acc + (parseFloat(r['Coverage Achievement']) || 0), 0);
+      const covPnd = vms.reduce((acc, r) => acc + (parseFloat(r['Coverage Pending']) || 0), 0);
+      const covPct = covTgt > 0 ? (covAch / covTgt * 100) : 0;
+
+      const visTgt = vms.reduce((acc, r) => acc + (parseFloat(r['Visit Target']) || 0), 0);
+      const visAch = vms.reduce((acc, r) => acc + (parseFloat(r['Visits Achieved']) || 0), 0);
+      const visPnd = vms.reduce((acc, r) => acc + (parseFloat(r['Visit Pending']) || 0), 0);
+      const visPct = visTgt > 0 ? (visAch / visTgt * 100) : 0;
+
+      const catATgt = vms.reduce((acc, r) => acc + (parseFloat(r['Cat A Target']) || 0), 0);
+      const catA1Ach = vms.reduce((acc, r) => acc + (parseFloat(r['Cat A 1st visit']) || 0), 0);
+      const catA1Pct = catATgt > 0 ? (catA1Ach / catATgt * 100) : 0;
+      const catA2Ach = vms.reduce((acc, r) => acc + (parseFloat(r['Cat A 2nd Visit']) || 0), 0);
+      const catA2Pnd = Math.max(0, catATgt - catA2Ach);
+      const catA2Pct = catATgt > 0 ? (catA2Ach / catATgt * 100) : 0;
+
+      const catBTgt = vms.reduce((acc, r) => acc + (parseFloat(r['Cat B Target']) || 0), 0);
+      const catBAch = vms.reduce((acc, r) => acc + (parseFloat(r['Cat B Achievement']) || 0), 0);
+      const catBPnd = vms.reduce((acc, r) => acc + (parseFloat(r['Cat B Coverage Pending']) || 0), 0);
+      const catBPct = catBTgt > 0 ? (catBAch / catBTgt * 100) : 0;
+
+      const mdTgt = vms.reduce((acc, r) => acc + (parseFloat(r['Target Man-days']) || 0), 0);
+      const mdAch = vms.reduce((acc, r) => acc + (parseFloat(r['Man-days Achieved']) || 0), 0);
+      const mdPct = mdTgt > 0 ? (mdAch / mdTgt * 100) : 0;
+
+      const avgProd = mdAch > 0 ? (visAch / mdAch) : 0;
+
+      const dispRep = vms.reduce((acc, r) => acc + (parseFloat(r['Display Reported']) || 0), 0);
+      const posmDep = vms.reduce((acc, r) => acc + (parseFloat(r['POSM Deployed']) || 0), 0);
+
+      const adhs = vms.map(r => parseFloat(r['First Visit Time Adherence (11:30 AM)'])).filter(n => !isNaN(n));
+      const avgAdh = adhs.length > 0 ? (adhs.reduce((a, b) => a + b, 0) / adhs.length * 100) : 0;
+
+      // Group by State
+      const stateMap = {};
+      vms.forEach(r => {
+        const st = r['State'] || 'Other';
+        if (!stateMap[st]) stateMap[st] = { covTgt: 0, covAch: 0, pending: 0, vms: 0, visTgt: 0, visAch: 0 };
+        stateMap[st].covTgt += (parseFloat(r['Coverage Target']) || 0);
+        stateMap[st].covAch += (parseFloat(r['Coverage Achievement']) || 0);
+        stateMap[st].pending += (parseFloat(r['Coverage Pending']) || 0);
+        stateMap[st].visTgt += (parseFloat(r['Visit Target']) || 0);
+        stateMap[st].visAch += (parseFloat(r['Visits Achieved']) || 0);
+        stateMap[st].vms += 1;
+      });
+      const stateList = Object.keys(stateMap).map(st => {
+        const s = stateMap[st];
+        const pct = s.covTgt > 0 ? (s.covAch / s.covTgt * 100) : 0;
+        const vPct = s.visTgt > 0 ? (s.visAch / s.visTgt * 100) : 0;
+        return { name: st, pct, vPct, covAch: s.covAch, covTgt: s.covTgt, pending: s.pending, vms: s.vms };
+      }).sort((a, b) => b.pct - a.pct);
+
+      // Group by AOM
+      const aomMap = {};
+      vms.forEach(r => {
+        const aom = r['AOM Name'] || 'Other';
+        if (!aomMap[aom]) aomMap[aom] = { covTgt: 0, covAch: 0, pending: 0, vms: 0, adhs: [] };
+        aomMap[aom].covTgt += (parseFloat(r['Coverage Target']) || 0);
+        aomMap[aom].covAch += (parseFloat(r['Coverage Achievement']) || 0);
+        aomMap[aom].pending += (parseFloat(r['Coverage Pending']) || 0);
+        aomMap[aom].vms += 1;
+        const aVal = parseFloat(r['First Visit Time Adherence (11:30 AM)']);
+        if (!isNaN(aVal)) aomMap[aom].adhs.push(aVal);
+      });
+      const aomList = Object.keys(aomMap).map(aom => {
+        const s = aomMap[aom];
+        const pct = s.covTgt > 0 ? (s.covAch / s.covTgt * 100) : 0;
+        const avgAomAdh = s.adhs.length > 0 ? (s.adhs.reduce((a, b) => a + b, 0) / s.adhs.length * 100) : 0;
+        return { name: aom, pct, covAch: s.covAch, covTgt: s.covTgt, pending: s.pending, vms: s.vms, avgAdh: avgAomAdh };
+      }).sort((a, b) => b.pct - a.pct);
+
+      // Rank Report: Sort VMs by Rank ascending
+      const sortedVMs = [...vms].sort((a, b) => (parseFloat(a['Rank']) || 999) - (parseFloat(b['Rank']) || 999));
+      const topVMs = sortedVMs.slice(0, 3);
+      const bottomVMs = sortedVMs.length > 3 ? sortedVMs.slice(-3).reverse() : [...sortedVMs].reverse().slice(0, 3);
+
+      // Contextual Scope
+      const { region, state, aom, vm } = State.filters;
+      let scopeDesc = `Month: <b>${currentMonth}</b> · National Program (${count} VMs · ${aomList.length} AOMs)`;
+      if (vm) {
+        scopeDesc = `Month: <b>${currentMonth}</b> · VM: <b>${vm}</b> (${vms[0]['Base Town'] || state || region || ''})`;
+      } else if (aom) {
+        scopeDesc = `Month: <b>${currentMonth}</b> · AOM: <b>${aom}</b> (${count} VMs)`;
+      } else if (state) {
+        scopeDesc = `Month: <b>${currentMonth}</b> · State: <b>${state}</b> (${count} VMs)`;
+      } else if (region) {
+        scopeDesc = `Month: <b>${currentMonth}</b> · Region: <b>${region}</b> (${count} VMs)`;
+      }
+      if (subtitleEl) subtitleEl.innerHTML = `Automated performance synthesis across ${scopeDesc}`;
+
+      // Quick summary pills
+      if (pillsEl) {
+        pillsEl.innerHTML = `
+          <span class="insights-quick-chip"><span>Coverage:</span> <b>${covPct.toFixed(1)}%</b></span>
+          <span class="insights-quick-chip"><span>Visits:</span> <b>${visPct.toFixed(1)}%</b></span>
+          <span class="insights-quick-chip"><span>Velocity:</span> <b>${avgProd.toFixed(1)} v/day</b></span>
+          <span class="insights-quick-chip"><span>11:30 AM Adh:</span> <b>${avgAdh.toFixed(1)}%</b></span>
+        `;
+      }
+
+      // 2. Health Score Calculation
+      let healthScore = 0;
+      const isCurrentMonth = currentMonth === State.currentMonth || (covPct < 65 && avgProd >= 3.0);
+      if (isCurrentMonth) {
+        // Pacing health based on calendar progression & daily velocity
+        const dayMatch = (State.dataUpdatedUpto || '').match(/(\d{1,2})/);
+        const dayOfMonth = dayMatch ? parseInt(dayMatch[1], 10) : 7;
+        const expectedPacePct = Math.min(100, Math.max(12, (dayOfMonth / 31) * 100));
+        const pacingRatio = expectedPacePct > 0 ? (covPct / expectedPacePct) : 1;
+        const pacingScore = Math.min(100, Math.round(pacingRatio * 75));
+        const prodScore = Math.min(100, Math.round((avgProd / 4.0) * 100));
+        const catAScore = Math.min(100, Math.round((catA1Pct / Math.max(15, expectedPacePct)) * 75));
+        const adhScore = Math.min(100, Math.round(avgAdh));
+        healthScore = Math.round((pacingScore * 0.40) + (prodScore * 0.25) + (catAScore * 0.20) + (adhScore * 0.15));
+      } else {
+        // Mature / Completed month (e.g. Sep/Aug)
+        const covScore = Math.min(100, covPct);
+        const visScore = Math.min(100, visPct);
+        const catAScore = Math.min(100, catA1Pct);
+        const prodScore = Math.min(100, (avgProd / 4.0) * 100);
+        healthScore = Math.round((covScore * 0.40) + (visScore * 0.30) + (catAScore * 0.15) + (prodScore * 0.15));
+      }
+      healthScore = Math.min(100, Math.max(10, healthScore));
+
+      if (healthScoreEl) healthScoreEl.textContent = `${healthScore}%`;
+
+      let healthStatusLabel = 'Healthy · On Track';
+      if (healthPillEl && healthTextEl) {
+        if (healthScore >= 80) {
+          healthPillEl.className = 'health-status-pill health-healthy';
+          healthStatusLabel = 'Healthy · On Track';
+          healthTextEl.textContent = healthStatusLabel;
+        } else if (healthScore >= 60) {
+          healthPillEl.className = 'health-status-pill health-moderate';
+          healthStatusLabel = 'Moderate · Attention Needed';
+          healthTextEl.textContent = healthStatusLabel;
+        } else {
+          healthPillEl.className = 'health-status-pill health-attention';
+          healthStatusLabel = 'Critical · Intervention Required';
+          healthTextEl.textContent = healthStatusLabel;
+        }
+      }
+
+      // 3. Program Executive Gist Banner (Who is doing great & who is not)
+      if (gistEl) {
+        if (vm && vms.length === 1) {
+          const single = vms[0];
+          const singleRank = single['Rank'] ? Math.round(single['Rank']) : '--';
+          const singleCovPct = ((parseFloat(single['Coverage Achievement %']) || 0) * 100).toFixed(1);
+          const singleAdh = ((parseFloat(single['First Visit Time Adherence (11:30 AM)']) || 0) * 100).toFixed(1);
+          const singleFinal = ((parseFloat(single['Final Achievement']) || 0) * 100).toFixed(1);
+          gistEl.innerHTML = `
+            <div class="insights-gist-top">
+              <div class="insights-gist-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>Individual VM Performance Briefing</span>
+              </div>
+              <div class="insights-gist-badges">
+                <span class="gist-pill gist-pill-info"><span class="gist-pill-label">Rank</span><span class="gist-pill-val">#${singleRank}</span></span>
+                <span class="gist-pill ${parseFloat(singleCovPct) >= 50 ? 'gist-pill-success' : 'gist-pill-warning'}"><span class="gist-pill-label">Coverage</span><span class="gist-pill-val">${singleCovPct}%</span></span>
+                <span class="gist-pill gist-pill-success"><span class="gist-pill-label">Composite</span><span class="gist-pill-val">${singleFinal}%</span></span>
+              </div>
+            </div>
+            <p class="insights-gist-text">
+              Merchandiser <b>${single['VM Name']}</b> is based in <b>${single['Base Town'] || single['State']}</b> under AOM <b>${single['AOM Name']}</b>, holding national rank <b>#${singleRank}</b>. Total visits logged: <b>${formatNum(single['Visits Achieved'] || 0)}</b> (${singleCovPct}% coverage). Morning route adherence stands at <b>${singleAdh}%</b>. <span class="${parseFloat(single['Coverage Pending']) > 0 ? 'gist-highlight-amber' : 'gist-highlight-green'}"><b>Operational Focus:</b> ${parseFloat(single['Coverage Pending']) > 0 ? formatNum(single['Coverage Pending']) + ' pending outlets remain to complete monthly quota.' : 'Coverage quota fully accomplished for the active beat.'}</span>
+            </p>
+          `;
+        } else {
+          // Multi-VM or Entire Program Gist
+          const topVM = topVMs[0] || {};
+          const topVM2 = topVMs[1] || {};
+          const botVM = bottomVMs[0] || {};
+          const botVM2 = bottomVMs[1] || {};
+          const topAOM = aomList[0] || { name: '--', pct: 0 };
+          const lagAOM = aomList[aomList.length - 1] || { name: '--', pct: 0, pending: 0 };
+          const topState = stateList[0] || { name: '--', pct: 0 };
+          const lagState = stateList[stateList.length - 1] || { name: '--', pct: 0, pending: 0 };
+
+          const topVMCov = ((parseFloat(topVM['Coverage Achievement %']) || 0) * 100).toFixed(1);
+          const botVMCov = ((parseFloat(botVM['Coverage Achievement %']) || 0) * 100).toFixed(1);
+
+          let bannerTitle = 'Program Executive Gist · National Operations';
+          if (aom) bannerTitle = `Executive Gist · AOM ${aom} Territory`;
+          else if (state) bannerTitle = `Executive Gist · ${state} State Operations`;
+          else if (region) bannerTitle = `Executive Gist · ${region} Regional Operations`;
+
+          gistEl.innerHTML = `
+            <div class="insights-gist-top">
+              <div class="insights-gist-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>${bannerTitle}</span>
+              </div>
+              <div class="insights-gist-badges">
+                <span class="gist-pill gist-pill-success" title="Top Performing VM from Rank Report">
+                  <span class="gist-pill-label">Top VM</span>
+                  <span class="gist-pill-val">${topVM['VM Name'] || '--'} (Rank #${Math.round(topVM['Rank']) || 1} · ${topVMCov}%)</span>
+                </span>
+                <span class="gist-pill gist-pill-success" title="Top Performing State">
+                  <span class="gist-pill-label">Top State</span>
+                  <span class="gist-pill-val">${topState.name} (${topState.pct.toFixed(1)}%)</span>
+                </span>
+                <span class="gist-pill gist-pill-success" title="Top Performing AOM">
+                  <span class="gist-pill-label">Top AOM</span>
+                  <span class="gist-pill-val">${topAOM.name} (${topAOM.pct.toFixed(1)}%)</span>
+                </span>
+                <span class="gist-pill gist-pill-warning" title="Intervention Needed: Lowest Rank VM">
+                  <span class="gist-pill-label">Focus VM</span>
+                  <span class="gist-pill-val">${botVM['VM Name'] || '--'} (Rank #${Math.round(botVM['Rank']) || count} · ${botVMCov}%)</span>
+                </span>
+                <span class="gist-pill gist-pill-warning" title="Intervention Needed: State Backlog">
+                  <span class="gist-pill-label">Focus State</span>
+                  <span class="gist-pill-val">${lagState.name} (${formatNum(lagState.pending)} pnd)</span>
+                </span>
+                <span class="gist-pill gist-pill-warning" title="Intervention Needed: AOM Territory Backlog">
+                  <span class="gist-pill-label">Focus AOM</span>
+                  <span class="gist-pill-val">${lagAOM.name} (${formatNum(lagAOM.pending)} pnd)</span>
+                </span>
+              </div>
+            </div>
+            <p class="insights-gist-text">
+              Current operational pacing index is <span class="gist-highlight-green"><b>${healthScore}% (${healthStatusLabel})</b></span> with <b>${covPct.toFixed(1)}%</b> coverage (${formatNum(covAch)} / ${formatNum(covTgt)} outlets) across ${count} VMs in ${currentMonth}.
+              <span class="gist-highlight-green"><b>Who is doing great:</b></span> Leadership benchmark is set by <b>${topAOM.name}</b>'s territory (${topAOM.pct.toFixed(1)}% coverage) and top state <b>${topState.name}</b> (${topState.pct.toFixed(1)}%), spearheaded by Rank Report leaders <b>${topVM['VM Name']}</b> (Rank #${Math.round(topVM['Rank']) || 1}, ${topVM['State']}) and <b>${topVM2['VM Name'] || ''}</b> (Rank #${topVM2['Rank'] ? Math.round(topVM2['Rank']) : ''}) with stellar route velocity.
+              <span class="gist-highlight-amber"><b>Where focus is needed:</b></span> Operational deficits are heavily concentrated in <b>${lagState.name}</b> (${formatNum(lagState.pending)} pending) and <b>${lagAOM.name}</b>'s beat (${formatNum(lagAOM.pending)} pending); priority supervisory coaching must target bottom-ranked merchandisers <b>${botVM['VM Name']}</b> (Rank #${Math.round(botVM['Rank']) || count}) and <b>${botVM2['VM Name'] || ''}</b> to accelerate store activations.
+            </p>
+          `;
+        }
+      }
+
+      // 4. Dynamic Highlights Generation (Employee-wise, State-wise, AOM-wise, Operations)
+      const selectedHighlights = [];
+
+      if (vm && vms.length === 1) {
+        const single = vms[0];
+        const singleRank = single['Rank'] ? Math.round(single['Rank']) : 1;
+        const singleCovPct = ((parseFloat(single['Coverage Achievement %']) || 0) * 100).toFixed(1);
+        const singleFinal = ((parseFloat(single['Final Achievement']) || 0) * 100).toFixed(1);
+        selectedHighlights.push({
+          tag: 'VM RANK & BENCHMARK',
+          metric: `Rank #${singleRank} in Program`,
+          text: `Overall composite achievement reached <b>${singleFinal}%</b>, ranking <b>#${singleRank} of 34</b> Visual Merchandisers nationwide.`
+        });
+        selectedHighlights.push({
+          tag: 'TERRITORY BEAT REACH',
+          metric: `${formatNum(single['Coverage Achievement'] || 0)} Stores (${singleCovPct}%)`,
+          text: `Activated <b>${formatNum(single['Coverage Achievement'] || 0)} of ${formatNum(single['Coverage Target'] || 0)}</b> scheduled retail outlets in ${single['Base Town'] || single['State']}.`
+        });
+        selectedHighlights.push({
+          tag: 'TIME ADHERENCE & PRODUCTIVITY',
+          metric: `${((parseFloat(single['First Visit Time Adherence (11:30 AM)']) || 0) * 100).toFixed(1)}% Morning Adherence`,
+          text: `Delivered <b>${(parseFloat(single['Avg. Productivity']) || 0).toFixed(2)} visits/day</b> with high route adherence on first store arrivals.`
+        });
+        selectedHighlights.push({
+          tag: 'MERCHANDISING DEPLOYMENT',
+          metric: `${formatNum(single['Display Reported'] || 0)} Displays · ${formatNum(single['POSM Deployed'] || 0)} POSM`,
+          text: `Substantial in-store shelf execution with active POSM placement across covered retail outlets.`
+        });
+      } else {
+        // Point 1: Employee-wise (Rank Report Champions)
+        const top1 = topVMs[0] || {};
+        const top2 = topVMs[1] || {};
+        const top3 = topVMs[2] || {};
+        const top1Cov = ((parseFloat(top1['Coverage Achievement %']) || 0) * 100).toFixed(1);
+        const top2Cov = ((parseFloat(top2['Coverage Achievement %']) || 0) * 100).toFixed(1);
+        const top3Cov = ((parseFloat(top3['Coverage Achievement %']) || 0) * 100).toFixed(1);
+        selectedHighlights.push({
+          tag: 'RANK REPORT CHAMPIONS',
+          metric: `Rank #1–#3 Leaders`,
+          text: `Top visual merchandisers leading national rankings: <b>${top1['VM Name']}</b> (Rank #${Math.round(top1['Rank']) || 1}, ${top1['Base Town'] || top1['State']} · ${top1Cov}% cov), <b>${top2['VM Name'] || ''}</b> (Rank #${top2['Rank'] ? Math.round(top2['Rank']) : 2}, ${top2['Base Town'] || top2['State']} · ${top2Cov}% cov), and <b>${top3['VM Name'] || ''}</b> (Rank #${top3['Rank'] ? Math.round(top3['Rank']) : 3} · ${top3Cov}% cov), setting program pace.`
+        });
+
+        // Point 2: AOM-wise Leadership
+        const topAOM = aomList[0];
+        selectedHighlights.push({
+          tag: 'AOM LEADERSHIP BENCHMARK',
+          metric: `${topAOM.name} (${topAOM.pct.toFixed(1)}%)`,
+          text: `AOM territory led by <b>${topAOM.name}</b> leads operational performance with <b>${topAOM.pct.toFixed(1)}%</b> coverage (${formatNum(topAOM.covAch)} / ${formatNum(topAOM.covTgt)} stores across ${topAOM.vms} VMs) and ${topAOM.avgAdh.toFixed(1)}% morning route adherence.`
+        });
+
+        // Point 3: State-wise Pacing Champions
+        const topSt1 = stateList[0];
+        const topSt2 = stateList.length > 1 ? stateList[1] : null;
+        selectedHighlights.push({
+          tag: 'STATE-WISE PACING LEADERS',
+          metric: `${topSt1.name} (${topSt1.pct.toFixed(1)}%) ${topSt2 ? '& ' + topSt2.name + ' (' + topSt2.pct.toFixed(1) + '%)' : ''}`,
+          text: `<b>${topSt1.name}</b> (${topSt1.pct.toFixed(1)}% coverage, ${formatNum(topSt1.covAch)} stores) and <b>${topSt2 ? topSt2.name : ''}</b> (${topSt2 ? topSt2.pct.toFixed(1) : ''}% coverage, ${topSt2 ? formatNum(topSt2.covAch) : ''} stores) demonstrate the fastest store conversion rates across all regional markets.`
+        });
+
+        // Point 4: Operational Route Discipline & Velocity
+        selectedHighlights.push({
+          tag: 'ROUTE DISCIPLINE & VELOCITY',
+          metric: `${avgAdh.toFixed(1)}% Adherence · ${avgProd.toFixed(1)} Visits/Day`,
+          text: `Beat execution demonstrates strong field discipline with <b>${avgAdh.toFixed(1)}%</b> of first visits initiated on or before 11:30 AM, backed by an active velocity of <b>${avgProd.toFixed(2)} visits per man-day</b> and ${formatNum(catA1Ach)} Tier-1 Cat A stores covered.`
+        });
+      }
+
+      // 5. Dynamic Low-lights Generation (Employee-wise, State-wise, AOM-wise, Operations)
+      const selectedLowlights = [];
+
+      if (vm && vms.length === 1) {
+        const single = vms[0];
+        const singlePnd = parseFloat(single['Coverage Pending']) || 0;
+        const singleCatAPnd = Math.max(0, (parseFloat(single['Cat A Target']) || 0) - (parseFloat(single['Cat A 2nd Visit']) || 0));
+        selectedLowlights.push({
+          tag: 'PENDING TARGET DEFICIT',
+          metric: `${formatNum(singlePnd)} Stores Remaining`,
+          text: `Target completion pending at <b>${((parseFloat(single['Coverage Achievement %']) || 0) * 100).toFixed(1)}%</b>; ${formatNum(single['Visit Pending'] || 0)} visits left to hit monthly quota.`
+        });
+        if (singleCatAPnd > 0) {
+          selectedLowlights.push({
+            tag: 'CAT A REPEAT CYCLE GAP',
+            metric: `${formatNum(singleCatAPnd)} 2nd Visits Pending`,
+            text: `High-velocity Cat A counters require 2nd round visits to secure promotional shelf dominance.`
+          });
+        }
+        selectedLowlights.push({
+          tag: 'SUPERVISORY ACTION',
+          metric: `Beat Adherence Focus`,
+          text: `Coordinate with AOM <b>${single['AOM Name']}</b> to schedule remaining unvisited outlets before month close.`
+        });
+        selectedLowlights.push({
+          tag: 'CHANNEL RUN-RATE',
+          metric: `${(parseFloat(single['Avg. Productivity']) || 0).toFixed(2)} Visits / Day`,
+          text: `Maintain daily visit velocity to clear geographic clusters with minimal transit overhead.`
+        });
+      } else {
+        // Point 1: Employee-wise (Rank Report Intervention)
+        const bot1 = bottomVMs[0] || {};
+        const bot2 = bottomVMs[1] || {};
+        const bot3 = bottomVMs[2] || {};
+        const bot1Rank = Math.round(bot1['Rank']) || count;
+        const bot3Rank = bot3['Rank'] ? Math.round(bot3['Rank']) : (bot1Rank - 2);
+        const bot1Cov = ((parseFloat(bot1['Coverage Achievement %']) || 0) * 100).toFixed(1);
+        const bot2Cov = ((parseFloat(bot2['Coverage Achievement %']) || 0) * 100).toFixed(1);
+        selectedLowlights.push({
+          tag: 'EMPLOYEE FIELD INTERVENTION',
+          metric: `Bottom VMs (Rank #${bot1Rank}–#${bot3Rank})`,
+          text: `Immediate supervisory coaching and route recalibration required for bottom-ranked VMs: <b>${bot1['VM Name']}</b> (Rank #${bot1Rank}, ${bot1['Base Town'] || bot1['State']} · ${bot1Cov}% cov), <b>${bot2['VM Name'] || ''}</b> (Rank #${bot2['Rank'] ? Math.round(bot2['Rank']) : ''}, ${bot2['Base Town'] || bot2['State']} · ${bot2Cov}% cov), and <b>${bot3['VM Name'] || ''}</b> (Rank #${bot3['Rank'] ? Math.round(bot3['Rank']) : ''}).`
+        });
+
+        // Point 2: AOM-wise Supervisory Focus
+        const lagAOM = aomList[aomList.length - 1];
+        selectedLowlights.push({
+          tag: 'AOM SUPERVISORY FOCUS',
+          metric: `${lagAOM.name} (${formatNum(lagAOM.pending)} Stores Pending)`,
+          text: `AOM territory under <b>${lagAOM.name}</b> holds <b>${formatNum(lagAOM.pending)} pending outlets</b> (${lagAOM.pct.toFixed(1)}% coverage across ${lagAOM.vms} VMs), requiring active route re-balancing and catch-up beat scheduling.`
+        });
+
+        // Point 3: State-wise Backlog Concentration
+        const lagSt1 = stateList[stateList.length - 1];
+        const lagSt2 = stateList.length > 1 ? stateList[stateList.length - 2] : null;
+        selectedLowlights.push({
+          tag: 'STATE BACKLOG CONCENTRATION',
+          metric: `${lagSt1.name} (${formatNum(lagSt1.pending)} pnd) ${lagSt2 ? '& ' + lagSt2.name + ' (' + formatNum(lagSt2.pending) + ' pnd)' : ''}`,
+          text: `Unvisited store concentration is heaviest in <b>${lagSt1.name}</b> (${lagSt1.pct.toFixed(1)}% coverage, ${formatNum(lagSt1.pending)} unvisited stores) and <b>${lagSt2 ? lagSt2.name : ''}</b> (${lagSt2 ? lagSt2.pct.toFixed(1) : ''}%, ${lagSt2 ? formatNum(lagSt2.pending) : ''} pending), needing focused catch-up beats.`
+        });
+
+        // Point 4: Operational Repeat Visit / Coverage Deficit
+        selectedLowlights.push({
+          tag: 'REPEAT CYCLE / COVERAGE GAP',
+          metric: `${catA2Pct.toFixed(1)}% Cat A 2nd Visits (${formatNum(catA2Pnd)} Pending)`,
+          text: `<b>${formatNum(catA2Pnd)}</b> premium Cat A counters are yet to receive mandatory 2nd-cycle repeat visits (${catA2Pct.toFixed(1)}% completed), alongside <b>${formatNum(covPnd)} total unvisited outlets</b> awaiting first activation.`
+        });
+      }
+
+      // Render Highlights HTML
+      if (hlListEl) {
+        hlListEl.innerHTML = selectedHighlights.map(item => `
+          <li class="insight-item highlight-item">
+            <div class="insight-icon icon-highlight">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.8"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="insight-content">
+              <div class="insight-header-row">
+                <span class="insight-tag tag-highlight">${item.tag}</span>
+                <span class="insight-metric">${item.metric}</span>
+              </div>
+              <p class="insight-desc">${item.text}</p>
+            </div>
+          </li>
+        `).join('');
+      }
+      if (hlCountEl) hlCountEl.textContent = `${selectedHighlights.length} Key Highlights`;
+
+      // Render Low-lights HTML
+      if (llListEl) {
+        llListEl.innerHTML = selectedLowlights.map(item => `
+          <li class="insight-item lowlight-item">
+            <div class="insight-icon icon-lowlight">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="insight-content">
+              <div class="insight-header-row">
+                <span class="insight-tag tag-lowlight">${item.tag}</span>
+                <span class="insight-metric metric-warning">${item.metric}</span>
+              </div>
+              <p class="insight-desc">${item.text}</p>
+            </div>
+          </li>
+        `).join('');
+      }
+      if (llCountEl) llCountEl.textContent = `${selectedLowlights.length} Action Items`;
     }
 
     /* Helper to set Donut Chart Progress */
