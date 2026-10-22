@@ -624,6 +624,22 @@ body {
   box-shadow: var(--shadow-sm);
   position: relative;
   overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.executive-insights-section.is-collapsed {
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
+
+.executive-insights-section.is-collapsed .insights-header {
+  margin-bottom: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.insights-collapsible-body {
+  transition: opacity 0.25s ease-out;
 }
 
 .executive-insights-section::before {
@@ -1246,9 +1262,16 @@ body.dark-theme .insights-gist-text .gist-highlight-amber {
    ===================================================================== */
 .section-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   margin: 24px 0 14px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.section-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 .section-title {
   font-size: 17px;
@@ -1262,6 +1285,136 @@ body.dark-theme .insights-gist-text .gist-highlight-amber {
 .section-subtitle {
   font-size: 12px;
   color: var(--ink-faint);
+}
+
+/* Universal Section Collapse Button */
+.section-collapse-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface-solid);
+  border: 1px solid var(--surface-border);
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.section-collapse-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.section-collapse-btn:active {
+  transform: translateY(0);
+}
+
+.section-collapse-btn .toggle-icon {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* Executive summary toggle button inside header */
+.insights-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(2, 132, 199, 0.08);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  color: var(--accent-blue);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 13px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.insights-toggle-btn:hover {
+  background: rgba(2, 132, 199, 0.16);
+  border-color: var(--accent-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.15);
+}
+
+.insights-toggle-btn .toggle-icon {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.group-collapse-btn {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  color: var(--ink-muted);
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.group-collapse-btn:hover {
+  background: var(--surface-hover);
+  color: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+
+.section-collapsible-body {
+  transition: all 0.25s ease-out;
+}
+
+/* Dark Theme Overrides for Collapse Buttons */
+body.dark-theme .section-collapse-btn {
+  background: var(--surface);
+  border-color: var(--surface-border);
+  color: var(--ink-soft);
+}
+
+body.dark-theme .section-collapse-btn:hover {
+  background: var(--surface-hover);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+body.dark-theme .insights-toggle-btn {
+  background: rgba(2, 132, 199, 0.15);
+  border-color: rgba(2, 132, 199, 0.35);
+  color: #38bdf8;
+}
+
+body.dark-theme .insights-toggle-btn:hover {
+  background: rgba(2, 132, 199, 0.25);
+  border-color: #38bdf8;
+}
+
+body.dark-theme .group-collapse-btn {
+  background: var(--surface);
+  border-color: var(--surface-border);
+  color: var(--ink-muted);
+}
+
+body.dark-theme .group-collapse-btn:hover {
+  background: var(--surface-hover);
+  border-color: #38bdf8;
+  color: #38bdf8;
 }
 
 /* KPI Group Sections */

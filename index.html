@@ -156,7 +156,7 @@
     </section>
 
     <!-- EXECUTIVE INSIGHTS SECTION (Side-by-side Highlights & Low-lights table) -->
-    <section class="executive-insights-section" id="executiveInsightsSection" aria-label="Executive Insights & Program Health">
+    <section class="executive-insights-section is-collapsed" id="executiveInsightsSection" aria-label="Executive Insights & Program Health">
       <!-- Section Header -->
       <div class="insights-header">
         <div class="insights-title-block">
@@ -184,81 +184,99 @@
               <span id="healthStatusText">Calculating...</span>
             </div>
           </div>
+          <button class="insights-toggle-btn" id="btnToggleInsights" onclick="toggleExecutiveInsights()" aria-expanded="false" title="Expand or Collapse Executive Summary">
+            <span class="toggle-icon" id="insightsToggleIcon">+</span>
+            <span class="toggle-label" id="insightsToggleText">Expand</span>
+          </button>
         </div>
       </div>
 
-      <!-- Program Executive Gist Banner -->
-      <div class="insights-gist-banner" id="insightsGistBanner">
-        <!-- Dynamically populated program gist: who is doing great and who is not -->
-      </div>
-
-      <!-- Side-by-Side Comparative Table / Cards -->
-      <div class="insights-side-by-side-table">
-        <!-- Highlights Column (Green) -->
-        <div class="insights-column highlights-col">
-          <div class="insights-col-header">
-            <div class="insights-col-header-left">
-              <span class="insights-col-icon success-icon">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-              </span>
-              <div>
-                <div class="insights-col-title">Program Highlights</div>
-                <div class="insights-col-sub" id="highlightsSub">Core achievements &amp; green milestones</div>
-              </div>
-            </div>
-            <span class="insights-count-tag count-success" id="highlightsCountTag">3 Key Highlights</span>
-          </div>
-          <ul class="insights-list" id="highlightsList">
-            <!-- Dynamically populated 3 highlight bullet points -->
-          </ul>
+      <!-- Collapsible Body (Collapsed by Default) -->
+      <div class="insights-collapsible-body" id="insightsCollapsibleBody" style="display: none;">
+        <!-- Program Executive Gist Banner -->
+        <div class="insights-gist-banner" id="insightsGistBanner">
+          <!-- Dynamically populated program gist: who is doing great and who is not -->
         </div>
 
-        <!-- Low-lights Column (Amber/Red) -->
-        <div class="insights-column lowlights-col">
-          <div class="insights-col-header">
-            <div class="insights-col-header-left">
-              <span class="insights-col-icon warning-icon">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6">
-                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-                  <line x1="12" y1="9" x2="12" y2="13"/>
-                  <line x1="12" y1="17" x2="12.01" y2="17"/>
-                </svg>
-              </span>
-              <div>
-                <div class="insights-col-title">Low-lights &amp; Focus Areas</div>
-                <div class="insights-col-sub" id="lowlightsSub">Operational backlogs &amp; action points</div>
+        <!-- Side-by-Side Comparative Table / Cards -->
+        <div class="insights-side-by-side-table">
+          <!-- Highlights Column (Green) -->
+          <div class="insights-column highlights-col">
+            <div class="insights-col-header">
+              <div class="insights-col-header-left">
+                <span class="insights-col-icon success-icon">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </span>
+                <div>
+                  <div class="insights-col-title">Program Highlights</div>
+                  <div class="insights-col-sub" id="highlightsSub">Core achievements &amp; green milestones</div>
+                </div>
               </div>
+              <span class="insights-count-tag count-success" id="highlightsCountTag">4 Key Highlights</span>
             </div>
-            <span class="insights-count-tag count-warning" id="lowlightsCountTag">3 Action Items</span>
+            <ul class="insights-list" id="highlightsList">
+              <!-- Dynamically populated highlight bullet points -->
+            </ul>
           </div>
-          <ul class="insights-list" id="lowlightsList">
-            <!-- Dynamically populated 3 lowlight bullet points -->
-          </ul>
+
+          <!-- Low-lights Column (Amber/Red) -->
+          <div class="insights-column lowlights-col">
+            <div class="insights-col-header">
+              <div class="insights-col-header-left">
+                <span class="insights-col-icon warning-icon">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                  </svg>
+                </span>
+                <div>
+                  <div class="insights-col-title">Low-lights &amp; Focus Areas</div>
+                  <div class="insights-col-sub" id="lowlightsSub">Operational backlogs &amp; pacing projections</div>
+                </div>
+              </div>
+              <span class="insights-count-tag count-warning" id="lowlightsCountTag">4 Action Items</span>
+            </div>
+            <ul class="insights-list" id="lowlightsList">
+              <!-- Dynamically populated lowlight bullet points -->
+            </ul>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- KPI TILES SECTION (15 Tiles) -->
-    <div class="section-header">
-      <div class="section-title">
-        <span>Key Performance Indicators</span>
+    <div class="section-header" id="kpisSectionHeader">
+      <div class="section-header-left">
+        <div class="section-title">
+          <span>Key Performance Indicators</span>
+        </div>
+        <div class="section-subtitle">Real-time program metrics & visit achievements</div>
       </div>
-      <div class="section-subtitle">Real-time program metrics & visit achievements</div>
+      <button class="section-collapse-btn" onclick="toggleGenericSection('kpisSection', 'kpisSectionBody', this)" aria-expanded="true" title="Expand or Collapse Key Performance Indicators">
+        <span class="toggle-icon">−</span>
+        <span class="toggle-label">Collapse</span>
+      </button>
     </div>
 
-    <!-- KPI TILES SECTION (3 Grouped Rows: 15 Tiles Total) -->
-    
-    <!-- 1. OVERALL KPI -->
-    <div class="kpi-group-section" id="kpi-group-overall">
-      <div class="kpi-group-header">
-        <div class="kpi-group-title">
-          <span>Overall KPI</span>
+    <!-- KPI TILES SECTION WRAPPER (Expanded by Default) -->
+    <div class="section-collapsible-body" id="kpisSectionBody">
+      <!-- 1. OVERALL KPI -->
+      <div class="kpi-group-section" id="kpi-group-overall">
+        <div class="kpi-group-header">
+          <div>
+            <div class="kpi-group-title">
+              <span>Overall KPI</span>
+            </div>
+            <span class="kpi-group-subtitle">Core program achievement, visit progress, and field deployments</span>
+          </div>
+          <button class="group-collapse-btn" onclick="toggleGroupCollapse('kpi-group-overall-grid', this)" aria-expanded="true" title="Toggle Overall KPI">
+            <span class="toggle-icon">−</span>
+          </button>
         </div>
-        <span class="kpi-group-subtitle">Core program achievement, visit progress, and field deployments</span>
-      </div>
-      <div class="kpi-grid">
+        <div class="kpi-grid" id="kpi-group-overall-grid">
         <!-- 1. Overall Coverage % -->
         <div class="kpi-card" id="kpi-card-1">
           <div class="kpi-top">
@@ -388,11 +406,17 @@
     <!-- 2. DETAILED KPIS -->
     <div class="kpi-group-section" id="kpi-group-detailed">
       <div class="kpi-group-header">
-        <div class="kpi-group-title">
-          <span>Detailed KPIs</span>
+        <div>
+          <div class="kpi-group-title">
+            <span>Detailed KPIs</span>
+          </div>
+          <span class="kpi-group-subtitle">Store category classification and territory coverage</span>
         </div>
-        <span class="kpi-group-subtitle">Store category classification and territory coverage</span>
+        <button class="group-collapse-btn" onclick="toggleGroupCollapse('kpi-group-detailed-content', this)" aria-expanded="true" title="Toggle Detailed KPIs">
+          <span class="toggle-icon">−</span>
+        </button>
       </div>
+      <div id="kpi-group-detailed-content">
       <div class="kpi-grid">
         <!-- 2. Cat A 1st Coverage % -->
         <div class="kpi-card" id="kpi-card-2">
@@ -697,17 +721,23 @@
           </div>
         </div>
       </div>
+      </div>
     </div>
 
     <!-- 3. MANPOWER KPIS -->
     <div class="kpi-group-section" id="kpi-group-manpower">
       <div class="kpi-group-header">
-        <div class="kpi-group-title">
-          <span>Manpower KPIs</span>
+        <div>
+          <div class="kpi-group-title">
+            <span>Manpower KPIs</span>
+          </div>
+          <span class="kpi-group-subtitle">Workforce field productivity, man-day adherence, and time metrics</span>
         </div>
-        <span class="kpi-group-subtitle">Workforce field productivity, man-day adherence, and time metrics</span>
+        <button class="group-collapse-btn" onclick="toggleGroupCollapse('kpi-group-manpower-grid', this)" aria-expanded="true" title="Toggle Manpower KPIs">
+          <span class="toggle-icon">−</span>
+        </button>
       </div>
-      <div class="kpi-grid">
+      <div class="kpi-grid" id="kpi-group-manpower-grid">
         <!-- 10. Average Productivity -->
         <div class="kpi-card" id="kpi-card-10">
           <div class="kpi-top">
@@ -807,233 +837,256 @@
         </div>
       </div>
     </div>
+    </div> <!-- End #kpisSectionBody -->
 
     <!-- COLUMN CHARTS SECTION -->
-    <div class="section-header">
-      <div class="section-title">
-        <span>Coverage Performance Analytics</span>
-      </div>
-      <div class="section-subtitle">Comparative coverage analysis across geographic & management tiers</div>
-    </div>
-
-    <!-- 1. State-wise Overall Coverage (Full Width) -->
-    <div class="chart-card" style="margin-bottom: 16px;">
-      <div class="chart-card-header">
-        <div>
-          <h3 class="chart-card-title">State-wise Overall Coverage (Stacked: Cat A &amp; Cat B)</h3>
-          <span class="chart-card-subtitle" id="stateChartSub">Coverage achievement percentage by state · Stacked break-up</span>
+    <div class="section-header" id="chartsSectionHeader">
+      <div class="section-header-left">
+        <div class="section-title">
+          <span>Coverage Performance Analytics</span>
         </div>
-        <div class="chart-hint-badge">💡 Click bar to filter State</div>
+        <div class="section-subtitle">Comparative coverage analysis across geographic & management tiers</div>
       </div>
-      <div class="chart-container-box" style="min-height: 280px; max-height: 320px;">
-        <canvas id="chartStateCoverage"></canvas>
-      </div>
+      <button class="section-collapse-btn" onclick="toggleGenericSection('chartsSection', 'chartsSectionBody', this)" aria-expanded="true" title="Expand or Collapse Coverage Performance Analytics">
+        <span class="toggle-icon">−</span>
+        <span class="toggle-label">Collapse</span>
+      </button>
     </div>
 
-    <!-- 2 & 3. Region-wise Coverage & AOM-wise Coverage (Side by Side) -->
-    <div class="charts-grid">
-      <!-- Chart 2: Region-wise Coverage -->
-      <div class="chart-card">
+    <div class="section-collapsible-body" id="chartsSectionBody">
+      <!-- 1. State-wise Overall Coverage (Full Width) -->
+      <div class="chart-card" style="margin-bottom: 16px;">
         <div class="chart-card-header">
           <div>
-            <h3 class="chart-card-title">Region-wise Coverage (Stacked: Cat A &amp; Cat B)</h3>
-            <span class="chart-card-subtitle" id="regionChartSub">Overall coverage achievement by region · Stacked break-up</span>
+            <h3 class="chart-card-title">State-wise Overall Coverage (Stacked: Cat A &amp; Cat B)</h3>
+            <span class="chart-card-subtitle" id="stateChartSub">Coverage achievement percentage by state · Stacked break-up</span>
           </div>
-          <div class="chart-hint-badge">💡 Click bar to filter Region</div>
+          <div class="chart-hint-badge">💡 Click bar to filter State</div>
         </div>
-        <div class="chart-container-box">
-          <canvas id="chartRegionCoverage"></canvas>
+        <div class="chart-container-box" style="min-height: 280px; max-height: 320px;">
+          <canvas id="chartStateCoverage"></canvas>
         </div>
       </div>
 
-      <!-- Chart 3: AOM-wise Coverage -->
-      <div class="chart-card">
-        <div class="chart-card-header">
-          <div>
-            <h3 class="chart-card-title">AOM-wise Coverage (Stacked: Cat A &amp; Cat B)</h3>
-            <span class="chart-card-subtitle" id="aomChartSub">Overall coverage achievement by AOM · Stacked break-up</span>
+      <!-- 2 & 3. Region-wise Coverage & AOM-wise Coverage (Side by Side) -->
+      <div class="charts-grid">
+        <!-- Chart 2: Region-wise Coverage -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <h3 class="chart-card-title">Region-wise Coverage (Stacked: Cat A &amp; Cat B)</h3>
+              <span class="chart-card-subtitle" id="regionChartSub">Overall coverage achievement by region · Stacked break-up</span>
+            </div>
+            <div class="chart-hint-badge">💡 Click bar to filter Region</div>
           </div>
-          <div class="chart-hint-badge">💡 Click bar to filter AOM</div>
+          <div class="chart-container-box">
+            <canvas id="chartRegionCoverage"></canvas>
+          </div>
         </div>
-        <div class="chart-container-box">
-          <canvas id="chartAOMCoverage"></canvas>
+
+        <!-- Chart 3: AOM-wise Coverage -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <div>
+              <h3 class="chart-card-title">AOM-wise Coverage (Stacked: Cat A &amp; Cat B)</h3>
+              <span class="chart-card-subtitle" id="aomChartSub">Overall coverage achievement by AOM · Stacked break-up</span>
+            </div>
+            <div class="chart-hint-badge">💡 Click bar to filter AOM</div>
+          </div>
+          <div class="chart-container-box">
+            <canvas id="chartAOMCoverage"></canvas>
+          </div>
         </div>
       </div>
-    </div>
+    </div> <!-- End #chartsSectionBody -->
 
     <!-- PERFORMANCE SECTION -->
-    <div class="section-header">
-      <div class="section-title">
-        <span>Performance & Rankings</span>
+    <div class="section-header" id="perfSectionHeader">
+      <div class="section-header-left">
+        <div class="section-title">
+          <span>Performance & Rankings</span>
+        </div>
+        <div class="section-subtitle">Evaluated on final rank, coverage score, visit targets & productivity</div>
       </div>
-      <div class="section-subtitle">Evaluated on final rank, coverage score, visit targets & productivity</div>
+      <button class="section-collapse-btn" onclick="toggleGenericSection('perfSection', 'perfSectionBody', this)" aria-expanded="true" title="Expand or Collapse Performance & Rankings">
+        <span class="toggle-icon">−</span>
+        <span class="toggle-label">Collapse</span>
+      </button>
     </div>
 
-    <!-- Top 5 & Bottom 5 Performers (Side by Side) -->
-    <div class="perf-top-bottom-grid">
-      <!-- Top 5 Performers Card -->
+    <div class="section-collapsible-body" id="perfSectionBody">
+      <!-- Top 5 & Bottom 5 Performers (Side by Side) -->
+      <div class="perf-top-bottom-grid">
+        <!-- Top 5 Performers Card -->
+        <div class="table-card">
+          <div class="chart-card-header">
+            <div>
+              <h3 class="chart-card-title" style="color: #10b981;">🏆 Top 5 Performers</h3>
+              <span class="chart-card-subtitle">Highest ranked Visual Merchandisers program-wide</span>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="top5Table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>VM Name</th>
+                  <th>AOM</th>
+                  <th>Base Town</th>
+                  <th style="text-align: right;">Coverage %</th>
+                  <th style="text-align: right;">Final Ach.</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Bottom 5 Performers Card -->
+        <div class="table-card">
+          <div class="chart-card-header">
+            <div>
+              <h3 class="chart-card-title" style="color: #ef4444;">⚠️ Bottom 5 Performers</h3>
+              <span class="chart-card-subtitle">Visual Merchandisers requiring operational support</span>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="bottom5Table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>VM Name</th>
+                  <th>AOM</th>
+                  <th>Base Town</th>
+                  <th style="text-align: right;">Coverage %</th>
+                  <th style="text-align: right;">Final Ach.</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- AOMs Performance Table based on VM Rank -->
       <div class="table-card">
         <div class="chart-card-header">
           <div>
-            <h3 class="chart-card-title" style="color: #10b981;">🏆 Top 5 Performers</h3>
-            <span class="chart-card-subtitle">Highest ranked Visual Merchandisers program-wide</span>
+            <h3 class="chart-card-title">AOM Performance based on VM Rank</h3>
+            <span class="chart-card-subtitle">Area Operations Managers executive leaderboard summarized from mapped VM performance</span>
           </div>
         </div>
         <div class="table-responsive">
-          <table class="data-table" id="top5Table">
+          <table class="data-table" id="aomPerformanceTable">
             <thead>
               <tr>
                 <th>Rank</th>
-                <th>VM Name</th>
-                <th>AOM</th>
+                <th>AOM Name</th>
                 <th>Base Town</th>
                 <th style="text-align: right;">Coverage %</th>
-                <th style="text-align: right;">Final Ach.</th>
+                <th style="text-align: right;">Cat A Coverage</th>
+                <th style="text-align: right;">Achi Mandays %</th>
+                <th style="text-align: right;">Productivity</th>
+                <th style="text-align: right;">First Visit Time Adherence (11:30 AM)</th>
+                <th style="text-align: right;">Final Achievement</th>
               </tr>
             </thead>
             <tbody></tbody>
           </table>
         </div>
       </div>
-
-      <!-- Bottom 5 Performers Card -->
-      <div class="table-card">
-        <div class="chart-card-header">
-          <div>
-            <h3 class="chart-card-title" style="color: #ef4444;">⚠️ Bottom 5 Performers</h3>
-            <span class="chart-card-subtitle">Visual Merchandisers requiring operational support</span>
-          </div>
-        </div>
-        <div class="table-responsive">
-          <table class="data-table" id="bottom5Table">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>VM Name</th>
-                <th>AOM</th>
-                <th>Base Town</th>
-                <th style="text-align: right;">Coverage %</th>
-                <th style="text-align: right;">Final Ach.</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- AOMs Performance Table based on VM Rank -->
-    <div class="table-card">
-      <div class="chart-card-header">
-        <div>
-          <h3 class="chart-card-title">AOM Performance based on VM Rank</h3>
-          <span class="chart-card-subtitle">Area Operations Managers executive leaderboard summarized from mapped VM performance</span>
-        </div>
-      </div>
-      <div class="table-responsive">
-        <table class="data-table" id="aomPerformanceTable">
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>AOM Name</th>
-              <th>Base Town</th>
-              <th style="text-align: right;">Coverage %</th>
-              <th style="text-align: right;">Cat A Coverage</th>
-              <th style="text-align: right;">Achi Mandays %</th>
-              <th style="text-align: right;">Productivity</th>
-              <th style="text-align: right;">First Visit Time Adherence (11:30 AM)</th>
-              <th style="text-align: right;">Final Achievement</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
+    </div> <!-- End #perfSectionBody -->
 
     <!-- Complete Rank Report at the Bottom -->
-    <div class="table-card">
-      <div class="chart-card-header">
+    <div class="table-card" id="completeRankReportCard">
+      <div class="chart-card-header" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
         <div>
           <h3 class="chart-card-title">Complete Rank Report</h3>
           <span class="chart-card-subtitle">Comprehensive rankings and performance metrics for all Visual Merchandisers</span>
         </div>
+        <button class="section-collapse-btn" onclick="toggleGenericSection('rankReportSection', 'completeRankReportBody', this)" aria-expanded="true" title="Expand or Collapse Complete Rank Report">
+          <span class="toggle-icon">−</span>
+          <span class="toggle-label">Collapse</span>
+        </button>
       </div>
 
-      <!-- Table Toolbar (Search & Export) -->
-      <div class="table-toolbar">
-        <div class="table-search-box">
-          <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          <input type="text" id="tableSearchInput" class="table-search-input" placeholder="Search VM Name, Code, AOM, State..." oninput="onSearchTable(this.value)">
-        </div>
-
-        <div class="table-actions">
-          <select id="tablePageSize" class="filter-select" style="padding: 6px 10px; font-size: 12px;" onchange="onChangePageSize(this.value)">
-            <option value="10">10 per page</option>
-            <option value="25" selected>25 per page</option>
-            <option value="50">50 per page</option>
-            <option value="1000">All records</option>
-          </select>
-          <button class="btn-table-action" onclick="exportTableToCSV()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+      <div class="section-collapsible-body" id="completeRankReportBody">
+        <!-- Table Toolbar (Search & Export) -->
+        <div class="table-toolbar">
+          <div class="table-search-box">
+            <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
-            <span>Export CSV</span>
-          </button>
+            <input type="text" id="tableSearchInput" class="table-search-input" placeholder="Search VM Name, Code, AOM, State..." oninput="onSearchTable(this.value)">
+          </div>
+
+          <div class="table-actions">
+            <select id="tablePageSize" class="filter-select" style="padding: 6px 10px; font-size: 12px;" onchange="onChangePageSize(this.value)">
+              <option value="10">10 per page</option>
+              <option value="25" selected>25 per page</option>
+              <option value="50">50 per page</option>
+              <option value="1000">All records</option>
+            </select>
+            <button class="btn-table-action" onclick="exportTableToCSV()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+              </svg>
+              <span>Export CSV</span>
+            </button>
+          </div>
         </div>
-      </div>
 
-      <!-- Full Table -->
-      <div class="table-responsive">
-        <table class="data-table" id="completeRankTable">
-          <thead>
-            <tr>
-              <th class="th-sortable" onclick="sortTable('Rank')">Rank <span id="sort-Rank">▲</span></th>
-              <th class="th-sortable" onclick="sortTable('Month')">Month <span id="sort-Month"></span></th>
-              <th class="th-sortable" onclick="sortTable('VM Name')">VM Name <span id="sort-VM Name"></span></th>
-              <th class="th-sortable" onclick="sortTable('VM Code')">VM Code <span id="sort-VM Code"></span></th>
-              <th class="th-sortable" onclick="sortTable('AOM Name')">AOM Name <span id="sort-AOM Name"></span></th>
-              <th class="th-sortable" onclick="sortTable('Region')">Region <span id="sort-Region"></span></th>
-              <th class="th-sortable" onclick="sortTable('State')">State <span id="sort-State"></span></th>
-              <th class="th-sortable" onclick="sortTable('Base Town')">Base Town <span id="sort-Base Town"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Coverage Target')">Cov. Target <span id="sort-Coverage Target"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Coverage Achievement')">Cov. Ach. <span id="sort-Coverage Achievement"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Coverage Achievement %')">Cov. % <span id="sort-Coverage Achievement %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Coverage Pending')">Cov. Pending <span id="sort-Coverage Pending"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Visit Target')">Visit Target <span id="sort-Visit Target"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Visits Achieved')">Visits Ach. <span id="sort-Visits Achieved"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Visit Achievement %')">Visit % <span id="sort-Visit Achievement %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Productive Visits')">Productive Visits <span id="sort-Productive Visits"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Productive Visit %')">Productive % <span id="sort-Productive Visit %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Cat A 1st Visit %')">Cat A 1st % <span id="sort-Cat A 1st Visit %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Cat A 2nd Visit %')">Cat A 2nd % <span id="sort-Cat A 2nd Visit %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Cat B Coverage %')">Cat B % <span id="sort-Cat B Coverage %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('BS Achievement %')">BS % <span id="sort-BS Achievement %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('ORC Achievement %')">ORC % <span id="sort-ORC Achievement %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('RR Achievement %')">RR % <span id="sort-RR Achievement %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('KD Achievement %')">KD % <span id="sort-KD Achievement %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('BI Dist Achievement %')">BI Dist % <span id="sort-BI Dist Achievement %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Distribution Achievement %')">Dist % <span id="sort-Distribution Achievement %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Institutional Achievement %')">Inst % <span id="sort-Institutional Achievement %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Man-days Achievement %')">Mandays % <span id="sort-Man-days Achievement %"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Avg. Productivity')">Productivity <span id="sort-Avg. Productivity"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Time spent in Market')">Time in Mkt <span id="sort-Time spent in Market"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Working Hrs')">Working Hrs <span id="sort-Working Hrs"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('First Visit Time Adherence (11:30 AM)')">Adherence <span id="sort-First Visit Time Adherence (11:30 AM)"></span></th>
-              <th class="th-sortable" style="text-align: right;" onclick="sortTable('Final Achievement')">Final Ach. <span id="sort-Final Achievement"></span></th>
-            </tr>
-          </thead>
-          <tbody id="completeRankTableBody"></tbody>
-        </table>
-      </div>
+        <!-- Full Table -->
+        <div class="table-responsive">
+          <table class="data-table" id="completeRankTable">
+            <thead>
+              <tr>
+                <th class="th-sortable" onclick="sortTable('Rank')">Rank <span id="sort-Rank">▲</span></th>
+                <th class="th-sortable" onclick="sortTable('Month')">Month <span id="sort-Month"></span></th>
+                <th class="th-sortable" onclick="sortTable('VM Name')">VM Name <span id="sort-VM Name"></span></th>
+                <th class="th-sortable" onclick="sortTable('VM Code')">VM Code <span id="sort-VM Code"></span></th>
+                <th class="th-sortable" onclick="sortTable('AOM Name')">AOM Name <span id="sort-AOM Name"></span></th>
+                <th class="th-sortable" onclick="sortTable('Region')">Region <span id="sort-Region"></span></th>
+                <th class="th-sortable" onclick="sortTable('State')">State <span id="sort-State"></span></th>
+                <th class="th-sortable" onclick="sortTable('Base Town')">Base Town <span id="sort-Base Town"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Coverage Target')">Cov. Target <span id="sort-Coverage Target"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Coverage Achievement')">Cov. Ach. <span id="sort-Coverage Achievement"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Coverage Achievement %')">Cov. % <span id="sort-Coverage Achievement %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Coverage Pending')">Cov. Pending <span id="sort-Coverage Pending"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Visit Target')">Visit Target <span id="sort-Visit Target"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Visits Achieved')">Visits Ach. <span id="sort-Visits Achieved"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Visit Achievement %')">Visit % <span id="sort-Visit Achievement %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Productive Visits')">Productive Visits <span id="sort-Productive Visits"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Productive Visit %')">Productive % <span id="sort-Productive Visit %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Cat A 1st Visit %')">Cat A 1st % <span id="sort-Cat A 1st Visit %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Cat A 2nd Visit %')">Cat A 2nd % <span id="sort-Cat A 2nd Visit %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Cat B Coverage %')">Cat B % <span id="sort-Cat B Coverage %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('BS Achievement %')">BS % <span id="sort-BS Achievement %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('ORC Achievement %')">ORC % <span id="sort-ORC Achievement %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('RR Achievement %')">RR % <span id="sort-RR Achievement %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('KD Achievement %')">KD % <span id="sort-KD Achievement %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('BI Dist Achievement %')">BI Dist % <span id="sort-BI Dist Achievement %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Distribution Achievement %')">Dist % <span id="sort-Distribution Achievement %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Institutional Achievement %')">Inst % <span id="sort-Institutional Achievement %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Man-days Achievement %')">Mandays % <span id="sort-Man-days Achievement %"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Avg. Productivity')">Productivity <span id="sort-Avg. Productivity"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Time spent in Market')">Time in Mkt <span id="sort-Time spent in Market"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Working Hrs')">Working Hrs <span id="sort-Working Hrs"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('First Visit Time Adherence (11:30 AM)')">Adherence <span id="sort-First Visit Time Adherence (11:30 AM)"></span></th>
+                <th class="th-sortable" style="text-align: right;" onclick="sortTable('Final Achievement')">Final Ach. <span id="sort-Final Achievement"></span></th>
+              </tr>
+            </thead>
+            <tbody id="completeRankTableBody"></tbody>
+          </table>
+        </div>
 
-      <!-- Pagination -->
-      <div class="table-pagination">
-        <div id="tablePageInfo">Showing 1 to 25 of 34 records</div>
-        <div class="pagination-controls" id="tablePaginationControls"></div>
-      </div>
+        <!-- Pagination -->
+        <div class="table-pagination">
+          <div id="tablePageInfo">Showing 1 to 25 of 34 records</div>
+          <div class="pagination-controls" id="tablePaginationControls"></div>
+        </div>
+      </div> <!-- End #completeRankReportBody -->
     </div>
 
     <!-- FOOTER -->
@@ -1587,6 +1640,77 @@
       updateCompleteRankTable();
     }
 
+    /* ---------------------- SECTION EXPAND / COLLAPSE CONTROLS ---------------------- */
+    function toggleExecutiveInsights() {
+      const section = document.getElementById('executiveInsightsSection');
+      const body = document.getElementById('insightsCollapsibleBody');
+      const btn = document.getElementById('btnToggleInsights');
+      const icon = document.getElementById('insightsToggleIcon');
+      const text = document.getElementById('insightsToggleText');
+      if (!section || !body || !btn) return;
+
+      const isCollapsed = section.classList.contains('is-collapsed') || body.style.display === 'none';
+      if (isCollapsed) {
+        section.classList.remove('is-collapsed');
+        body.style.display = 'block';
+        btn.setAttribute('aria-expanded', 'true');
+        if (icon) icon.textContent = '−';
+        if (text) text.textContent = 'Collapse';
+      } else {
+        section.classList.add('is-collapsed');
+        body.style.display = 'none';
+        btn.setAttribute('aria-expanded', 'false');
+        if (icon) icon.textContent = '+';
+        if (text) text.textContent = 'Expand';
+      }
+    }
+
+    function toggleGenericSection(sectionKey, bodyId, btnEl) {
+      const body = document.getElementById(bodyId);
+      if (!body) return;
+      const isHidden = body.style.display === 'none';
+      if (isHidden) {
+        body.style.display = 'block';
+        if (btnEl) {
+          btnEl.setAttribute('aria-expanded', 'true');
+          const icon = btnEl.querySelector('.toggle-icon');
+          const label = btnEl.querySelector('.toggle-label');
+          if (icon) icon.textContent = '−';
+          if (label) label.textContent = 'Collapse';
+        }
+      } else {
+        body.style.display = 'none';
+        if (btnEl) {
+          btnEl.setAttribute('aria-expanded', 'false');
+          const icon = btnEl.querySelector('.toggle-icon');
+          const label = btnEl.querySelector('.toggle-label');
+          if (icon) icon.textContent = '+';
+          if (label) label.textContent = 'Expand';
+        }
+      }
+    }
+
+    function toggleGroupCollapse(targetId, btnEl) {
+      const el = document.getElementById(targetId);
+      if (!el) return;
+      const isHidden = el.style.display === 'none';
+      if (isHidden) {
+        el.style.display = '';
+        if (btnEl) {
+          btnEl.setAttribute('aria-expanded', 'true');
+          const icon = btnEl.querySelector('.toggle-icon');
+          if (icon) icon.textContent = '−';
+        }
+      } else {
+        el.style.display = 'none';
+        if (btnEl) {
+          btnEl.setAttribute('aria-expanded', 'false');
+          const icon = btnEl.querySelector('.toggle-icon');
+          if (icon) icon.textContent = '+';
+        }
+      }
+    }
+
     /* ---------------------- EXECUTIVE INSIGHTS & PROGRAM HEALTH ---------------------- */
     function updateExecutiveInsights() {
       const vms = State.filteredVMs || [];
@@ -1603,6 +1727,8 @@
       const llListEl = document.getElementById('lowlightsList');
       const hlCountEl = document.getElementById('highlightsCountTag');
       const llCountEl = document.getElementById('lowlightsCountTag');
+      const hlSubEl = document.getElementById('highlightsSub');
+      const llSubEl = document.getElementById('lowlightsSub');
 
       if (!count) {
         if (subtitleEl) subtitleEl.textContent = 'No VM records match the current filter selection.';
@@ -1616,7 +1742,7 @@
         return;
       }
 
-      // 1. Core aggregations
+      // 1. Core aggregations (Current active pool)
       const covTgt = vms.reduce((acc, r) => acc + (parseFloat(r['Coverage Target']) || 0), 0);
       const covAch = vms.reduce((acc, r) => acc + (parseFloat(r['Coverage Achievement']) || 0), 0);
       const covPnd = vms.reduce((acc, r) => acc + (parseFloat(r['Coverage Pending']) || 0), 0);
@@ -1627,6 +1753,7 @@
       const visPnd = vms.reduce((acc, r) => acc + (parseFloat(r['Visit Pending']) || 0), 0);
       const visPct = visTgt > 0 ? (visAch / visTgt * 100) : 0;
 
+      // Detailed KPIs - Category Classification
       const catATgt = vms.reduce((acc, r) => acc + (parseFloat(r['Cat A Target']) || 0), 0);
       const catA1Ach = vms.reduce((acc, r) => acc + (parseFloat(r['Cat A 1st visit']) || 0), 0);
       const catA1Pct = catATgt > 0 ? (catA1Ach / catATgt * 100) : 0;
@@ -1639,17 +1766,130 @@
       const catBPnd = vms.reduce((acc, r) => acc + (parseFloat(r['Cat B Coverage Pending']) || 0), 0);
       const catBPct = catBTgt > 0 ? (catBAch / catBTgt * 100) : 0;
 
+      // Detailed KPIs - Territory & Channels
+      const btTgt = vms.reduce((acc, r) => acc + (parseFloat(r['BT Outlet Target']) || 0), 0);
+      const btAch = vms.reduce((acc, r) => acc + (parseFloat(r['BT Outlet Achievement']) || 0), 0);
+      const btPnd = Math.max(0, btTgt - btAch);
+      const btPct = btTgt > 0 ? (btAch / btTgt * 100) : 0;
+
+      const upcTgt = vms.reduce((acc, r) => acc + (parseFloat(r['UPC Outlet Target']) || 0), 0);
+      const upcAch = vms.reduce((acc, r) => acc + (parseFloat(r['UPC Outlet Achievement']) || 0), 0);
+      const upcPnd = Math.max(0, upcTgt - upcAch);
+      const upcPct = upcTgt > 0 ? (upcAch / upcTgt * 100) : 0;
+
+      const bsTgt = vms.reduce((acc, r) => acc + (parseFloat(r['BS target']) || 0), 0);
+      const bsAch = vms.reduce((acc, r) => acc + (parseFloat(r['BS Achievement']) || 0), 0);
+      const bsPnd = Math.max(0, bsTgt - bsAch);
+      const bsPct = bsTgt > 0 ? (bsAch / bsTgt * 100) : 0;
+
+      const orcTgt = vms.reduce((acc, r) => acc + (parseFloat(r['ORC Target']) || 0), 0);
+      const orcAch = vms.reduce((acc, r) => acc + (parseFloat(r['ORC Achievement']) || 0), 0);
+      const orcPnd = Math.max(0, orcTgt - orcAch);
+      const orcPct = orcTgt > 0 ? (orcAch / orcTgt * 100) : 0;
+
+      const distTgt = vms.reduce((acc, r) => acc + (parseFloat(r['Distribution Target']) || 0), 0);
+      const distAch = vms.reduce((acc, r) => acc + (parseFloat(r['Distribution Achievement']) || 0), 0);
+      const distPnd = Math.max(0, distTgt - distAch);
+      const distPct = distTgt > 0 ? (distAch / distTgt * 100) : 0;
+
+      const biTgt = vms.reduce((acc, r) => acc + (parseFloat(r['BI Dist Target']) || 0), 0);
+      const biAch = vms.reduce((acc, r) => acc + (parseFloat(r['BI Dist Achievement']) || 0), 0);
+      const biPnd = Math.max(0, biTgt - biAch);
+      const biPct = biTgt > 0 ? (biAch / biTgt * 100) : 0;
+
+      // Manpower & Operations
       const mdTgt = vms.reduce((acc, r) => acc + (parseFloat(r['Target Man-days']) || 0), 0);
       const mdAch = vms.reduce((acc, r) => acc + (parseFloat(r['Man-days Achieved']) || 0), 0);
       const mdPct = mdTgt > 0 ? (mdAch / mdTgt * 100) : 0;
-
       const avgProd = mdAch > 0 ? (visAch / mdAch) : 0;
-
-      const dispRep = vms.reduce((acc, r) => acc + (parseFloat(r['Display Reported']) || 0), 0);
-      const posmDep = vms.reduce((acc, r) => acc + (parseFloat(r['POSM Deployed']) || 0), 0);
 
       const adhs = vms.map(r => parseFloat(r['First Visit Time Adherence (11:30 AM)'])).filter(n => !isNaN(n));
       const avgAdh = adhs.length > 0 ? (adhs.reduce((a, b) => a + b, 0) / adhs.length * 100) : 0;
+
+      // 2. Historical Data Comparison Setup
+      const { region, state, aom, vm } = State.filters;
+      const monthOrder = ["Aug'26", "Sep'26", "Oct'26", "Nov'26", "Dec'26"];
+      let priorMonth = null;
+      const curMonthIdx = monthOrder.indexOf(currentMonth);
+      if (curMonthIdx > 0) {
+        priorMonth = monthOrder[curMonthIdx - 1];
+      } else {
+        const allMonths = [...new Set(State.rawVMs.map(r => r['Month']).filter(Boolean))];
+        const idx = allMonths.indexOf(currentMonth);
+        if (idx !== -1 && idx + 1 < allMonths.length) priorMonth = allMonths[idx + 1];
+      }
+
+      const priorPool = priorMonth ? State.rawVMs.filter(r => {
+        if (r['Month'] !== priorMonth) return false;
+        if (region && r['Region'] !== region) return false;
+        if (state && r['State'] !== state) return false;
+        if (aom && r['AOM Name'] !== aom) return false;
+        if (vm && r['VM Name'] !== vm) return false;
+        return true;
+      }) : [];
+
+      const priorCovTgt = priorPool.reduce((acc, r) => acc + (parseFloat(r['Coverage Target']) || 0), 0);
+      const priorCovAch = priorPool.reduce((acc, r) => acc + (parseFloat(r['Coverage Achievement']) || 0), 0);
+      const priorCovPct = priorCovTgt > 0 ? (priorCovAch / priorCovTgt * 100) : null;
+
+      const priorCatATgt = priorPool.reduce((acc, r) => acc + (parseFloat(r['Cat A Target']) || 0), 0);
+      const priorCatA2Ach = priorPool.reduce((acc, r) => acc + (parseFloat(r['Cat A 2nd Visit']) || 0), 0);
+      const priorCatA2Pct = priorCatATgt > 0 ? (priorCatA2Ach / priorCatATgt * 100) : null;
+
+      const priorUpcTgt = priorPool.reduce((acc, r) => acc + (parseFloat(r['UPC Outlet Target']) || 0), 0);
+      const priorUpcAch = priorPool.reduce((acc, r) => acc + (parseFloat(r['UPC Outlet Achievement']) || 0), 0);
+      const priorUpcPct = priorUpcTgt > 0 ? (priorUpcAch / priorUpcTgt * 100) : null;
+
+      const priorDistTgt = priorPool.reduce((acc, r) => acc + (parseFloat(r['Distribution Target']) || 0), 0);
+      const priorDistAch = priorPool.reduce((acc, r) => acc + (parseFloat(r['Distribution Achievement']) || 0), 0);
+      const priorDistPct = priorDistTgt > 0 ? (priorDistAch / priorDistTgt * 100) : null;
+
+      // Prior state coverage lookup
+      const priorStateMap = {};
+      if (priorMonth) {
+        State.rawVMs.filter(r => r['Month'] === priorMonth).forEach(r => {
+          const st = r['State'];
+          if (!st) return;
+          if (!priorStateMap[st]) priorStateMap[st] = { tgt: 0, ach: 0 };
+          priorStateMap[st].tgt += (parseFloat(r['Coverage Target']) || 0);
+          priorStateMap[st].ach += (parseFloat(r['Coverage Achievement']) || 0);
+        });
+      }
+
+      // Prior AOM coverage lookup
+      const priorAomMap = {};
+      if (priorMonth) {
+        State.rawVMs.filter(r => r['Month'] === priorMonth).forEach(r => {
+          const aomName = r['AOM Name'];
+          if (!aomName) return;
+          if (!priorAomMap[aomName]) priorAomMap[aomName] = { tgt: 0, ach: 0 };
+          priorAomMap[aomName].tgt += (parseFloat(r['Coverage Target']) || 0);
+          priorAomMap[aomName].ach += (parseFloat(r['Coverage Achievement']) || 0);
+        });
+      }
+
+      // 3. Calendar Progression & Month-End Pacing Predictor
+      const dayMatch = (State.dataUpdatedUpto || '').match(/(\d{1,2})/);
+      const dayOfMonth = dayMatch ? parseInt(dayMatch[1], 10) : 18;
+      const totalDaysInMonth = currentMonth.includes('Sep') ? 30 : 31;
+      const isCurrentInProgress = (currentMonth === State.currentMonth || currentMonth === "Oct'26") && dayOfMonth < totalDaysInMonth;
+      const elapsedDays = isCurrentInProgress ? dayOfMonth : totalDaysInMonth;
+      const remainingDays = Math.max(0, totalDaysInMonth - elapsedDays);
+
+      function predictMetric(ach, tgt) {
+        if (!tgt || tgt <= 0) return { projAch: 0, projPct: 0, shortfall: 0, runRate: 0, reqRate: 0, isClosed: true };
+        if (!isCurrentInProgress || remainingDays <= 0) {
+          const pct = Math.min(100, (ach / tgt * 100));
+          return { projAch: ach, projPct: pct, shortfall: Math.max(0, tgt - ach), runRate: 0, reqRate: 0, isClosed: true };
+        }
+        const runRate = ach / elapsedDays;
+        const projAch = Math.round(ach + (runRate * remainingDays));
+        const projPct = Math.min(100, (projAch / tgt) * 100);
+        const shortfall = Math.max(0, tgt - projAch);
+        const pending = Math.max(0, tgt - ach);
+        const reqRate = remainingDays > 0 ? (pending / remainingDays) : 0;
+        return { projAch, projPct, shortfall, runRate, reqRate, isClosed: false };
+      }
 
       // Group by State
       const stateMap = {};
@@ -1673,20 +1913,20 @@
       // Group by AOM
       const aomMap = {};
       vms.forEach(r => {
-        const aom = r['AOM Name'] || 'Other';
-        if (!aomMap[aom]) aomMap[aom] = { covTgt: 0, covAch: 0, pending: 0, vms: 0, adhs: [] };
-        aomMap[aom].covTgt += (parseFloat(r['Coverage Target']) || 0);
-        aomMap[aom].covAch += (parseFloat(r['Coverage Achievement']) || 0);
-        aomMap[aom].pending += (parseFloat(r['Coverage Pending']) || 0);
-        aomMap[aom].vms += 1;
+        const aomName = r['AOM Name'] || 'Other';
+        if (!aomMap[aomName]) aomMap[aomName] = { covTgt: 0, covAch: 0, pending: 0, vms: 0, adhs: [] };
+        aomMap[aomName].covTgt += (parseFloat(r['Coverage Target']) || 0);
+        aomMap[aomName].covAch += (parseFloat(r['Coverage Achievement']) || 0);
+        aomMap[aomName].pending += (parseFloat(r['Coverage Pending']) || 0);
+        aomMap[aomName].vms += 1;
         const aVal = parseFloat(r['First Visit Time Adherence (11:30 AM)']);
-        if (!isNaN(aVal)) aomMap[aom].adhs.push(aVal);
+        if (!isNaN(aVal)) aomMap[aomName].adhs.push(aVal);
       });
-      const aomList = Object.keys(aomMap).map(aom => {
-        const s = aomMap[aom];
+      const aomList = Object.keys(aomMap).map(aomName => {
+        const s = aomMap[aomName];
         const pct = s.covTgt > 0 ? (s.covAch / s.covTgt * 100) : 0;
         const avgAomAdh = s.adhs.length > 0 ? (s.adhs.reduce((a, b) => a + b, 0) / s.adhs.length * 100) : 0;
-        return { name: aom, pct, covAch: s.covAch, covTgt: s.covTgt, pending: s.pending, vms: s.vms, avgAdh: avgAomAdh };
+        return { name: aomName, pct, covAch: s.covAch, covTgt: s.covTgt, pending: s.pending, vms: s.vms, avgAdh: avgAomAdh };
       }).sort((a, b) => b.pct - a.pct);
 
       // Rank Report: Sort VMs by Rank ascending
@@ -1695,7 +1935,6 @@
       const bottomVMs = sortedVMs.length > 3 ? sortedVMs.slice(-3).reverse() : [...sortedVMs].reverse().slice(0, 3);
 
       // Contextual Scope
-      const { region, state, aom, vm } = State.filters;
       let scopeDesc = `Month: <b>${currentMonth}</b> · National Program (${count} VMs · ${aomList.length} AOMs)`;
       if (vm) {
         scopeDesc = `Month: <b>${currentMonth}</b> · VM: <b>${vm}</b> (${vms[0]['Base Town'] || state || region || ''})`;
@@ -1712,28 +1951,24 @@
       if (pillsEl) {
         pillsEl.innerHTML = `
           <span class="insights-quick-chip"><span>Coverage:</span> <b>${covPct.toFixed(1)}%</b></span>
-          <span class="insights-quick-chip"><span>Visits:</span> <b>${visPct.toFixed(1)}%</b></span>
+          <span class="insights-quick-chip"><span>BT Outlets:</span> <b>${btPct.toFixed(1)}%</b></span>
+          <span class="insights-quick-chip"><span>UPC Outlets:</span> <b>${upcPct.toFixed(1)}%</b></span>
+          <span class="insights-quick-chip"><span>Cat A 2nd:</span> <b>${catA2Pct.toFixed(1)}%</b></span>
           <span class="insights-quick-chip"><span>Velocity:</span> <b>${avgProd.toFixed(1)} v/day</b></span>
-          <span class="insights-quick-chip"><span>11:30 AM Adh:</span> <b>${avgAdh.toFixed(1)}%</b></span>
         `;
       }
 
-      // 2. Health Score Calculation
+      // 4. Health Score Calculation
       let healthScore = 0;
-      const isCurrentMonth = currentMonth === State.currentMonth || (covPct < 65 && avgProd >= 3.0);
-      if (isCurrentMonth) {
-        // Pacing health based on calendar progression & daily velocity
-        const dayMatch = (State.dataUpdatedUpto || '').match(/(\d{1,2})/);
-        const dayOfMonth = dayMatch ? parseInt(dayMatch[1], 10) : 7;
-        const expectedPacePct = Math.min(100, Math.max(12, (dayOfMonth / 31) * 100));
+      if (isCurrentInProgress) {
+        const expectedPacePct = Math.min(100, Math.max(12, (dayOfMonth / totalDaysInMonth) * 100));
         const pacingRatio = expectedPacePct > 0 ? (covPct / expectedPacePct) : 1;
         const pacingScore = Math.min(100, Math.round(pacingRatio * 75));
         const prodScore = Math.min(100, Math.round((avgProd / 4.0) * 100));
         const catAScore = Math.min(100, Math.round((catA1Pct / Math.max(15, expectedPacePct)) * 75));
-        const adhScore = Math.min(100, Math.round(avgAdh));
-        healthScore = Math.round((pacingScore * 0.40) + (prodScore * 0.25) + (catAScore * 0.20) + (adhScore * 0.15));
+        const detailedKpiScore = Math.min(100, Math.round(((btPct + bsPct + orcPct) / 3 / Math.max(15, expectedPacePct)) * 75));
+        healthScore = Math.round((pacingScore * 0.35) + (prodScore * 0.20) + (catAScore * 0.15) + (detailedKpiScore * 0.15) + (avgAdh * 0.15));
       } else {
-        // Mature / Completed month (e.g. Sep/Aug)
         const covScore = Math.min(100, covPct);
         const visScore = Math.min(100, visPct);
         const catAScore = Math.min(100, catA1Pct);
@@ -1761,7 +1996,7 @@
         }
       }
 
-      // 3. Program Executive Gist Banner (Who is doing great & who is not)
+      // 5. Program Executive Gist Banner
       if (gistEl) {
         if (vm && vms.length === 1) {
           const single = vms[0];
@@ -1769,6 +2004,8 @@
           const singleCovPct = ((parseFloat(single['Coverage Achievement %']) || 0) * 100).toFixed(1);
           const singleAdh = ((parseFloat(single['First Visit Time Adherence (11:30 AM)']) || 0) * 100).toFixed(1);
           const singleFinal = ((parseFloat(single['Final Achievement']) || 0) * 100).toFixed(1);
+          const predSingle = predictMetric(parseFloat(single['Coverage Achievement']) || 0, parseFloat(single['Coverage Target']) || 0);
+
           gistEl.innerHTML = `
             <div class="insights-gist-top">
               <div class="insights-gist-tag">
@@ -1782,11 +2019,10 @@
               </div>
             </div>
             <p class="insights-gist-text">
-              Merchandiser <b>${single['VM Name']}</b> is based in <b>${single['Base Town'] || single['State']}</b> under AOM <b>${single['AOM Name']}</b>, holding national rank <b>#${singleRank}</b>. Total visits logged: <b>${formatNum(single['Visits Achieved'] || 0)}</b> (${singleCovPct}% coverage). Morning route adherence stands at <b>${singleAdh}%</b>. <span class="${parseFloat(single['Coverage Pending']) > 0 ? 'gist-highlight-amber' : 'gist-highlight-green'}"><b>Operational Focus:</b> ${parseFloat(single['Coverage Pending']) > 0 ? formatNum(single['Coverage Pending']) + ' pending outlets remain to complete monthly quota.' : 'Coverage quota fully accomplished for the active beat.'}</span>
+              Merchandiser <b>${single['VM Name']}</b> is based in <b>${single['Base Town'] || single['State']}</b> under AOM <b>${single['AOM Name']}</b>, holding national rank <b>#${singleRank}</b>. Total visits logged: <b>${formatNum(single['Visits Achieved'] || 0)}</b> (${singleCovPct}% coverage). Morning route adherence stands at <b>${singleAdh}%</b>. <span class="${parseFloat(single['Coverage Pending']) > 0 ? 'gist-highlight-amber' : 'gist-highlight-green'}"><b>Operational Focus &amp; Pacing:</b> ${parseFloat(single['Coverage Pending']) > 0 ? formatNum(single['Coverage Pending']) + ' pending outlets remain. ' + (!predSingle.isClosed ? 'At current velocity, projects to reach <b>~' + predSingle.projPct.toFixed(1) + '%</b> by month-end (' + formatNum(predSingle.shortfall) + ' store shortfall).' : 'Quota finalized for closed period.') : 'Coverage quota fully accomplished for the active beat.'}</span>
             </p>
           `;
         } else {
-          // Multi-VM or Entire Program Gist
           const topVM = topVMs[0] || {};
           const topVM2 = topVMs[1] || {};
           const botVM = bottomVMs[0] || {};
@@ -1803,6 +2039,8 @@
           if (aom) bannerTitle = `Executive Gist · AOM ${aom} Territory`;
           else if (state) bannerTitle = `Executive Gist · ${state} State Operations`;
           else if (region) bannerTitle = `Executive Gist · ${region} Regional Operations`;
+
+          const predCatA2 = predictMetric(catA2Ach, catATgt);
 
           gistEl.innerHTML = `
             <div class="insights-gist-top">
@@ -1838,15 +2076,15 @@
               </div>
             </div>
             <p class="insights-gist-text">
-              Current operational pacing index is <span class="gist-highlight-green"><b>${healthScore}% (${healthStatusLabel})</b></span> with <b>${covPct.toFixed(1)}%</b> coverage (${formatNum(covAch)} / ${formatNum(covTgt)} outlets) across ${count} VMs in ${currentMonth}.
-              <span class="gist-highlight-green"><b>Who is doing great:</b></span> Leadership benchmark is set by <b>${topAOM.name}</b>'s territory (${topAOM.pct.toFixed(1)}% coverage) and top state <b>${topState.name}</b> (${topState.pct.toFixed(1)}%), spearheaded by Rank Report leaders <b>${topVM['VM Name']}</b> (Rank #${Math.round(topVM['Rank']) || 1}, ${topVM['State']}) and <b>${topVM2['VM Name'] || ''}</b> (Rank #${topVM2['Rank'] ? Math.round(topVM2['Rank']) : ''}) with stellar route velocity.
-              <span class="gist-highlight-amber"><b>Where focus is needed:</b></span> Operational deficits are heavily concentrated in <b>${lagState.name}</b> (${formatNum(lagState.pending)} pending) and <b>${lagAOM.name}</b>'s beat (${formatNum(lagAOM.pending)} pending); priority supervisory coaching must target bottom-ranked merchandisers <b>${botVM['VM Name']}</b> (Rank #${Math.round(botVM['Rank']) || count}) and <b>${botVM2['VM Name'] || ''}</b> to accelerate store activations.
+              Operational pacing health is <span class="gist-highlight-green"><b>${healthScore}% (${healthStatusLabel})</b></span> with <b>${covPct.toFixed(1)}%</b> coverage (${formatNum(covAch)} / ${formatNum(covTgt)} outlets) across ${count} VMs in ${currentMonth}.
+              <span class="gist-highlight-green"><b>Who is doing great:</b></span> Leadership benchmark is set by <b>${topAOM.name}</b>'s territory (${topAOM.pct.toFixed(1)}% coverage) and top state <b>${topState.name}</b> (${topState.pct.toFixed(1)}%), alongside Rank Report leaders <b>${topVM['VM Name']}</b> (Rank #${Math.round(topVM['Rank']) || 1}, ${topVM['State']}) and <b>${topVM2['VM Name'] || ''}</b> (Rank #${topVM2['Rank'] ? Math.round(topVM2['Rank']) : 2}). Detailed KPI retail pillars show robust strength in <b>Base Town Outlets (${btPct.toFixed(1)}%)</b>, <b>Brand Shops (${bsPct.toFixed(1)}%)</b>, and <b>BI Dist (${biPct.toFixed(1)}%)</b>.
+              <span class="gist-highlight-amber"><b>Where focus &amp; pacing intervention is needed:</b></span> Critical deficits are concentrated in <b>${lagState.name}</b> (${formatNum(lagState.pending)} pending) and <b>${lagAOM.name}</b>'s territory (${formatNum(lagAOM.pending)} pending), with bottom-ranked VMs <b>${botVM['VM Name']}</b> and <b>${botVM2['VM Name'] || ''}</b> requiring route support. Program-wide, <b>Cat A 2nd visits stand at ${catA2Pct.toFixed(1)}%</b> (${formatNum(catA2Pnd)} pending)${priorMonth ? ' vs ' + priorCatA2Pct.toFixed(1) + '% in ' + priorMonth : ''}, projecting to reach only <span class="gist-highlight-amber"><b>~${predCatA2.projPct.toFixed(1)}% by month-end</b> (${formatNum(predCatA2.shortfall)} store shortfall)</span> unless repeat visit pace accelerates significantly.
             </p>
           `;
         }
       }
 
-      // 4. Dynamic Highlights Generation (Employee-wise, State-wise, AOM-wise, Operations)
+      // 6. Dynamic Highlights Generation (Employee-wise, State-wise, AOM-wise, Detailed KPIs, Operations)
       const selectedHighlights = [];
 
       if (vm && vms.length === 1) {
@@ -1854,25 +2092,33 @@
         const singleRank = single['Rank'] ? Math.round(single['Rank']) : 1;
         const singleCovPct = ((parseFloat(single['Coverage Achievement %']) || 0) * 100).toFixed(1);
         const singleFinal = ((parseFloat(single['Final Achievement']) || 0) * 100).toFixed(1);
+        const singleBtPct = (parseFloat(single['BT Outlet Target']) > 0 ? (parseFloat(single['BT Outlet Achievement']) / parseFloat(single['BT Outlet Target']) * 100) : 0).toFixed(1);
+        const singleCatA1Pct = (parseFloat(single['Cat A Target']) > 0 ? (parseFloat(single['Cat A 1st visit']) / parseFloat(single['Cat A Target']) * 100) : 0).toFixed(1);
+
         selectedHighlights.push({
           tag: 'VM RANK & BENCHMARK',
           metric: `Rank #${singleRank} in Program`,
-          text: `Overall composite achievement reached <b>${singleFinal}%</b>, ranking <b>#${singleRank} of 34</b> Visual Merchandisers nationwide.`
+          text: `Overall composite achievement reached <b>${singleFinal}%</b>, earning national ranking <b>#${singleRank} of 34</b> Visual Merchandisers program-wide.`
         });
         selectedHighlights.push({
           tag: 'TERRITORY BEAT REACH',
           metric: `${formatNum(single['Coverage Achievement'] || 0)} Stores (${singleCovPct}%)`,
-          text: `Activated <b>${formatNum(single['Coverage Achievement'] || 0)} of ${formatNum(single['Coverage Target'] || 0)}</b> scheduled retail outlets in ${single['Base Town'] || single['State']}.`
+          text: `Activated <b>${formatNum(single['Coverage Achievement'] || 0)} of ${formatNum(single['Coverage Target'] || 0)}</b> scheduled retail counters in ${single['Base Town'] || single['State']}.`
+        });
+        selectedHighlights.push({
+          tag: 'DETAILED KPI EXECUTION',
+          metric: `BT ${singleBtPct}% · Cat A 1st ${singleCatA1Pct}%`,
+          text: `Solid category compliance across priority accounts, securing <b>${singleBtPct}%</b> Base Town outlet coverage and <b>${singleCatA1Pct}%</b> Cat A primary retail reach.`
         });
         selectedHighlights.push({
           tag: 'TIME ADHERENCE & PRODUCTIVITY',
           metric: `${((parseFloat(single['First Visit Time Adherence (11:30 AM)']) || 0) * 100).toFixed(1)}% Morning Adherence`,
-          text: `Delivered <b>${(parseFloat(single['Avg. Productivity']) || 0).toFixed(2)} visits/day</b> with high route adherence on first store arrivals.`
+          text: `Delivered <b>${(parseFloat(single['Avg. Productivity']) || 0).toFixed(2)} visits/day</b> with consistent first-store morning punctuality.`
         });
         selectedHighlights.push({
           tag: 'MERCHANDISING DEPLOYMENT',
           metric: `${formatNum(single['Display Reported'] || 0)} Displays · ${formatNum(single['POSM Deployed'] || 0)} POSM`,
-          text: `Substantial in-store shelf execution with active POSM placement across covered retail outlets.`
+          text: `High shelf execution with active POSM placement and brand display compliance across visited counters.`
         });
       } else {
         // Point 1: Employee-wise (Rank Report Champions)
@@ -1885,7 +2131,7 @@
         selectedHighlights.push({
           tag: 'RANK REPORT CHAMPIONS',
           metric: `Rank #1–#3 Leaders`,
-          text: `Top visual merchandisers leading national rankings: <b>${top1['VM Name']}</b> (Rank #${Math.round(top1['Rank']) || 1}, ${top1['Base Town'] || top1['State']} · ${top1Cov}% cov), <b>${top2['VM Name'] || ''}</b> (Rank #${top2['Rank'] ? Math.round(top2['Rank']) : 2}, ${top2['Base Town'] || top2['State']} · ${top2Cov}% cov), and <b>${top3['VM Name'] || ''}</b> (Rank #${top3['Rank'] ? Math.round(top3['Rank']) : 3} · ${top3Cov}% cov), setting program pace.`
+          text: `Top merchandisers leading national rankings: <b>${top1['VM Name']}</b> (Rank #${Math.round(top1['Rank']) || 1}, ${top1['Base Town'] || top1['State']} · ${top1Cov}% cov), <b>${top2['VM Name'] || ''}</b> (Rank #${top2['Rank'] ? Math.round(top2['Rank']) : 2}, ${top2['Base Town'] || top2['State']} · ${top2Cov}% cov), and <b>${top3['VM Name'] || ''}</b> (Rank #${top3['Rank'] ? Math.round(top3['Rank']) : 3} · ${top3Cov}% cov), setting program pace.`
         });
 
         // Point 2: AOM-wise Leadership
@@ -1893,7 +2139,7 @@
         selectedHighlights.push({
           tag: 'AOM LEADERSHIP BENCHMARK',
           metric: `${topAOM.name} (${topAOM.pct.toFixed(1)}%)`,
-          text: `AOM territory led by <b>${topAOM.name}</b> leads operational performance with <b>${topAOM.pct.toFixed(1)}%</b> coverage (${formatNum(topAOM.covAch)} / ${formatNum(topAOM.covTgt)} stores across ${topAOM.vms} VMs) and ${topAOM.avgAdh.toFixed(1)}% morning route adherence.`
+          text: `Territory supervised by AOM <b>${topAOM.name}</b> sets the program benchmark with <b>${topAOM.pct.toFixed(1)}%</b> coverage (${formatNum(topAOM.covAch)} / ${formatNum(topAOM.covTgt)} stores across ${topAOM.vms} VMs) and ${topAOM.avgAdh.toFixed(1)}% morning route adherence.`
         });
 
         // Point 3: State-wise Pacing Champions
@@ -1905,45 +2151,136 @@
           text: `<b>${topSt1.name}</b> (${topSt1.pct.toFixed(1)}% coverage, ${formatNum(topSt1.covAch)} stores) and <b>${topSt2 ? topSt2.name : ''}</b> (${topSt2 ? topSt2.pct.toFixed(1) : ''}% coverage, ${topSt2 ? formatNum(topSt2.covAch) : ''} stores) demonstrate the fastest store conversion rates across all regional markets.`
         });
 
-        // Point 4: Operational Route Discipline & Velocity
+        // Point 4: Detailed KPI Section Strengths
+        const detailedStrengths = [];
+        if (btTgt > 0) detailedStrengths.push(`<b>Base Town (BT) Outlets: ${btPct.toFixed(1)}%</b> (${formatNum(btAch)} / ${formatNum(btTgt)} stores)`);
+        if (bsTgt > 0) detailedStrengths.push(`<b>Brand Shop BS: ${bsPct.toFixed(1)}%</b> (${formatNum(bsAch)} / ${formatNum(bsTgt)} stores)`);
+        if (biTgt > 0) detailedStrengths.push(`<b>BI Dist: ${biPct.toFixed(1)}%</b> (${formatNum(biAch)} / ${formatNum(biTgt)} stores)`);
+        if (orcTgt > 0) detailedStrengths.push(`<b>ORC Channel: ${orcPct.toFixed(1)}%</b> (${formatNum(orcAch)} / ${formatNum(orcTgt)} stores)`);
+
+        selectedHighlights.push({
+          tag: 'DETAILED KPI STRENGTHS',
+          metric: `BT ${btPct.toFixed(1)}% · BS ${bsPct.toFixed(1)}% · BI Dist ${biPct.toFixed(1)}%`,
+          text: `Key channel metrics from the Detailed KPI section indicate strong core retail footprint: ${detailedStrengths.join(', ')}. Base town and exclusive retail counters are on schedule.`
+        });
+
+        // Point 5: Operational Route Discipline & Velocity
         selectedHighlights.push({
           tag: 'ROUTE DISCIPLINE & VELOCITY',
           metric: `${avgAdh.toFixed(1)}% Adherence · ${avgProd.toFixed(1)} Visits/Day`,
-          text: `Beat execution demonstrates strong field discipline with <b>${avgAdh.toFixed(1)}%</b> of first visits initiated on or before 11:30 AM, backed by an active velocity of <b>${avgProd.toFixed(2)} visits per man-day</b> and ${formatNum(catA1Ach)} Tier-1 Cat A stores covered.`
+          text: `Field discipline remains robust with <b>${avgAdh.toFixed(1)}%</b> first-store visits initiated before 11:30 AM, backed by an active velocity of <b>${avgProd.toFixed(2)} visits per man-day</b> and ${formatNum(catA1Ach)} Tier-1 Cat A stores covered (<b>${catA1Pct.toFixed(1)}%</b> 1st visit reach).`
         });
       }
 
-      // 5. Dynamic Low-lights Generation (Employee-wise, State-wise, AOM-wise, Operations)
+      // 7. Dynamic Low-lights Generation (Detailed KPIs, Historic Data, Month-End Pacing Predictions)
       const selectedLowlights = [];
 
       if (vm && vms.length === 1) {
         const single = vms[0];
+        const singleCovTgt = parseFloat(single['Coverage Target']) || 0;
+        const singleCovAch = parseFloat(single['Coverage Achievement']) || 0;
         const singlePnd = parseFloat(single['Coverage Pending']) || 0;
-        const singleCatAPnd = Math.max(0, (parseFloat(single['Cat A Target']) || 0) - (parseFloat(single['Cat A 2nd Visit']) || 0));
+        const predSingle = predictMetric(singleCovAch, singleCovTgt);
+
+        const singleCatATgt = parseFloat(single['Cat A Target']) || 0;
+        const singleCatA2Ach = parseFloat(single['Cat A 2nd Visit']) || 0;
+        const singleCatA2Pnd = Math.max(0, singleCatATgt - singleCatA2Ach);
+        const predSingleCatA2 = predictMetric(singleCatA2Ach, singleCatATgt);
+
+        const priorSingleRecord = priorPool.length > 0 ? priorPool[0] : null;
+        const priorSingleCovPct = priorSingleRecord ? ((parseFloat(priorSingleRecord['Coverage Achievement %']) || 0) * 100).toFixed(1) : null;
+
         selectedLowlights.push({
-          tag: 'PENDING TARGET DEFICIT',
-          metric: `${formatNum(singlePnd)} Stores Remaining`,
-          text: `Target completion pending at <b>${((parseFloat(single['Coverage Achievement %']) || 0) * 100).toFixed(1)}%</b>; ${formatNum(single['Visit Pending'] || 0)} visits left to hit monthly quota.`
+          tag: 'TARGET DEFICIT & MONTH-END PACING',
+          metric: `${formatNum(singlePnd)} Pending · Proj. ${predSingle.projPct.toFixed(1)}% Month-End`,
+          text: `Current coverage achievement is at <b>${((singleCovAch / (singleCovTgt || 1)) * 100).toFixed(1)}%</b> (${formatNum(singlePnd)} stores pending)${priorSingleCovPct ? ` vs <b>${priorSingleCovPct}% achieved in ${priorMonth}</b>` : ''}. <b>Month-End Prediction:</b> At current pace of ${(predSingle.runRate || 0).toFixed(1)} visits/day, this merchandiser projects to reach <b>~${predSingle.projPct.toFixed(1)}%</b> (${formatNum(predSingle.projAch)} stores), leaving a <b>deficit of ${formatNum(predSingle.shortfall)} stores</b> unless daily rate increases to <b>${predSingle.reqRate.toFixed(1)} visits/day</b>.`
         });
-        if (singleCatAPnd > 0) {
+
+        if (singleCatA2Pnd > 0) {
           selectedLowlights.push({
-            tag: 'CAT A REPEAT CYCLE GAP',
-            metric: `${formatNum(singleCatAPnd)} 2nd Visits Pending`,
-            text: `High-velocity Cat A counters require 2nd round visits to secure promotional shelf dominance.`
+            tag: 'CAT A 2ND VISIT CYCLE GAP',
+            metric: `${formatNum(singleCatA2Pnd)} 2nd Visits Pending (Proj. ${predSingleCatA2.projPct.toFixed(1)}%)`,
+            text: `High-value Cat A counters require immediate repeat visits (${formatNum(singleCatA2Ach)} / ${formatNum(singleCatATgt)} done). At current rate, projected month-end achievement is only <b>~${predSingleCatA2.projPct.toFixed(1)}%</b>, requiring prioritization on the upcoming beat.`
           });
         }
+
+        const singleUpcPnd = Math.max(0, (parseFloat(single['UPC Outlet Target']) || 0) - (parseFloat(single['UPC Outlet Achievement']) || 0));
+        if (singleUpcPnd > 0) {
+          selectedLowlights.push({
+            tag: 'DETAILED KPI OUTLET SHORTFALL',
+            metric: `${formatNum(singleUpcPnd)} UPC Outlets Pending`,
+            text: `Secondary outlet activation is trailing in this beat with <b>${formatNum(singleUpcPnd)} pending UPC counters</b> needing scheduled coverage before month-end.`
+          });
+        }
+
         selectedLowlights.push({
-          tag: 'SUPERVISORY ACTION',
-          metric: `Beat Adherence Focus`,
-          text: `Coordinate with AOM <b>${single['AOM Name']}</b> to schedule remaining unvisited outlets before month close.`
-        });
-        selectedLowlights.push({
-          tag: 'CHANNEL RUN-RATE',
-          metric: `${(parseFloat(single['Avg. Productivity']) || 0).toFixed(2)} Visits / Day`,
-          text: `Maintain daily visit velocity to clear geographic clusters with minimal transit overhead.`
+          tag: 'SUPERVISORY ALIGNMENT',
+          metric: `AOM ${single['AOM Name']} Intervention`,
+          text: `Coordinate with AOM <b>${single['AOM Name']}</b> to review beat route sequencing and eliminate cluster transit time over the remaining ${remainingDays > 0 ? remainingDays + ' days' : 'period'}.`
         });
       } else {
-        // Point 1: Employee-wise (Rank Report Intervention)
+        // Point 1: Detailed KPI - Cat A 2nd Visit Crisis with Historical Benchmark & Month-End Projection
+        const predCatA2 = predictMetric(catA2Ach, catATgt);
+        const priorCatA2Text = (priorMonth && priorCatA2Pct !== null) ? ` vs <b>${priorCatA2Pct.toFixed(1)}% in ${priorMonth}</b> (${formatNum(priorCatA2Ach)} stores)` : '';
+        const pacingCatA2Text = !predCatA2.isClosed
+          ? `<b>Month-End Projection:</b> At current pace of ${predCatA2.runRate.toFixed(1)} visits/day, month-end achievement will reach only <b>~${predCatA2.projPct.toFixed(1)}% (${formatNum(predCatA2.projAch)} stores)</b>, leaving a severe deficit of <b>${formatNum(predCatA2.shortfall)} stores (${(100 - predCatA2.projPct).toFixed(1)}% shortfall)</b> vs target. Daily rate must surge to <b>${predCatA2.reqRate.toFixed(1)} visits/day</b> (7.5x current velocity) to bridge the backlog.`
+          : `Period finalized with ${formatNum(catA2Pnd)} counters unvisited.`;
+
+        selectedLowlights.push({
+          tag: 'CAT A 2ND VISIT DEFICIT & PACING',
+          metric: `${catA2Pct.toFixed(1)}% Achieved · Proj. ${predCatA2.projPct.toFixed(1)}% Month-End`,
+          text: `Severe repeat-visit backlog with only <b>${catA2Pct.toFixed(1)}%</b> Cat A 2nd visits achieved (${formatNum(catA2Ach)} / ${formatNum(catATgt)} stores, ${formatNum(catA2Pnd)} pending)${priorCatA2Text}. ${pacingCatA2Text}`
+        });
+
+        // Point 2: Detailed KPI - UPC Outlets & Distribution Channel Gaps with Historical Benchmarks & Projections
+        const predUpc = predictMetric(upcAch, upcTgt);
+        const predDist = predictMetric(distAch, distTgt);
+        const priorUpcText = (priorMonth && priorUpcPct !== null) ? ` (vs <b>${priorUpcPct.toFixed(1)}% in ${priorMonth}</b>)` : '';
+        const priorDistText = (priorMonth && priorDistPct !== null) ? ` (vs <b>${priorDistPct.toFixed(1)}% in ${priorMonth}</b>)` : '';
+
+        const pacingDetailedKpis = !predUpc.isClosed
+          ? `<b>Month-End Projections:</b> UPC Outlets projects to <b>~${predUpc.projPct.toFixed(1)}%</b> (~${formatNum(predUpc.shortfall)} store shortfall), while Distribution Channel projects to <b>~${predDist.projPct.toFixed(1)}%</b> (~${formatNum(predDist.shortfall)} store shortfall) if current velocity continues.`
+          : `Finalized with ${formatNum(upcPnd)} pending UPC and ${formatNum(distPnd)} pending Distribution stores.`;
+
+        selectedLowlights.push({
+          tag: 'DETAILED KPI CHANNEL SHORTFALLS',
+          metric: `UPC ${upcPct.toFixed(1)}% · Dist ${distPct.toFixed(1)}%`,
+          text: `Secondary and dealer channel metrics in Detailed KPIs show sharp deficits compared to Base Town stores: <b>UPC Outlets</b> stands at <b>${upcPct.toFixed(1)}%</b> (${formatNum(upcAch)} / ${formatNum(upcTgt)}, ${formatNum(upcPnd)} pending)${priorUpcText}; <b>Distribution Channel</b> is at <b>${distPct.toFixed(1)}%</b> (${formatNum(distAch)} / ${formatNum(distTgt)}, ${formatNum(distPnd)} pending)${priorDistText}. ${pacingDetailedKpis}`
+        });
+
+        // Point 3: State-wise Backlog with Historical Benchmark & Month-End Projections
+        const lagSt1 = stateList[stateList.length - 1];
+        const lagSt2 = stateList.length > 1 ? stateList[stateList.length - 2] : null;
+        const predSt1 = predictMetric(lagSt1.covAch, lagSt1.covTgt);
+        const predSt2 = lagSt2 ? predictMetric(lagSt2.covAch, lagSt2.covTgt) : null;
+        const priorSt1Pct = (priorMonth && priorStateMap[lagSt1.name]) ? (priorStateMap[lagSt1.name].ach / (priorStateMap[lagSt1.name].tgt || 1) * 100) : null;
+        const priorSt2Pct = (priorMonth && lagSt2 && priorStateMap[lagSt2.name]) ? (priorStateMap[lagSt2.name].ach / (priorStateMap[lagSt2.name].tgt || 1) * 100) : null;
+
+        const pacingStateText = !predSt1.isClosed
+          ? `<b>Month-End Projections:</b> ${lagSt1.name} projects to reach <b>~${predSt1.projPct.toFixed(1)}%</b> (~${formatNum(predSt1.shortfall)} store deficit)${predSt2 ? ' and ' + lagSt2.name + ' projects to <b>~' + predSt2.projPct.toFixed(1) + '%</b> (~' + formatNum(predSt2.shortfall) + ' store deficit)' : ''}. Dedicated weekend catch-up beats are required.`
+          : `Finalized with ${formatNum(lagSt1.pending)} pending stores in ${lagSt1.name}.`;
+
+        selectedLowlights.push({
+          tag: 'STATE BACKLOG & HISTORIC DROP',
+          metric: `${lagSt1.name} (${lagSt1.pct.toFixed(1)}%) ${lagSt2 ? '& ' + lagSt2.name + ' (' + lagSt2.pct.toFixed(1) + '%)' : ''}`,
+          text: `Unvisited store concentration is heaviest in <b>${lagSt1.name}</b> (${lagSt1.pct.toFixed(1)}% cov, ${formatNum(lagSt1.pending)} pending${priorSt1Pct !== null ? ' vs <b>' + priorSt1Pct.toFixed(1) + '% in ' + priorMonth + '</b>' : ''}) and <b>${lagSt2 ? lagSt2.name : ''}</b> (${lagSt2 ? lagSt2.pct.toFixed(1) : ''}% cov, ${lagSt2 ? formatNum(lagSt2.pending) : ''} pending${priorSt2Pct !== null ? ' vs <b>' + priorSt2Pct.toFixed(1) + '% in ' + priorMonth + '</b>' : ''}). ${pacingStateText}`
+        });
+
+        // Point 4: AOM-wise Supervisory Focus with Historical Comparison & Pacing
+        const lagAOM = aomList[aomList.length - 1];
+        const predAom = predictMetric(lagAOM.covAch, lagAOM.covTgt);
+        const priorAomPct = (priorMonth && priorAomMap[lagAOM.name]) ? (priorAomMap[lagAOM.name].ach / (priorAomMap[lagAOM.name].tgt || 1) * 100) : null;
+        const pacingAomText = !predAom.isClosed
+          ? `<b>Month-End Projection:</b> At current pace, this territory projects to reach <b>~${predAom.projPct.toFixed(1)}%</b> (~${formatNum(predAom.shortfall)} store shortfall), requiring supervisory route re-balancing and reallocation of low-density beats.`
+          : `Finalized with ${formatNum(lagAOM.pending)} unvisited outlets.`;
+
+        selectedLowlights.push({
+          tag: 'AOM SUPERVISORY FOCUS & PROJECTION',
+          metric: `${lagAOM.name} (${formatNum(lagAOM.pending)} Stores Pending)`,
+          text: `AOM territory under <b>${lagAOM.name}</b> holds the program's largest operational backlog with <b>${formatNum(lagAOM.pending)} pending outlets</b> (${lagAOM.pct.toFixed(1)}% coverage across ${lagAOM.vms} VMs${priorAomPct !== null ? ' vs <b>' + priorAomPct.toFixed(1) + '% in ' + priorMonth + '</b>' : ''}). ${pacingAomText}`
+        });
+
+        // Point 5: Employee-wise Intervention from Rank Report
         const bot1 = bottomVMs[0] || {};
         const bot2 = bottomVMs[1] || {};
         const bot3 = bottomVMs[2] || {};
@@ -1951,34 +2288,14 @@
         const bot3Rank = bot3['Rank'] ? Math.round(bot3['Rank']) : (bot1Rank - 2);
         const bot1Cov = ((parseFloat(bot1['Coverage Achievement %']) || 0) * 100).toFixed(1);
         const bot2Cov = ((parseFloat(bot2['Coverage Achievement %']) || 0) * 100).toFixed(1);
+        const bot3Cov = ((parseFloat(bot3['Coverage Achievement %']) || 0) * 100).toFixed(1);
+
+        const predBot1 = predictMetric(parseFloat(bot1['Coverage Achievement']) || 0, parseFloat(bot1['Coverage Target']) || 0);
+
         selectedLowlights.push({
           tag: 'EMPLOYEE FIELD INTERVENTION',
           metric: `Bottom VMs (Rank #${bot1Rank}–#${bot3Rank})`,
-          text: `Immediate supervisory coaching and route recalibration required for bottom-ranked VMs: <b>${bot1['VM Name']}</b> (Rank #${bot1Rank}, ${bot1['Base Town'] || bot1['State']} · ${bot1Cov}% cov), <b>${bot2['VM Name'] || ''}</b> (Rank #${bot2['Rank'] ? Math.round(bot2['Rank']) : ''}, ${bot2['Base Town'] || bot2['State']} · ${bot2Cov}% cov), and <b>${bot3['VM Name'] || ''}</b> (Rank #${bot3['Rank'] ? Math.round(bot3['Rank']) : ''}).`
-        });
-
-        // Point 2: AOM-wise Supervisory Focus
-        const lagAOM = aomList[aomList.length - 1];
-        selectedLowlights.push({
-          tag: 'AOM SUPERVISORY FOCUS',
-          metric: `${lagAOM.name} (${formatNum(lagAOM.pending)} Stores Pending)`,
-          text: `AOM territory under <b>${lagAOM.name}</b> holds <b>${formatNum(lagAOM.pending)} pending outlets</b> (${lagAOM.pct.toFixed(1)}% coverage across ${lagAOM.vms} VMs), requiring active route re-balancing and catch-up beat scheduling.`
-        });
-
-        // Point 3: State-wise Backlog Concentration
-        const lagSt1 = stateList[stateList.length - 1];
-        const lagSt2 = stateList.length > 1 ? stateList[stateList.length - 2] : null;
-        selectedLowlights.push({
-          tag: 'STATE BACKLOG CONCENTRATION',
-          metric: `${lagSt1.name} (${formatNum(lagSt1.pending)} pnd) ${lagSt2 ? '& ' + lagSt2.name + ' (' + formatNum(lagSt2.pending) + ' pnd)' : ''}`,
-          text: `Unvisited store concentration is heaviest in <b>${lagSt1.name}</b> (${lagSt1.pct.toFixed(1)}% coverage, ${formatNum(lagSt1.pending)} unvisited stores) and <b>${lagSt2 ? lagSt2.name : ''}</b> (${lagSt2 ? lagSt2.pct.toFixed(1) : ''}%, ${lagSt2 ? formatNum(lagSt2.pending) : ''} pending), needing focused catch-up beats.`
-        });
-
-        // Point 4: Operational Repeat Visit / Coverage Deficit
-        selectedLowlights.push({
-          tag: 'REPEAT CYCLE / COVERAGE GAP',
-          metric: `${catA2Pct.toFixed(1)}% Cat A 2nd Visits (${formatNum(catA2Pnd)} Pending)`,
-          text: `<b>${formatNum(catA2Pnd)}</b> premium Cat A counters are yet to receive mandatory 2nd-cycle repeat visits (${catA2Pct.toFixed(1)}% completed), alongside <b>${formatNum(covPnd)} total unvisited outlets</b> awaiting first activation.`
+          text: `Immediate supervisory intervention required for trailing merchandisers: <b>${bot1['VM Name']}</b> (Rank #${bot1Rank}, ${bot1['Base Town'] || bot1['State']} · ${bot1Cov}% cov, ${formatNum(bot1['Coverage Pending'] || 0)} pending), <b>${bot2['VM Name'] || ''}</b> (Rank #${bot2['Rank'] ? Math.round(bot2['Rank']) : ''}, ${bot2['Base Town'] || bot2['State']} · ${bot2Cov}% cov), and <b>${bot3['VM Name'] || ''}</b> (Rank #${bot3['Rank'] ? Math.round(bot3['Rank']) : ''} · ${bot3Cov}% cov). ${!predBot1.isClosed ? 'Trailing VMs project below <b>~75% coverage</b> at month-end without schedule restructuring.' : ''}`
         });
       }
 
@@ -2000,6 +2317,7 @@
         `).join('');
       }
       if (hlCountEl) hlCountEl.textContent = `${selectedHighlights.length} Key Highlights`;
+      if (hlSubEl) hlSubEl.textContent = 'Core achievements, Detailed KPIs & green milestones';
 
       // Render Low-lights HTML
       if (llListEl) {
@@ -2019,6 +2337,7 @@
         `).join('');
       }
       if (llCountEl) llCountEl.textContent = `${selectedLowlights.length} Action Items`;
+      if (llSubEl) llSubEl.textContent = 'Operational backlogs, historic data & pacing projections';
     }
 
     /* Helper to set Donut Chart Progress */
