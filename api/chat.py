@@ -211,8 +211,7 @@ def get_status_dict(api_key=None):
     qc_data = get_qc_data()
     return {
         "status": "online",
-        "assistant": "Bosch Gemini AI Copilot",
-        "model": "gemini-2.5-flash",
+        "assistant": "Bosch AI Copilot",
         "apiKeyConfigured": has_key,
         "datasets": {
             "programLoaded": prog_data is not None,

@@ -1,6 +1,6 @@
 /**
- * Bosch Dashboards — Gemini AI Chat Assistant (ai-assistant.js)
- * High-performance, data-aware copilot interface powered by Gemini 2.0 Flash.
+ * Bosch Dashboards — AI Chat Assistant (ai-assistant.js)
+ * High-performance, data-aware copilot interface.
  * Automatically synchronizes with live dashboard state, active cascading filters,
  * and pre-loaded datasets (Program & QC).
  */
@@ -11,11 +11,10 @@
   // State
   const state = {
     isOpen: false,
-    isSettingsOpen: false,
     isLoading: false,
+    isConnected: true,
     dashboardType: 'program', // 'program' or 'qc'
-    history: [],
-    apiKey: localStorage.getItem('bosch_gemini_api_key') || ''
+    history: []
   };
 
   // Determine current dashboard context
@@ -123,6 +122,56 @@
     return html;
   }
 
+  function escapeHtml(str) {
+    return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // Update Live Connection Status Indicator (Green for Connected, Red for Error)
+  function updateConnectionStatus(isConnected, tooltip) {
+    state.isConnected = isConnected;
+    const pill = document.getElementById('boschAiStatusPill');
+    const launcherSub = document.getElementById('boschAiLauncherSub');
+    const pulseDot = document.getElementById('boschAiPulseDot');
+
+    if (pill) {
+      pill.className = `bosch-ai-status-pill ${isConnected ? 'connected' : 'error'}`;
+      pill.innerHTML = `
+        <span class="bosch-ai-status-dot"></span>
+        ${isConnected ? 'Connected &amp; Live' : 'Not Connected / Error'}
+      `;
+      pill.title = tooltip || (isConnected ? 'AI Assistant connected & dataset ready' : 'AI Assistant not connected');
+    }
+
+    if (launcherSub) {
+      launcherSub.textContent = isConnected ? 'Connected & Live' : 'Not Connected';
+      launcherSub.style.color = isConnected ? '#10b981' : '#ef4444';
+    }
+
+    if (pulseDot) {
+      pulseDot.className = `bosch-ai-pulse-dot ${isConnected ? '' : 'error'}`;
+      pulseDot.title = isConnected ? 'Live & Connected' : 'Not Connected';
+    }
+  }
+
+  // Health check to verify /api/chat connectivity on load
+  async function checkHealth() {
+    try {
+      const res = await fetch('/api/chat', { method: 'GET' });
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (data.apiKeyConfigured !== false) {
+          updateConnectionStatus(true);
+        } else {
+          updateConnectionStatus(false, 'API key missing on server');
+        }
+      } else {
+        updateConnectionStatus(false, `Server status ${res.status}`);
+      }
+    } catch (e) {
+      updateConnectionStatus(false, 'Unable to reach /api/chat endpoint');
+    }
+  }
+
   // Build and Inject Assistant DOM
   function injectWidget() {
     state.dashboardType = detectDashboardType();
@@ -139,9 +188,9 @@
       </div>
       <div class="bosch-ai-launcher-text">
         <span class="bosch-ai-launcher-title">Bosch AI Copilot</span>
-        <span class="bosch-ai-launcher-sub">Gemini 2.5 Flash</span>
+        <span class="bosch-ai-launcher-sub" id="boschAiLauncherSub">Connected &amp; Live</span>
       </div>
-      <div class="bosch-ai-pulse-dot" title="Data pre-loaded"></div>
+      <div class="bosch-ai-pulse-dot" id="boschAiPulseDot" title="Live & Connected"></div>
     `;
 
     // Drawer Container
@@ -179,7 +228,9 @@
           <div class="bosch-ai-header-info">
             <div class="bosch-ai-header-title">
               Bosch AI Copilot
-              <span class="bosch-ai-badge">Gemini 2.5</span>
+              <button type="button" class="bosch-ai-status-pill connected" id="boschAiStatusPill" title="Click to refresh status">
+                <span class="bosch-ai-status-dot"></span>Connected &amp; Live
+              </button>
             </div>
             <div class="bosch-ai-header-subtitle">
               <span>●</span> Pre-loaded Live Data
@@ -187,12 +238,6 @@
           </div>
         </div>
         <div class="bosch-ai-header-actions">
-          <button class="bosch-ai-btn-icon" id="boschAiBtnSettings" title="API Settings">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-          </button>
           <button class="bosch-ai-btn-icon" id="boschAiBtnClear" title="Clear Conversation">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3 6 5 6 21 6"></polyline>
@@ -205,23 +250,6 @@
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </button>
-        </div>
-      </div>
-
-      <!-- Settings Sub-panel -->
-      <div class="bosch-ai-settings-panel" id="boschAiSettingsPanel">
-        <div class="bosch-ai-settings-title">
-          <span>Gemini API Configuration</span>
-          <span style="font-size:10px;color:#94a3b8;">Stored locally in browser</span>
-        </div>
-        <div class="bosch-ai-input-group">
-          <input type="password" id="boschAiApiKeyInput" class="bosch-ai-settings-input" 
-                 placeholder="AIzaSy... (leave blank if set on server)" 
-                 value="${state.apiKey}">
-          <button id="boschAiBtnSaveKey" class="bosch-ai-btn-sm">Save</button>
-        </div>
-        <div style="font-size:10px;color:#94a3b8;line-height:1.4;">
-          Optional: If your key is already defined in <code style="color:#ff6b72;">.env</code> or Vercel Environment Variables, no key is needed here.
         </div>
       </div>
 
@@ -263,7 +291,7 @@
           </button>
         </form>
         <div class="bosch-ai-footer-note">
-          Google Gemini 2.5 Flash • Pre-loaded in-memory context • Zero lag
+          Bosch Field Copilot • Pre-loaded in-memory dataset • Zero lag
         </div>
       </div>
     `;
@@ -273,6 +301,7 @@
 
     bindEvents();
     bindFilterListeners();
+    checkHealth();
   }
 
   // Bind UI Events
@@ -281,10 +310,7 @@
     const drawer = document.getElementById('boschAiDrawer');
     const btnClose = document.getElementById('boschAiBtnClose');
     const btnClear = document.getElementById('boschAiBtnClear');
-    const btnSettings = document.getElementById('boschAiBtnSettings');
-    const settingsPanel = document.getElementById('boschAiSettingsPanel');
-    const btnSaveKey = document.getElementById('boschAiBtnSaveKey');
-    const apiKeyInput = document.getElementById('boschAiApiKeyInput');
+    const statusPill = document.getElementById('boschAiStatusPill');
     const form = document.getElementById('boschAiForm');
     const textarea = document.getElementById('boschAiTextarea');
     const suggestionsContainer = document.getElementById('boschAiSuggestions');
@@ -304,24 +330,15 @@
       drawer.classList.remove('open');
     });
 
-    // Toggle settings panel
-    btnSettings.addEventListener('click', () => {
-      state.isSettingsOpen = !state.isSettingsOpen;
-      settingsPanel.classList.toggle('active', state.isSettingsOpen);
-    });
-
-    // Save API Key
-    btnSaveKey.addEventListener('click', () => {
-      const val = apiKeyInput.value.trim();
-      state.apiKey = val;
-      localStorage.setItem('bosch_gemini_api_key', val);
-      btnSaveKey.textContent = 'Saved!';
-      setTimeout(() => {
-        btnSaveKey.textContent = 'Save';
-        state.isSettingsOpen = false;
-        settingsPanel.classList.remove('active');
-      }, 1200);
-    });
+    // Clicking status pill triggers a connection re-check
+    if (statusPill) {
+      statusPill.addEventListener('click', () => {
+        statusPill.style.opacity = '0.6';
+        checkHealth().finally(() => {
+          statusPill.style.opacity = '1';
+        });
+      });
+    }
 
     // Clear Chat
     btnClear.addEventListener('click', () => {
@@ -414,10 +431,6 @@
     container.scrollTop = container.scrollHeight;
   }
 
-  function escapeHtml(str) {
-    return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
-
   // Show typing indicator
   function showTyping() {
     const container = document.getElementById('boschAiMessages');
@@ -460,38 +473,29 @@
       prompt: query,
       dashboard: state.dashboardType,
       activeFilters: activeFilters,
-      history: state.history.slice(-8),
-      apiKey: state.apiKey || undefined
+      history: state.history.slice(-8)
     };
 
     try {
-      const headers = { 'Content-Type': 'application/json' };
-      if (state.apiKey) {
-        headers['x-gemini-api-key'] = state.apiKey;
-      }
-
       const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: headers,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
       removeTyping();
 
       if (res.status === 401) {
+        updateConnectionStatus(false, 'API key missing on server');
         appendMessage('assistant', 
-          '⚠️ **Gemini API Key Required**\n\n' +
-          'To start querying the pre-loaded dataset, please provide a Gemini API key. ' +
-          'You can either add `GEMINI_API_KEY=your_key` into your `.env` file / Vercel Environment Variables, ' +
-          'or click the **⚙️ Settings icon** above to paste it for this session.'
+          '⚠️ **Server Configuration Error**\n\n' +
+          'The AI Copilot requires `GEMINI_API_KEY` configured in the server environment variables (e.g., in Vercel project settings or `.env`).'
         );
-        // Automatically open settings panel
-        state.isSettingsOpen = true;
-        document.getElementById('boschAiSettingsPanel')?.classList.add('active');
         return;
       }
 
       if (!res.ok) {
+        updateConnectionStatus(false, `Error (${res.status})`);
         const errData = await res.json().catch(() => ({}));
         const errMessage = errData.error || `Server responded with status ${res.status}`;
         appendMessage('assistant', `⚠️ **Error:** ${errMessage}`);
@@ -500,17 +504,16 @@
 
       const data = await res.json();
       const reply = data.reply || 'No answer received.';
+      updateConnectionStatus(true);
       appendMessage('assistant', reply);
       state.history.push({ role: 'model', text: reply });
 
     } catch (err) {
       removeTyping();
+      updateConnectionStatus(false, 'Connection error');
       console.error('Chat Assistant Fetch Error:', err);
       appendMessage('assistant', 
-        `⚠️ **Network Error:** Could not reach \`/api/chat\` endpoint.\n\n` +
-        `If running locally, please start the development server with:\n` +
-        `\`\`\`bash\npython3 dev_server.py\n\`\`\`\n` +
-        `This enables the \`/api/chat\` Python serverless handler on port 8000.`
+        `⚠️ **Connection Error:** Could not reach \`/api/chat\` endpoint.`
       );
     } finally {
       state.isLoading = false;
