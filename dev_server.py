@@ -128,13 +128,26 @@ class DevRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 if __name__ == "__main__":
     socketserver.TCPServer.allow_reuse_address = True
-    with socketserver.TCPServer(("", PORT), DevRequestHandler) as httpd:
+    httpd = None
+    actual_port = PORT
+    for p in [PORT, 8001, 8008, 8080]:
+        try:
+            httpd = socketserver.TCPServer(("", p), DevRequestHandler)
+            actual_port = p
+            break
+        except OSError:
+            continue
+    if not httpd:
+        print(f"Error: Could not bind to any port.")
+        sys.exit(1)
+
+    with httpd:
         print(f"==================================================")
         print(f"🚀 Bosch Dashboard Dev Server running at:")
-        print(f"   http://localhost:{PORT}")
-        print(f"   http://localhost:{PORT}/qc")
-        print(f"   API /api/chat: http://localhost:{PORT}/api/chat")
-        print(f"   API /api/sync: http://localhost:{PORT}/api/sync")
+        print(f"   http://localhost:{actual_port}")
+        print(f"   http://localhost:{actual_port}/qc")
+        print(f"   API /api/chat: http://localhost:{actual_port}/api/chat")
+        print(f"   API /api/sync: http://localhost:{actual_port}/api/sync")
         print(f"==================================================")
         try:
             httpd.serve_forever()

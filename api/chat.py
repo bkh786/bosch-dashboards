@@ -114,10 +114,12 @@ def build_system_instruction(dashboard_type="program", active_filters=None):
         "- Final Achievement & Rank: Official executive score ranking all Visual Merchandisers.\n"
         "- Quality Audit (QC Tracker): Benchmark target is ≥ 80% approval. Evaluates Display Audit (Ref, WM, DW, Chimney, 360 photo), "
         "External & Internal Visibility, and Campaign/POSM compliance.\n\n"
-        "### TONE & GUIDELINES:\n"
+        "### TONE & FORMATTING GUIDELINES:\n"
         "- Answer with precise figures, percentages, and names directly from the pre-loaded dataset below.\n"
-        "- Use clean, concise Markdown formatting (bullet points, bold highlights, concise summary tables).\n"
-        "- If the user asks for top performers or bottom performers, provide ranks, AOM names, and key metrics.\n"
+        "- ALWAYS prioritize well-structured Markdown tables (| Col1 | Col2 | ... |) whenever comparing entities, listing VM rankings, summarizing AOMs, or presenting multiple data points.\n"
+        "- Structure answers with clear bold headings (e.g. ### Executive Summary, ### Leaderboard Breakdown, ### Key Takeaways).\n"
+        "- Use bullet points with bold leading terms for concise narrative points.\n"
+        "- If the user asks for top performers, bottom performers, or regional stats, always output a clean Markdown table with Rank, VM Name, AOM, Region, Coverage %, and Achievement.\n"
         "- Be proactive: provide actionable context (e.g., highlight if first-visit adherence or Cat A 2nd visits are pulling a score down).\n\n"
     )
 

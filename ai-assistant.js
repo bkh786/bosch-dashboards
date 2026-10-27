@@ -1,8 +1,11 @@
 /**
- * Bosch Dashboards — AI Chat Assistant (ai-assistant.js)
+ * Bosch Dashboards — AI Copilot Assistant (ai-assistant.js)
  * High-performance, data-aware copilot interface.
- * Automatically synchronizes with live dashboard state, active cascading filters,
- * and pre-loaded datasets (Program & QC).
+ * Features:
+ * - Expandable drawer window (normal 440px -> expanded 860px)
+ * - Rich formatted table rendering & structured markdown
+ * - Live screen filter context awareness & refresh sync
+ * - Zero-lag pre-loaded in-memory intelligence
  */
 
 (function () {
@@ -11,10 +14,17 @@
   // State
   const state = {
     isOpen: false,
+    isExpanded: false,
     isLoading: false,
     isConnected: true,
     dashboardType: 'program', // 'program' or 'qc'
     history: []
+  };
+
+  // SVGs for dynamic icons
+  const ICONS = {
+    expand: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>`,
+    collapse: `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>`
   };
 
   // Determine current dashboard context
@@ -56,12 +66,12 @@
   function getFilterSummaryText(filters) {
     const keys = Object.keys(filters);
     if (keys.length === 0) {
-      return state.dashboardType === 'qc' ? 'Full QC Audit Dataset' : 'Full National Program Dataset';
+      return state.dashboardType === 'qc' ? 'National / All Stores & Audits' : 'National / All VMs & AOMs';
     }
     return keys.map(k => `${k}: ${filters[k]}`).join(' • ');
   }
 
-  // Lightweight Markdown to HTML Formatter
+  // Enhanced Lightweight Markdown to HTML Formatter
   function parseMarkdown(md) {
     if (!md) return '';
     let html = md;
@@ -69,11 +79,15 @@
     // Escape basic html tags to prevent XSS
     html = html.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-    // Code blocks ```code```
-    html = html.replace(/```([a-z]*)\n([\s\S]*?)```/gm, '<pre><code>$2</code></pre>');
+    // Fenced Code blocks ```code```
+    html = html.replace(/```([a-z]*)\n([\s\S]*?)```/gm, '<pre class="bosch-ai-code-block"><code>$2</code></pre>');
 
     // Inline code `code`
-    html = html.replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.1);padding:2px 5px;border-radius:4px;font-family:IBM Plex Mono,monospace;font-size:11px;">$1</code>');
+    html = html.replace(/`([^`]+)`/g, '<code class="bosch-ai-inline-code">$1</code>');
+
+    // Headings (### and ##)
+    html = html.replace(/^### (.*$)/gim, '<h4 class="bosch-ai-h4">$1</h4>');
+    html = html.replace(/^## (.*$)/gim, '<h3 class="bosch-ai-h3">$1</h3>');
 
     // Bold **text**
     html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -81,14 +95,13 @@
     // Italic *text*
     html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 
-    // Tables
+    // Tables (Wrapped in scrollable table wrapper with high-density styling)
     const tableRegex = /((?:\|[^\n]+\|\r?\n)+)/g;
     html = html.replace(tableRegex, function (match) {
       const rows = match.trim().split('\n');
       if (rows.length < 2) return match;
       
-      let tableHtml = '<table>';
-      let isHeader = true;
+      let tableHtml = '<div class="bosch-ai-table-wrap"><table>';
 
       rows.forEach((row, idx) => {
         if (row.includes('---')) return; // separator
@@ -99,21 +112,34 @@
           tableHtml += '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
         }
       });
-      tableHtml += '</tbody></table>';
+      tableHtml += '</tbody></table></div>';
       return tableHtml;
     });
 
+    // Numbered lists (1. 2. 3.)
+    html = html.replace(/^\s*\d+\.\s+(.*)$/gm, '<oli>$1</oli>');
+    html = html.replace(/(<oli>.*<\/oli>(\n|(?=<oli>)))/g, '<ol>$1</ol>');
+    html = html.replace(/<\/ol>\n?<ol>/g, '');
+    html = html.replace(/<\/?oli>/g, match => match === '<oli>' ? '<li>' : '</li>');
+
     // Unordered lists (- or *)
-    html = html.replace(/^\s*[-*]\s+(.*)$/gm, '<li>$1</li>');
-    html = html.replace(/(<li>.*<\/li>(\n|(?=<li>)))/g, '<ul>$1</ul>');
+    html = html.replace(/^\s*[-*]\s+(.*)$/gm, '<uli>$1</uli>');
+    html = html.replace(/(<uli>.*<\/uli>(\n|(?=<uli>)))/g, '<ul>$1</ul>');
     html = html.replace(/<\/ul>\n?<ul>/g, '');
+    html = html.replace(/<\/?uli>/g, match => match === '<uli>' ? '<li>' : '</li>');
 
     // Paragraphs
     const lines = html.split('\n\n');
     html = lines.map(block => {
       block = block.trim();
       if (!block) return '';
-      if (block.startsWith('<table') || block.startsWith('<ul') || block.startsWith('<pre') || block.startsWith('<h')) {
+      if (block.startsWith('<div class="bosch-ai-table-wrap"') || 
+          block.startsWith('<table') || 
+          block.startsWith('<ul') || 
+          block.startsWith('<ol') || 
+          block.startsWith('<pre') || 
+          block.startsWith('<h3') || 
+          block.startsWith('<h4')) {
         return block;
       }
       return `<p>${block.replace(/\n/g, '<br>')}</p>`;
@@ -130,7 +156,6 @@
   function updateConnectionStatus(isConnected, tooltip) {
     state.isConnected = isConnected;
     const pill = document.getElementById('boschAiStatusPill');
-    const launcherSub = document.getElementById('boschAiLauncherSub');
     const pulseDot = document.getElementById('boschAiPulseDot');
 
     if (pill) {
@@ -140,11 +165,6 @@
         ${isConnected ? 'Connected &amp; Live' : 'Not Connected / Error'}
       `;
       pill.title = tooltip || (isConnected ? 'AI Assistant connected & dataset ready' : 'AI Assistant not connected');
-    }
-
-    if (launcherSub) {
-      launcherSub.textContent = isConnected ? 'Connected & Live' : 'Not Connected';
-      launcherSub.style.color = isConnected ? '#10b981' : '#ef4444';
     }
 
     if (pulseDot) {
@@ -172,25 +192,69 @@
     }
   }
 
+  // Generate Welcome Card HTML
+  function getWelcomeCardHtml() {
+    const isQc = state.dashboardType === 'qc';
+    const datasetName = isQc ? 'QC Tracker Audit & Compliance' : 'Visual Merchandising (Oct\'26)';
+    const bullet3 = isQc 
+      ? 'Ask about VM QC scores, store mistakes, audit pass rates, and compliance.' 
+      : 'Ask about VM rankings, AOM coverage %, Cat A/B visits, or 11:30 AM adherence.';
+
+    const suggestions = isQc ? [
+      'Top 5 & Bottom 5 VM QC Scores',
+      'Most Common Mistakes Reported',
+      'AOM-wise Audit Pass Rates',
+      'Ref & WM Section Compliance',
+      '360 Inside Snap Adherence'
+    ] : [
+      'Top 5 VM Leaderboard Summary',
+      'Which States saw highest Coverage?',
+      'Bottom 5 Performers Needing Attention',
+      'Cat A vs Cat B Progress',
+      'AOM Coverage Breakdown'
+    ];
+
+    return `
+      <div class="bosch-ai-welcome-card" id="boschAiWelcomeCard">
+        <div class="bosch-ai-welcome-title">👋 Welcome to Bosch AI Copilot!</div>
+        <div class="bosch-ai-welcome-sub">
+          I have the entire <strong>${datasetName}</strong> dataset pre-loaded in working memory.
+        </div>
+        <ul class="bosch-ai-welcome-features">
+          <li><strong>Zero Lag:</strong> Instant analysis without external database queries.</li>
+          <li><strong>Screen-Aware:</strong> Your active filters above are automatically synchronized.</li>
+          <li><strong>Granular Accuracy:</strong> ${bullet3}</li>
+        </ul>
+        <div class="bosch-ai-welcome-chips" id="boschAiSuggestions">
+          ${suggestions.map(s => `<button class="bosch-ai-chip">${s}</button>`).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   // Build and Inject Assistant DOM
   function injectWidget() {
     state.dashboardType = detectDashboardType();
 
-    // Launcher Button
+    // Launcher Button (Matches Screenshot: AI Copilot pill with sparkle icon & green dot)
     const launcher = document.createElement('div');
     launcher.id = 'boschAiLauncher';
     launcher.className = 'bosch-ai-launcher';
     launcher.innerHTML = `
       <div class="bosch-ai-launcher-icon">
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="2" x2="12" y2="6"></line>
+          <line x1="12" y1="18" x2="12" y2="22"></line>
+          <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+          <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+          <line x1="2" y1="12" x2="6" y2="12"></line>
+          <line x1="18" y1="12" x2="22" y2="12"></line>
+          <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+          <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
         </svg>
       </div>
-      <div class="bosch-ai-launcher-text">
-        <span class="bosch-ai-launcher-title">Bosch AI Copilot</span>
-        <span class="bosch-ai-launcher-sub" id="boschAiLauncherSub">Connected &amp; Live</span>
-      </div>
-      <div class="bosch-ai-pulse-dot" id="boschAiPulseDot" title="Live & Connected"></div>
+      <span class="bosch-ai-launcher-title">AI Copilot</span>
+      <div class="bosch-ai-pulse-dot" id="boschAiPulseDot" title="Live &amp; Connected"></div>
     `;
 
     // Drawer Container
@@ -202,41 +266,27 @@
     const initialFilters = getActiveFilters();
     const contextLabel = getFilterSummaryText(initialFilters);
 
-    // Dynamic suggestions based on dashboard
-    const suggestions = state.dashboardType === 'qc' ? [
-      '🏆 Top 5 & Bottom 5 VM QC Scores',
-      '⚠️ Most Common Mistakes Reported',
-      '📊 AOM-wise Audit Pass Rates',
-      '🔍 Ref & WM Section Compliance',
-      '📸 360 Inside Snap Adherence'
-    ] : [
-      '🏆 Top 5 VM Leaderboard Summary',
-      '⚠️ Bottom 5 Performers & Laggards',
-      '📊 AOM Coverage Breakdown',
-      '⏰ 11:30 AM First Visit Adherence',
-      '🎯 Cat A vs Cat B Progress'
-    ];
-
     drawer.innerHTML = `
+      <!-- Header -->
       <div class="bosch-ai-header">
         <div class="bosch-ai-header-left">
           <div class="bosch-ai-avatar">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"/>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
             </svg>
           </div>
           <div class="bosch-ai-header-info">
-            <div class="bosch-ai-header-title">
-              Bosch AI Copilot
-              <button type="button" class="bosch-ai-status-pill connected" id="boschAiStatusPill" title="Click to refresh status">
-                <span class="bosch-ai-status-dot"></span>Connected &amp; Live
-              </button>
-            </div>
-            <div class="bosch-ai-header-subtitle">
-              <span>●</span> Pre-loaded Live Data
-            </div>
+            <div class="bosch-ai-header-title">Bosch AI Copilot</div>
+            <div class="bosch-ai-header-subtitle">In-Memory Analytical Intelligence</div>
           </div>
         </div>
+
+        <button type="button" class="bosch-ai-status-pill connected" id="boschAiStatusPill" title="Click to refresh status">
+          <span class="bosch-ai-status-dot"></span>Connected &amp; Live
+        </button>
+
         <div class="bosch-ai-header-actions">
           <button class="bosch-ai-btn-icon" id="boschAiBtnClear" title="Clear Conversation">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -244,7 +294,10 @@
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
             </svg>
           </button>
-          <button class="bosch-ai-btn-icon" id="boschAiBtnClose" title="Minimize">
+          <button class="bosch-ai-btn-icon" id="boschAiBtnExpand" title="Expand window">
+            ${ICONS.expand}
+          </button>
+          <button class="bosch-ai-btn-icon" id="boschAiBtnClose" title="Close">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -253,45 +306,40 @@
         </div>
       </div>
 
-      <!-- Active Context Banner -->
-      <div class="bosch-ai-context-banner">
-        <span>Active View:</span>
-        <span class="bosch-ai-context-tag" id="boschAiContextTag">
-          🎯 ${contextLabel}
-        </span>
+      <!-- Active View Filter Bar (Screen State Awareness) -->
+      <div class="bosch-ai-active-bar">
+        <div class="bosch-ai-active-tag">🎯 ACTIVE VIEW</div>
+        <div class="bosch-ai-active-text" id="boschAiActiveText">${contextLabel}</div>
+        <button class="bosch-ai-active-refresh" id="boschAiBtnRefreshView" title="Sync with active screen filters">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M23 4v6h-6"></path>
+            <path d="M1 20v-6h6"></path>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+        </button>
       </div>
 
       <!-- Messages Stream -->
       <div class="bosch-ai-messages" id="boschAiMessages">
-        <div class="bosch-ai-msg assistant">
-          <div class="bosch-ai-msg-avatar">⚡</div>
-          <div class="bosch-ai-msg-bubble">
-            <p><strong>Hello! I'm your Bosch Field Performance Copilot.</strong></p>
-            <p>The entire master dataset is pre-loaded into my working memory. You can ask me any question about VM rankings, AOM performance, coverage %, Category A/B visits, or first-visit adherence benchmarks.</p>
-            <p style="font-size:11px;color:#94a3b8;margin-top:6px;">Try one of the quick suggestions below or type your question!</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Suggestion Chips -->
-      <div class="bosch-ai-suggestions" id="boschAiSuggestions">
-        ${suggestions.map(s => `<button class="bosch-ai-chip">${s}</button>`).join('')}
+        ${getWelcomeCardHtml()}
       </div>
 
       <!-- Input Footer -->
       <div class="bosch-ai-footer">
         <form class="bosch-ai-input-form" id="boschAiForm">
-          <textarea id="boschAiTextarea" class="bosch-ai-textarea" rows="1" 
-                    placeholder="Ask anything about Bosch VM or QC performance..."></textarea>
-          <button type="submit" id="boschAiSendBtn" class="bosch-ai-send-btn" title="Send (Enter)">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <line x1="22" y1="2" x2="11" y2="13"></line>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-            </svg>
-          </button>
+          <div class="bosch-ai-input-box">
+            <textarea id="boschAiTextarea" class="bosch-ai-textarea" rows="1" 
+                      placeholder="Ask anything about VM rankings, coverage, or QC..."></textarea>
+            <button type="submit" id="boschAiSendBtn" class="bosch-ai-send-btn" title="Send (Enter)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </button>
+          </div>
         </form>
         <div class="bosch-ai-footer-note">
-          Bosch Field Copilot • Pre-loaded in-memory dataset • Zero lag
+          Bosch Program Analytics · In-Memory AI Intelligence · Shift+Enter for newline
         </div>
       </div>
     `;
@@ -310,17 +358,19 @@
     const drawer = document.getElementById('boschAiDrawer');
     const btnClose = document.getElementById('boschAiBtnClose');
     const btnClear = document.getElementById('boschAiBtnClear');
+    const btnExpand = document.getElementById('boschAiBtnExpand');
+    const btnRefreshView = document.getElementById('boschAiBtnRefreshView');
     const statusPill = document.getElementById('boschAiStatusPill');
     const form = document.getElementById('boschAiForm');
     const textarea = document.getElementById('boschAiTextarea');
-    const suggestionsContainer = document.getElementById('boschAiSuggestions');
+    const messagesContainer = document.getElementById('boschAiMessages');
 
-    // Toggle drawer
+    // Toggle drawer open / close
     launcher.addEventListener('click', () => {
       state.isOpen = !state.isOpen;
       drawer.classList.toggle('open', state.isOpen);
       if (state.isOpen) {
-        updateContextTag();
+        updateActiveView();
         setTimeout(() => textarea.focus(), 150);
       }
     });
@@ -330,7 +380,28 @@
       drawer.classList.remove('open');
     });
 
-    // Clicking status pill triggers a connection re-check
+    // Expand / Collapse Drawer Window
+    if (btnExpand) {
+      btnExpand.addEventListener('click', () => {
+        state.isExpanded = !state.isExpanded;
+        drawer.classList.toggle('expanded', state.isExpanded);
+        btnExpand.innerHTML = state.isExpanded ? ICONS.collapse : ICONS.expand;
+        btnExpand.title = state.isExpanded ? 'Collapse window' : 'Expand window';
+      });
+    }
+
+    // Refresh Active View on Demand
+    if (btnRefreshView) {
+      btnRefreshView.addEventListener('click', () => {
+        btnRefreshView.style.transform = 'rotate(360deg)';
+        updateActiveView();
+        setTimeout(() => {
+          btnRefreshView.style.transform = 'none';
+        }, 300);
+      });
+    }
+
+    // Status pill re-check
     if (statusPill) {
       statusPill.addEventListener('click', () => {
         statusPill.style.opacity = '0.6';
@@ -343,16 +414,7 @@
     // Clear Chat
     btnClear.addEventListener('click', () => {
       state.history = [];
-      const messagesContainer = document.getElementById('boschAiMessages');
-      messagesContainer.innerHTML = `
-        <div class="bosch-ai-msg assistant">
-          <div class="bosch-ai-msg-avatar">⚡</div>
-          <div class="bosch-ai-msg-bubble">
-            <p><strong>Conversation refreshed.</strong></p>
-            <p>The pre-loaded dataset is ready. How can I assist you with your field analytics?</p>
-          </div>
-        </div>
-      `;
+      messagesContainer.innerHTML = getWelcomeCardHtml();
     });
 
     // Auto-resize textarea & Enter key to submit
@@ -368,8 +430,8 @@
       }
     });
 
-    // Quick suggestion chips
-    suggestionsContainer.addEventListener('click', (e) => {
+    // Delegate Quick suggestion chips click
+    messagesContainer.addEventListener('click', (e) => {
       const chip = e.target.closest('.bosch-ai-chip');
       if (chip) {
         const text = chip.textContent.replace(/^[^a-zA-Z0-9]+/, '').trim();
@@ -390,7 +452,7 @@
     });
   }
 
-  // Monitor DOM dropdown filter changes to keep context tag and prompt synced
+  // Monitor DOM dropdown filter changes
   function bindFilterListeners() {
     const filterIds = state.dashboardType === 'qc' 
       ? ['qcFilterRegion', 'qcFilterState', 'qcFilterAom', 'qcFilterVm']
@@ -400,17 +462,17 @@
       const el = document.getElementById(id);
       if (el) {
         el.addEventListener('change', () => {
-          updateContextTag();
+          updateActiveView();
         });
       }
     });
   }
 
-  function updateContextTag() {
-    const tag = document.getElementById('boschAiContextTag');
-    if (!tag) return;
+  function updateActiveView() {
+    const textEl = document.getElementById('boschAiActiveText');
+    if (!textEl) return;
     const filters = getActiveFilters();
-    tag.textContent = `🎯 ${getFilterSummaryText(filters)}`;
+    textEl.textContent = getFilterSummaryText(filters);
   }
 
   // Append a message to the UI
@@ -419,7 +481,9 @@
     const msgEl = document.createElement('div');
     msgEl.className = `bosch-ai-msg ${role}`;
 
-    const avatar = role === 'assistant' ? '⚡' : '👤';
+    const avatar = role === 'assistant' 
+      ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>`
+      : '👤';
     const parsedText = role === 'assistant' ? parseMarkdown(text) : `<p>${escapeHtml(text)}</p>`;
 
     msgEl.innerHTML = `
@@ -438,13 +502,15 @@
     typingEl.id = 'boschAiTyping';
     typingEl.className = 'bosch-ai-msg assistant';
     typingEl.innerHTML = `
-      <div class="bosch-ai-msg-avatar">⚡</div>
+      <div class="bosch-ai-msg-avatar">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"/></svg>
+      </div>
       <div class="bosch-ai-msg-bubble" style="padding: 10px 16px;">
         <div class="bosch-ai-typing">
           <div class="bosch-ai-dot"></div>
           <div class="bosch-ai-dot"></div>
           <div class="bosch-ai-dot"></div>
-          <span style="font-size:11px;color:#94a3b8;margin-left:6px;">Consulting pre-loaded data...</span>
+          <span style="font-size:11px;color:#94a3b8;margin-left:6px;">Consulting pre-loaded dataset...</span>
         </div>
       </div>
     `;
@@ -488,7 +554,7 @@
       if (res.status === 401) {
         updateConnectionStatus(false, 'API key missing on server');
         appendMessage('assistant', 
-          '⚠️ **Server Configuration Error**\n\n' +
+          '⚠️ **Server Configuration Notice**\n\n' +
           'The AI Copilot requires `GEMINI_API_KEY` configured in the server environment variables (e.g., in Vercel project settings or `.env`).'
         );
         return;
