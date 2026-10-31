@@ -41,19 +41,27 @@
   function getActiveFilters() {
     const filters = {};
     if (state.dashboardType === 'qc') {
-      const reg = document.getElementById('qcFilterRegion')?.value;
-      const st = document.getElementById('qcFilterState')?.value;
-      const aom = document.getElementById('qcFilterAom')?.value;
-      const vm = document.getElementById('qcFilterVm')?.value;
+      const reg = document.getElementById('fBranch')?.value || document.getElementById('qcFilterRegion')?.value;
+      const aom = document.getElementById('fAOM')?.value || document.getElementById('qcFilterAom')?.value;
+      const vm = document.getElementById('fEmp')?.value || document.getElementById('qcFilterVm')?.value;
+      const cat = document.getElementById('fCat')?.value;
+      const cls = document.getElementById('fClass')?.value;
+      const dFrom = document.getElementById('fDateFrom')?.value;
+      const dTo = document.getElementById('fDateTo')?.value;
       if (reg && reg !== 'ALL') filters['Region'] = reg;
-      if (st && st !== 'ALL') filters['State'] = st;
       if (aom && aom !== 'ALL') filters['AOM'] = aom;
       if (vm && vm !== 'ALL') filters['VM'] = vm;
+      if (cat && cat !== 'ALL') filters['Category'] = cat;
+      if (cls && cls !== 'ALL') filters['Class'] = cls;
+      if (dFrom) filters['From'] = dFrom;
+      if (dTo) filters['To'] = dTo;
     } else {
+      const mo = document.getElementById('filterMonth')?.value;
       const reg = document.getElementById('filterRegion')?.value;
       const st = document.getElementById('filterState')?.value;
-      const aom = document.getElementById('filterAom')?.value;
-      const vm = document.getElementById('filterVm')?.value;
+      const aom = document.getElementById('filterAOM')?.value || document.getElementById('filterAom')?.value;
+      const vm = document.getElementById('filterVM')?.value || document.getElementById('filterVm')?.value;
+      if (mo && mo !== 'ALL') filters['Month'] = mo;
       if (reg && reg !== 'ALL') filters['Region'] = reg;
       if (st && st !== 'ALL') filters['State'] = st;
       if (aom && aom !== 'ALL') filters['AOM'] = aom;
@@ -85,18 +93,18 @@
     // Inline code `code`
     html = html.replace(/`([^`]+)`/g, '<code class="bosch-ai-inline-code">$1</code>');
 
-    // Headings (### and ##)
-    html = html.replace(/^### (.*$)/gim, '<h4 class="bosch-ai-h4">$1</h4>');
-    html = html.replace(/^## (.*$)/gim, '<h3 class="bosch-ai-h3">$1</h3>');
+    // Strip standalone horizontal rules (--- or ***)
+    html = html.replace(/^\s*[-*_]{3,}\s*$/gm, '');
+
+    // Headings (# to ######, stripping any duplicate # prefixes)
+    html = html.replace(/^\s*#{3,6}\s+(?:#+\s*)?(.*)$/gm, '<h4 class="bosch-ai-h4">$1</h4>');
+    html = html.replace(/^\s*#{1,2}\s+(?:#+\s*)?(.*)$/gm, '<h3 class="bosch-ai-h3">$1</h3>');
 
     // Bold **text**
     html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 
-    // Italic *text*
-    html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-
     // Tables (Wrapped in scrollable table wrapper with high-density styling)
-    const tableRegex = /((?:\|[^\n]+\|\r?\n)+)/g;
+    const tableRegex = /((?:\|[^\n]+\|\r?\n?)+)/g;
     html = html.replace(tableRegex, function (match) {
       const rows = match.trim().split('\n');
       if (rows.length < 2) return match;
@@ -122,11 +130,14 @@
     html = html.replace(/<\/ol>\n?<ol>/g, '');
     html = html.replace(/<\/?oli>/g, match => match === '<oli>' ? '<li>' : '</li>');
 
-    // Unordered lists (- or *)
+    // Unordered lists (- or *) — parsed BEFORE single-asterisk italic
     html = html.replace(/^\s*[-*]\s+(.*)$/gm, '<uli>$1</uli>');
     html = html.replace(/(<uli>.*<\/uli>(\n|(?=<uli>)))/g, '<ul>$1</ul>');
     html = html.replace(/<\/ul>\n?<ul>/g, '');
     html = html.replace(/<\/?uli>/g, match => match === '<uli>' ? '<li>' : '</li>');
+
+    // Single-line Italic *text* (only after bullet lists are converted)
+    html = html.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
 
     // Paragraphs
     const lines = html.split('\n\n');
@@ -452,11 +463,11 @@
     });
   }
 
-  // Monitor DOM dropdown filter changes
+  // Monitor DOM dropdown filter changes (including dynamically populated filters)
   function bindFilterListeners() {
     const filterIds = state.dashboardType === 'qc' 
-      ? ['qcFilterRegion', 'qcFilterState', 'qcFilterAom', 'qcFilterVm']
-      : ['filterRegion', 'filterState', 'filterAom', 'filterVm'];
+      ? ['fBranch', 'fAOM', 'fEmp', 'fCat', 'fClass', 'fDateFrom', 'fDateTo', 'qcFilterRegion', 'qcFilterState', 'qcFilterAom', 'qcFilterVm']
+      : ['filterMonth', 'filterRegion', 'filterState', 'filterAOM', 'filterVM', 'filterAom', 'filterVm'];
 
     filterIds.forEach(id => {
       const el = document.getElementById(id);
@@ -464,6 +475,12 @@
         el.addEventListener('change', () => {
           updateActiveView();
         });
+      }
+    });
+
+    document.addEventListener('change', (e) => {
+      if (e.target && filterIds.includes(e.target.id)) {
+        updateActiveView();
       }
     });
   }
@@ -539,7 +556,7 @@
       prompt: query,
       dashboard: state.dashboardType,
       activeFilters: activeFilters,
-      history: state.history.slice(-8)
+      history: state.history.slice(-4)
     };
 
     try {

@@ -7,8 +7,8 @@
   <meta name="description" content="Real-time Visual Merchandising program performance dashboard for Bosch, featuring live coverage %, visit achievements, productivity, AOM & VM rankings.">
 
   <!-- External Design System & Fonts -->
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="ai-assistant.css?v=2.1">
+  <link rel="stylesheet" href="style.css?v=2.2">
+  <link rel="stylesheet" href="ai-assistant.css?v=2.2">
 
   <!-- SheetJS, Chart.js & Datalabels -->
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
@@ -104,57 +104,84 @@
       </div>
     </header>
 
-    <!-- SCROLLABLE FILTERS SECTION (Scrolls with page content to preserve vertical screen space) -->
-    <section class="filters-container compact-filters" id="mainFiltersSection" aria-label="Filters">
-      <div class="filters-bar-row">
-        <div class="filters-title-compact">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
-          </svg>
-          <span>Filters</span>
+    <!-- LEFT-SIDEBAR COLLAPSIBLE FILTERS (Collapsed by default, 90-degree rotated tab button) -->
+    <div class="filters-sidebar-backdrop" id="filtersSidebarBackdrop" onclick="toggleFiltersSidebar(false)"></div>
+    <aside class="filters-sidebar is-collapsed" id="mainFiltersSection" aria-label="Filters">
+      <button type="button"
+              class="filters-sidebar-toggle-btn"
+              id="btnToggleFiltersSidebar"
+              onclick="toggleFiltersSidebar()"
+              aria-expanded="false"
+              title="Expand Filters">
+        <span class="filters-toggle-chevron" id="filtersToggleChevron">❯</span>
+        <svg class="filters-toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+        </svg>
+        <span class="filters-toggle-text-wrap">
+          <span class="filters-toggle-text">FILTERS</span>
+        </span>
+        <span class="filters-toggle-badge" id="filtersToggleBadge" style="display:none;">0</span>
+      </button>
+
+      <div class="filters-sidebar-panel">
+        <div class="filters-sidebar-header">
+          <div class="filters-title-compact">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+            <span>Filters</span>
+          </div>
+          <div class="filters-sidebar-header-right">
+            <span class="filters-count-badge" id="filterRecordCount">34 VMs</span>
+            <button type="button" class="filters-sidebar-collapse-btn" onclick="toggleFiltersSidebar(false)" title="Collapse Filters">
+              <span>❮</span>
+              <span>Collapse</span>
+            </button>
+          </div>
         </div>
 
-        <div class="filter-item-compact">
-          <label class="filter-label-inline" for="filterMonth">Month</label>
-          <select id="filterMonth" class="filter-select-compact" onchange="onFilterChange('month')">
-            <option value="">All Months</option>
-          </select>
-        </div>
+        <div class="filters-bar-row">
+          <div class="filter-item-compact">
+            <label class="filter-label-inline" for="filterMonth">Month</label>
+            <select id="filterMonth" class="filter-select-compact" onchange="onFilterChange('month')">
+              <option value="">All Months</option>
+            </select>
+          </div>
 
-        <div class="filter-item-compact">
-          <label class="filter-label-inline" for="filterRegion">Region</label>
-          <select id="filterRegion" class="filter-select-compact" onchange="onFilterChange('region')">
-            <option value="">All Regions</option>
-          </select>
-        </div>
+          <div class="filter-item-compact">
+            <label class="filter-label-inline" for="filterRegion">Region</label>
+            <select id="filterRegion" class="filter-select-compact" onchange="onFilterChange('region')">
+              <option value="">All Regions</option>
+            </select>
+          </div>
 
-        <div class="filter-item-compact">
-          <label class="filter-label-inline" for="filterState">State</label>
-          <select id="filterState" class="filter-select-compact" onchange="onFilterChange('state')">
-            <option value="">All States</option>
-          </select>
-        </div>
+          <div class="filter-item-compact">
+            <label class="filter-label-inline" for="filterState">State</label>
+            <select id="filterState" class="filter-select-compact" onchange="onFilterChange('state')">
+              <option value="">All States</option>
+            </select>
+          </div>
 
-        <div class="filter-item-compact">
-          <label class="filter-label-inline" for="filterAOM">AOM</label>
-          <select id="filterAOM" class="filter-select-compact" onchange="onFilterChange('aom')">
-            <option value="">All AOMs</option>
-          </select>
-        </div>
+          <div class="filter-item-compact">
+            <label class="filter-label-inline" for="filterAOM">AOM</label>
+            <select id="filterAOM" class="filter-select-compact" onchange="onFilterChange('aom')">
+              <option value="">All AOMs</option>
+            </select>
+          </div>
 
-        <div class="filter-item-compact">
-          <label class="filter-label-inline" for="filterVM">VM Name</label>
-          <select id="filterVM" class="filter-select-compact" onchange="onFilterChange('vm')">
-            <option value="">All VMs</option>
-          </select>
-        </div>
+          <div class="filter-item-compact">
+            <label class="filter-label-inline" for="filterVM">VM Name</label>
+            <select id="filterVM" class="filter-select-compact" onchange="onFilterChange('vm')">
+              <option value="">All VMs</option>
+            </select>
+          </div>
 
-        <div class="filters-actions-compact">
-          <span class="filters-count-badge" id="filterRecordCount">34 VMs</span>
-          <button class="btn-clear-filter" onclick="resetBarFilters()" title="Reset other filters (preserves month)">Reset</button>
+          <div class="filters-actions-compact">
+            <button type="button" class="btn-clear-filter" onclick="resetBarFilters()" title="Reset other filters (preserves month)">Reset Filters</button>
+          </div>
         </div>
       </div>
-    </section>
+    </aside>
 
     <!-- EXECUTIVE INSIGHTS SECTION (Side-by-side Highlights & Low-lights table) -->
     <section class="executive-insights-section is-collapsed" id="executiveInsightsSection" aria-label="Executive Insights & Program Health">
@@ -1626,6 +1653,18 @@
         ? `${baseTotal} VMs` 
         : `${State.filteredVMs.length} of ${baseTotal} VMs`;
 
+      // Update active filter badge on left-sidebar toggle button
+      const activeDimCount = [region, state, aom, vm].filter(Boolean).length;
+      const badgeEl = document.getElementById('filtersToggleBadge');
+      if (badgeEl) {
+        if (activeDimCount > 0) {
+          badgeEl.style.display = 'inline-flex';
+          badgeEl.textContent = activeDimCount;
+        } else {
+          badgeEl.style.display = 'none';
+        }
+      }
+
       const totalVisitsInMonth = basePool.reduce((acc, r) => acc + (parseFloat(r['Visits Achieved']) || 0), 0);
       const metaTotalVisitsEl = document.getElementById('metaTotalVisits');
       if (metaTotalVisitsEl) metaTotalVisitsEl.textContent = formatNum(totalVisitsInMonth);
@@ -1640,6 +1679,45 @@
       updateAOMTable();
       updateCompleteRankTable();
     }
+
+    /* ---------------------- LEFT-SIDEBAR FILTERS EXPAND / COLLAPSE ---------------------- */
+    function toggleFiltersSidebar(forceOpen) {
+      const sidebar = document.getElementById('mainFiltersSection');
+      const backdrop = document.getElementById('filtersSidebarBackdrop');
+      const btn = document.getElementById('btnToggleFiltersSidebar');
+      const chevron = document.getElementById('filtersToggleChevron');
+      if (!sidebar) return;
+
+      const currentlyCollapsed = sidebar.classList.contains('is-collapsed');
+      const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : currentlyCollapsed;
+
+      if (shouldOpen) {
+        sidebar.classList.remove('is-collapsed');
+        if (backdrop) backdrop.classList.add('is-open');
+        if (btn) {
+          btn.setAttribute('aria-expanded', 'true');
+          btn.title = 'Collapse Filters';
+        }
+        if (chevron) chevron.textContent = '❮';
+      } else {
+        sidebar.classList.add('is-collapsed');
+        if (backdrop) backdrop.classList.remove('is-open');
+        if (btn) {
+          btn.setAttribute('aria-expanded', 'false');
+          btn.title = 'Expand Filters';
+        }
+        if (chevron) chevron.textContent = '❯';
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const sidebar = document.getElementById('mainFiltersSection');
+        if (sidebar && !sidebar.classList.contains('is-collapsed')) {
+          toggleFiltersSidebar(false);
+        }
+      }
+    });
 
     /* ---------------------- SECTION EXPAND / COLLAPSE CONTROLS ---------------------- */
     function toggleExecutiveInsights() {
@@ -3671,6 +3749,6 @@
   </script>
 
   <!-- Bosch Gemini AI Copilot -->
-  <script src="ai-assistant.js?v=2.1"></script>
+  <script src="ai-assistant.js?v=2.2"></script>
 </body>
 </html>

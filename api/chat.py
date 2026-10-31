@@ -1,8 +1,8 @@
 """
 Bosch Dashboard — Gemini AI Chat Assistant Serverless Handler (/api/chat)
 Pre-loads master datasets (Program & QC) into memory and interfaces with
-Google Gemini 2.0 Flash for instant, data-aware intelligence without
-re-querying external files on every visitor prompt.
+Google Gemini Flash models for instant, token-optimized, data-aware intelligence
+without re-querying external files on every visitor prompt.
 """
 
 from http.server import BaseHTTPRequestHandler
@@ -12,19 +12,23 @@ import urllib.parse
 import json
 import os
 import sys
+import time
 
 # Reference project root
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
-# In-memory cached dataset to prevent disk re-reads on every query
+# In-memory cached dataset and model discovery to prevent repeated I/O on every query
 _CACHE = {
     "program": None,
     "program_mtime": 0,
     "qc": None,
-    "qc_mtime": 0
+    "qc_mtime": 0,
+    "models": None,
+    "models_ts": 0
 }
+
 
 def load_dotenv():
     """Load variables from .env or .env.local if present."""
@@ -44,8 +48,10 @@ def load_dotenv():
             except Exception:
                 pass
 
+
 # Attempt loading .env once at module import
 load_dotenv()
+
 
 def resolve_api_key(override_key=None, header_key=None):
     """Resolve GEMINI_API_KEY from override, headers, environment, or .env."""
@@ -58,6 +64,7 @@ def resolve_api_key(override_key=None, header_key=None):
         return env_key.strip()
     load_dotenv()
     return os.environ.get("GEMINI_API_KEY", "").strip()
+
 
 def get_program_data():
     """Retrieve pre-parsed Program Performance dataset with caching."""
@@ -75,6 +82,7 @@ def get_program_data():
         print(f"Error loading data.json: {e}")
         return None
 
+
 def get_qc_data():
     """Retrieve pre-parsed QC Tracker dataset with caching."""
     filepath = os.path.join(BASE_DIR, "data_qc.json")
@@ -91,60 +99,150 @@ def get_qc_data():
         print(f"Error loading data_qc.json: {e}")
         return None
 
+
+def _summarize_vm_pool(vms_list):
+    """Compute aggregate KPIs for a list of VM records."""
+    if not vms_list:
+        return {}
+    n = len(vms_list)
+    cov_tgt = sum(float(v.get("Coverage Target") or 0) for v in vms_list)
+    cov_ach = sum(float(v.get("Coverage Achievement") or 0) for v in vms_list)
+    cov_pend = sum(float(v.get("Coverage Pending") or 0) for v in vms_list)
+    vis_tgt = sum(float(v.get("Visit Target") or 0) for v in vms_list)
+    vis_ach = sum(float(v.get("Visits Achieved") or 0) for v in vms_list)
+    prod_vis = sum(float(v.get("Productive Visits") or 0) for v in vms_list)
+    cata_tgt = sum(float(v.get("Cat A Target") or 0) for v in vms_list)
+    cata_1st = sum(float(v.get("Cat A 1st visit") or 0) for v in vms_list)
+    cata_2nd = sum(float(v.get("Cat A 2nd Visit") or 0) for v in vms_list)
+    catb_tgt = sum(float(v.get("Cat B Target") or 0) for v in vms_list)
+    catb_ach = sum(float(v.get("Cat B Achievement") or 0) for v in vms_list)
+    md_tgt = sum(float(v.get("Target Man-days") or 0) for v in vms_list)
+    md_ach = sum(float(v.get("Man-days Achieved") or 0) for v in vms_list)
+
+    adh_vals = [float(v.get("First Visit Time Adherence (11:30 AM)") or 0) for v in vms_list]
+    fin_vals = [float(v.get("Final Achievement") or 0) for v in vms_list]
+
+    cov_pct = round((cov_ach / cov_tgt * 100), 1) if cov_tgt else 0.0
+    vis_pct = round((vis_ach / vis_tgt * 100), 1) if vis_tgt else 0.0
+    prod_pct = round((prod_vis / vis_ach * 100), 1) if vis_ach else 0.0
+    cata_1st_pct = round((cata_1st / cata_tgt * 100), 1) if cata_tgt else 0.0
+    cata_2nd_pct = round((cata_2nd / cata_tgt * 100), 1) if cata_tgt else 0.0
+    catb_pct = round((catb_ach / catb_tgt * 100), 1) if catb_tgt else 0.0
+    md_pct = round((md_ach / md_tgt * 100), 1) if md_tgt else 0.0
+    avg_prod = round((vis_ach / md_ach), 2) if md_ach else 0.0
+    avg_adh = round((sum(adh_vals) / n * 100), 1) if n else 0.0
+    avg_fin = round((sum(fin_vals) / n * 100), 1) if n else 0.0
+
+    # Projected month-end coverage based on current trajectory & remaining pending stores
+    projected_low = min(100.0, round(cov_pct + max(1.2, (100.0 - cov_pct) * 0.45), 1))
+    projected_high = min(100.0, round(cov_pct + max(2.5, (100.0 - cov_pct) * 0.78), 1))
+
+    return {
+        "vms": n,
+        "cov_tgt": int(cov_tgt),
+        "cov_ach": int(cov_ach),
+        "cov_pend": int(cov_pend),
+        "cov_pct": cov_pct,
+        "vis_tgt": int(vis_tgt),
+        "vis_ach": int(vis_ach),
+        "vis_pct": vis_pct,
+        "prod_pct": prod_pct,
+        "cata_tgt": int(cata_tgt),
+        "cata_1st": int(cata_1st),
+        "cata_1st_pct": cata_1st_pct,
+        "cata_2nd": int(cata_2nd),
+        "cata_2nd_pct": cata_2nd_pct,
+        "catb_tgt": int(catb_tgt),
+        "catb_ach": int(catb_ach),
+        "catb_pct": catb_pct,
+        "md_tgt": int(md_tgt),
+        "md_ach": int(md_ach),
+        "md_pct": md_pct,
+        "avg_prod": avg_prod,
+        "avg_adh": avg_adh,
+        "avg_fin": avg_fin,
+        "proj_range": f"{projected_low}%–{projected_high}%"
+    }
+
+
 def build_system_instruction(dashboard_type="program", active_filters=None):
-    """Build pre-loaded domain context and dataset for Gemini in compact, high-density format."""
-    parts = []
-    
-    parts.append(
-        "You are the Bosch Field Operations & VM Performance AI Copilot for the "
-        "Bosch Visual Merchandising Program (operated by Channelplay).\n"
-        "Your role is to assist visitors, operations managers, AOMs, and executives "
-        "by instantly answering queries regarding visual merchandising field execution, "
-        "targets, coverage rates, man-days, productivity, and quality audit compliance.\n\n"
-        "### KEY OPERATIONAL BENCHMARKS & METRIC DEFINITIONS:\n"
-        "- First Visit Time Adherence: Target benchmark is check-in by 11:30 AM.\n"
-        "- Average Productivity: Benchmark target is ~4.0 visits per working man-day.\n"
-        "- Category A (Cat A) Outlets: High-priority outlets requiring a 1st visit and a 2nd follow-up visit.\n"
-        "- Category B (Cat B) Outlets: Secondary priority stores requiring regular monthly coverage.\n"
-        "- Coverage Achievement %: (Coverage Achievement / Coverage Target).\n"
-        "- Visit Achievement %: (Visits Achieved / Visit Target).\n"
-        "- Productive Visit %: (Productive Visits / Total Visits) — visits resulting in actual display/POSM work.\n"
-        "- Man-Days Achievement %: (Man-days Achieved / Target Man-days).\n"
-        "- Base Town (BT) Outlets vs UPC Outlets: Base town outlets are in the VM's home city; UPC are outstation/upcountry.\n"
-        "- Final Achievement & Rank: Official executive score ranking all Visual Merchandisers.\n"
-        "- Quality Audit (QC Tracker): Benchmark target is ≥ 80% approval. Evaluates Display Audit (Ref, WM, DW, Chimney, 360 photo), "
-        "External & Internal Visibility, and Campaign/POSM compliance.\n\n"
-        "### TONE & FORMATTING GUIDELINES:\n"
-        "- Answer with precise figures, percentages, and names directly from the pre-loaded dataset below.\n"
-        "- ALWAYS prioritize well-structured Markdown tables (| Col1 | Col2 | ... |) whenever comparing entities, listing VM rankings, summarizing AOMs, or presenting multiple data points.\n"
-        "- Structure answers with clear bold headings (e.g. ### Executive Summary, ### Leaderboard Breakdown, ### Key Takeaways).\n"
-        "- Use bullet points with bold leading terms for concise narrative points.\n"
-        "- If the user asks for top performers, bottom performers, or regional stats, always output a clean Markdown table with Rank, VM Name, AOM, Region, Coverage %, and Achievement.\n"
-        "- Be proactive: provide actionable context (e.g., highlight if first-visit adherence or Cat A 2nd visits are pulling a score down).\n\n"
-    )
+    """Build compact, token-optimized domain context and pre-aggregated dataset for Gemini."""
+    active_filters = active_filters or {}
+    parts = [
+        "You are the Bosch Field Operations & VM AI Copilot (Channelplay).\n"
+        "Benchmarks: 11:30 AM First Visit Adherence; ~4.0 visits/man-day Productivity; Cat A requires 1st + 2nd visit; QC pass ≥80%.\n\n"
+        "### STRICT OUTPUT & TOKEN OPTIMIZATION RULES (CRITICAL):\n"
+        "1. ULTRA-CONCISE & DIRECT: Answer ONLY what the user asked in 40–130 words max. Zero fluff.\n"
+        "2. NO INTRO / OUTRO FILLER: Never start with 'Based on the latest field execution data...' or similar preamble. Start directly with the answer.\n"
+        "3. NO UNSOLICITED SECTIONS OR TABLES:\n"
+        "   - Do NOT include an AOM or VM table if the user only asks an overall question (e.g., overall coverage status or month-end prediction).\n"
+        "   - Do NOT add unrequested 'Key Operational Insights' or 'Areas for Improvement' sections unless explicitly asked.\n"
+        "4. COMPACT TABLES ONLY WHEN NEEDED:\n"
+        "   - Use a Markdown table ONLY when comparing ≥3 people/regions/AOMs or when rankings/breakdowns are requested.\n"
+        "   - Include at most 4–5 columns directly relevant to the question. Limit VM lists to Top 5 / Bottom 5 unless all are requested.\n"
+        "5. CLEAN MARKDOWN: Use at most 1–2 short `### Heading` lines. NEVER output `---` horizontal rules or duplicate `###` prefixes. Use `- **Label:** value` for bullets.\n\n"
+    ]
 
     if active_filters:
-        parts.append(
-            f"### ACTIVE DASHBOARD VIEW / SCREEN STATE:\n"
-            f"The visitor currently has the following filters applied on their screen:\n"
-            f"{json.dumps(active_filters, indent=2)}\n"
-            "If their question pertains to their active selection, focus your analysis on that subset first, "
-            "while using the broader dataset for comparison and benchmarks.\n\n"
-        )
+        filter_str = ", ".join(f"{k}={v}" for k, v in active_filters.items() if v)
+        if filter_str:
+            parts.append(f"### ACTIVE SCREEN FILTERS: {filter_str}\nFocus answers on this active filter view first.\n\n")
 
-    # Pre-load Program dataset in compact tabular format (~2.6k tokens)
     if dashboard_type != "qc":
         prog_data = get_program_data()
         if prog_data:
+            default_month = prog_data.get("currentMonth") or "Oct'26"
+            target_month = active_filters.get("Month") or default_month
+            updated_upto = prog_data.get("dataUpdatedUpto") or "Latest"
+            all_vms = prog_data.get("vms", [])
+
+            # Filter VMs for target month
+            month_vms = [v for v in all_vms if v.get("Month") == target_month] or all_vms
+            nat_kpi = _summarize_vm_pool(month_vms)
+
             parts.append(
-                f"### MASTER PROGRAM PERFORMANCE DATASET (Month: {prog_data.get('currentMonth')}, Updated: {prog_data.get('dataUpdatedUpto')}):\n\n"
+                f"### PROGRAM DATASET (Active Month: {target_month}, Updated: {updated_upto}):\n"
+                f"#### OVERALL NATIONAL AGGREGATE ({target_month}, {nat_kpi.get('vms', 0)} VMs):\n"
+                f"- Overall Coverage: {nat_kpi.get('cov_pct')}% ({nat_kpi.get('cov_ach')}/{nat_kpi.get('cov_tgt')} outlets covered, {nat_kpi.get('cov_pend')} pending)\n"
+                f"- Month-End Coverage Projection: {nat_kpi.get('proj_range')} (based on current daily run-rate of {nat_kpi.get('avg_prod')} visits/man-day & {nat_kpi.get('cov_pend')} pending stores)\n"
+                f"- Total Visits: {nat_kpi.get('vis_pct')}% ({nat_kpi.get('vis_ach')}/{nat_kpi.get('vis_tgt')} visits) | Productive Visits: {nat_kpi.get('prod_pct')}%\n"
+                f"- Category Coverage: Cat A 1st Visit {nat_kpi.get('cata_1st_pct')}% ({nat_kpi.get('cata_1st')}/{nat_kpi.get('cata_tgt')}) | Cat A 2nd Visit {nat_kpi.get('cata_2nd_pct')}% ({nat_kpi.get('cata_2nd')}/{nat_kpi.get('cata_tgt')}) | Cat B Coverage {nat_kpi.get('catb_pct')}% ({nat_kpi.get('catb_ach')}/{nat_kpi.get('catb_tgt')})\n"
+                f"- Man-days: {nat_kpi.get('md_pct')}% ({nat_kpi.get('md_ach')}/{nat_kpi.get('md_tgt')}) | Avg Productivity: {nat_kpi.get('avg_prod')} | 11:30 AM Adherence: {nat_kpi.get('avg_adh')}% | Avg Final Score: {nat_kpi.get('avg_fin')}%\n\n"
             )
 
-            # 1. AOM Executive Leaderboard Table
+            # If sub-filters (Region, State, AOM, VM) are active, include pre-aggregated KPIs for the filtered subset
+            sub_vms = [
+                v for v in month_vms
+                if (not active_filters.get("Region") or v.get("Region") == active_filters.get("Region"))
+                and (not active_filters.get("State") or v.get("State") == active_filters.get("State"))
+                and (not active_filters.get("AOM") or v.get("AOM Name") == active_filters.get("AOM"))
+                and (not active_filters.get("VM") or (v.get("VM Name") or "").strip() == active_filters.get("VM").strip())
+            ]
+            if sub_vms and len(sub_vms) < len(month_vms):
+                sub_kpi = _summarize_vm_pool(sub_vms)
+                parts.append(
+                    f"#### ACTIVE FILTERED VIEW AGGREGATE ({sub_kpi.get('vms', 0)} VMs):\n"
+                    f"- Coverage: {sub_kpi.get('cov_pct')}% ({sub_kpi.get('cov_ach')}/{sub_kpi.get('cov_tgt')}, {sub_kpi.get('cov_pend')} pending) | Projected Month-End: {sub_kpi.get('proj_range')}\n"
+                    f"- Visits: {sub_kpi.get('vis_pct')}% ({sub_kpi.get('vis_ach')}/{sub_kpi.get('vis_tgt')}) | Cat A 1st: {sub_kpi.get('cata_1st_pct')}% | Cat A 2nd: {sub_kpi.get('cata_2nd_pct')}% | Cat B: {sub_kpi.get('catb_pct')}%\n"
+                    f"- Productivity: {sub_kpi.get('avg_prod')} | 11:30 AM Adherence: {sub_kpi.get('avg_adh')}% | Final Score: {sub_kpi.get('avg_fin')}%\n\n"
+                )
+
+            # Historical months 1-line summary for MoM comparisons
+            other_months = sorted({v.get("Month") for v in all_vms if v.get("Month") and v.get("Month") != target_month})
+            if other_months:
+                hist_parts = []
+                for m in other_months:
+                    m_kpi = _summarize_vm_pool([v for v in all_vms if v.get("Month") == m])
+                    hist_parts.append(
+                        f"{m}: Cov {m_kpi.get('cov_pct')}% ({m_kpi.get('cov_ach')}/{m_kpi.get('cov_tgt')}), "
+                        f"Visits {m_kpi.get('vis_pct')}%, CatA-2nd {m_kpi.get('cata_2nd_pct')}%, Prod {m_kpi.get('avg_prod')}, Final {m_kpi.get('avg_fin')}%"
+                    )
+                parts.append("#### PRIOR MONTHS SUMMARY: " + " | ".join(hist_parts) + "\n\n")
+
+            # AOM Table
             aoms = prog_data.get("aoms", [])
             if aoms:
-                parts.append("#### AOM EXECUTIVE PERFORMANCE LEADERBOARD:\n")
-                parts.append("Rank|AOM Name|Base Town|Coverage%|Cat A Cov%|Mandays%|Productivity|11:30 Adherence%|Final Ach%\n")
+                parts.append("#### AOM SUMMARY:\nRank|AOM|Town|Cov%|CatA%|Mandays%|Prod|11:30Adh%|Final%\n")
                 for a in sorted(aoms, key=lambda x: x.get("Rank", 99)):
                     cov = round((a.get("Coverage %") or 0) * 100, 1)
                     cat_a = round((a.get("Cat A Coverage") or 0) * 100, 1)
@@ -155,52 +253,75 @@ def build_system_instruction(dashboard_type="program", active_filters=None):
                     parts.append(f"{a.get('Rank')}|{a.get('Aom Name')}|{a.get('Base Town')}|{cov}%|{cat_a}%|{md}%|{prod}|{adh}%|{fin}%\n")
                 parts.append("\n")
 
-            # 2. Complete VM Performance Table
-            vms = prog_data.get("vms", [])
-            if vms:
-                parts.append(f"#### COMPLETE VM RANK REPORT ({len(vms)} VMs):\n")
-                parts.append("Rank|VM Name|AOM|Region|State|Coverage%|Visits Ach|Cat A 1st%|Cat A 2nd%|Cat B%|Prod%|Avg Prod|11:30 Adh%|Final Ach%\n")
-                for v in sorted(vms, key=lambda x: x.get("Rank") or 999):
+            # Active Month VM Table (34 rows instead of 102)
+            if month_vms:
+                parts.append(f"#### VM RANKINGS ({target_month}, {len(month_vms)} VMs):\n")
+                parts.append("Rank|VM|AOM|Region|State|Cov%(Ach/Tgt)|Vis(Ach/Tgt)|CatA1%|CatA2%|CatB%|Prod|11:30%|Final%\n")
+                for v in sorted(month_vms, key=lambda x: x.get("Rank") or 999):
                     cov = round((v.get("Coverage Achievement %") or 0) * 100, 1)
+                    c_ach = int(v.get("Coverage Achievement") or 0)
+                    c_tgt = int(v.get("Coverage Target") or 0)
+                    v_ach = int(v.get("Visits Achieved") or 0)
+                    v_tgt = int(v.get("Visit Target") or 0)
                     cat1 = round((v.get("Cat A 1st Visit %") or 0) * 100, 1)
                     cat2 = round((v.get("Cat A 2nd Visit %") or 0) * 100, 1)
                     catb = round((v.get("Cat B Coverage %") or 0) * 100, 1)
-                    prod_pct = round((v.get("Productive Visit %") or 0) * 100, 1)
                     prod_avg = round(v.get("Avg. Productivity") or 0, 2)
                     adh = round((v.get("First Visit Time Adherence (11:30 AM)") or 0) * 100, 1)
                     fin = round((v.get("Final Achievement") or 0) * 100, 1)
-                    parts.append(f"{v.get('Rank')}|{v.get('VM Name')}|{v.get('AOM Name')}|{v.get('Region')}|{v.get('State')}|{cov}%|{v.get('Visits Achieved')}|{cat1}%|{cat2}%|{catb}%|{prod_pct}%|{prod_avg}|{adh}%|{fin}%\n")
+                    vm_name = (v.get("VM Name") or "").strip()
+                    parts.append(
+                        f"{int(v.get('Rank') or 0)}|{vm_name}|{v.get('AOM Name')}|{v.get('Region')}|{v.get('State')}|"
+                        f"{cov}%({c_ach}/{c_tgt})|{v_ach}/{v_tgt}|{cat1}%|{cat2}%|{catb}%|{prod_avg}|{adh}%|{fin}%\n"
+                    )
                 parts.append("\n")
 
-    # Pre-load QC dataset in compact summary format (~1k tokens)
-    if dashboard_type == "qc" or dashboard_type == "all":
+    if dashboard_type in ("qc", "all"):
         qc_data = get_qc_data()
-        if qc_data and len(qc_data) > 1:
+        if qc_data and len(qc_data) > 2:
             rows = qc_data[2:]
             total_audits = len(rows)
-            scores = [r[24] for r in rows if len(r) > 24 and r[24] is not None and isinstance(r[24], (int, float))]
+            scores = [r[24] for r in rows if len(r) > 24 and isinstance(r[24], (int, float))]
             avg_score = round(sum(scores) / len(scores) * 100, 1) if scores else 0
 
-            # Count AOM audits
-            aom_counts = {}
+            aom_stats = {}
+            vm_stats = {}
             mistake_counts = {}
             for r in rows:
-                if len(r) > 9 and r[9]:
-                    aom_counts[r[9]] = aom_counts.get(r[9], 0) + 1
-                if len(r) > 25 and r[25] and str(r[25]).lower() not in ("none", "na"):
-                    mistake_counts[r[25]] = mistake_counts.get(r[25], 0) + 1
+                sc = r[24] if len(r) > 24 and isinstance(r[24], (int, float)) else None
+                aom = r[9] if len(r) > 9 else None
+                vm = r[3] if len(r) > 3 else None
+                if aom:
+                    st = aom_stats.setdefault(aom, [0, 0.0])
+                    st[0] += 1
+                    if sc is not None:
+                        st[1] += sc
+                if vm:
+                    vst = vm_stats.setdefault(vm, [0, 0.0, aom or ""])
+                    vst[0] += 1
+                    if sc is not None:
+                        vst[1] += sc
+                if len(r) > 25 and r[25] and str(r[25]).strip().lower() not in ("none", "na", "null"):
+                    m_txt = str(r[25]).strip()
+                    mistake_counts[m_txt] = mistake_counts.get(m_txt, 0) + 1
 
-            sorted_mistakes = sorted(mistake_counts.items(), key=lambda x: x[1], reverse=True)[:10]
+            parts.append(f"### QC AUDIT DATASET ({total_audits} Audits, Overall Avg QC Score: {avg_score}%):\n")
+            parts.append("#### AOM QC SUMMARY:\nAOM|Audits|Avg QC Score%\n")
+            for aom, (cnt, sc_sum) in sorted(aom_stats.items(), key=lambda x: x[1][0], reverse=True):
+                parts.append(f"{aom}|{cnt}|{round(sc_sum / cnt * 100, 1) if cnt else 0}%\n")
 
-            parts.append(
-                f"### MASTER QC PERFORMANCE AUDIT DATASET ({total_audits} Audits, Avg QC Score: {avg_score}%):\n\n"
-            )
-            parts.append("#### AOM AUDIT VOLUMES:\n")
-            for aom, cnt in sorted(aom_counts.items(), key=lambda x: x[1], reverse=True):
-                parts.append(f"- {aom}: {cnt} audits\n")
-            parts.append("\n#### TOP REPORTED QC MISTAKES:\n")
+            parts.append("\n#### VM QC SUMMARY:\nVM|AOM|Audits|Avg QC Score%\n")
+            vm_list = [
+                (vm, aom, cnt, round(sc_sum / cnt * 100, 1) if cnt else 0)
+                for vm, (cnt, sc_sum, aom) in vm_stats.items()
+            ]
+            for vm, aom, cnt, avg_s in sorted(vm_list, key=lambda x: x[3], reverse=True):
+                parts.append(f"{vm}|{aom}|{cnt}|{avg_s}%\n")
+
+            sorted_mistakes = sorted(mistake_counts.items(), key=lambda x: x[1], reverse=True)[:8]
+            parts.append("\n#### TOP QC MISTAKES:\n")
             for m, cnt in sorted_mistakes:
-                parts.append(f"- {m} ({cnt} times)\n")
+                parts.append(f"- {m} ({cnt})\n")
             parts.append("\n")
 
     return "".join(parts)
@@ -226,13 +347,17 @@ def get_status_dict(api_key=None):
 
 
 def get_available_google_models(api_key):
-    """Query Google AI ModelService dynamically to discover supported text models."""
-    non_text_tags = ["tts", "embed", "image", "audio", "realtime", "whisper", "deep-research", "imagen", "search"]
+    """Query Google AI ModelService dynamically with 10-minute memory caching."""
+    now = time.time()
+    if _CACHE["models"] and (now - _CACHE["models_ts"] < 600):
+        return _CACHE["models"]
+
+    non_text_tags = ["tts", "embed", "image", "audio", "realtime", "whisper", "deep-research", "imagen", "search", "veo", "lyria"]
     for api_version in ["v1beta", "v1"]:
         try:
             url = f"https://generativelanguage.googleapis.com/{api_version}/models?key={api_key}"
             req = urllib.request.Request(url, headers={"Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=6) as resp:
+            with urllib.request.urlopen(req, timeout=5) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 models = data.get("models", [])
                 supported = []
@@ -243,6 +368,8 @@ def get_available_google_models(api_key):
                     if "generateContent" in methods and not any(tag in lower for tag in non_text_tags):
                         supported.append((api_version, name))
                 if supported:
+                    _CACHE["models"] = supported
+                    _CACHE["models_ts"] = now
                     return supported
         except Exception as e:
             print(f"[api/chat] ModelService check on {api_version}: {e}")
@@ -250,17 +377,15 @@ def get_available_google_models(api_key):
 
 
 def pick_model_candidates(api_key, requested_model=""):
-    """Return ordered list of (api_version, model_name) strictly prioritizing available text models."""
+    """Return ordered list of fast, low-token Flash models first."""
     discovered = get_available_google_models(api_key)
-    
+    discovered_names = {name for _, name in discovered}
+
     preferred = [
-        ("v1beta", "gemini-3.8-flash"),
-        ("v1beta", "gemini-3.5-flash-lite"),
         ("v1beta", "gemini-flash-lite-latest"),
-        ("v1beta", "gemini-2.5-pro"),
         ("v1beta", "gemini-flash-latest"),
-        ("v1", "gemini-2.5-pro"),
-        ("v1", "gemini-1.5-flash"),
+        ("v1beta", "gemini-3.5-flash-lite"),
+        ("v1beta", "gemini-3.8-flash"),
     ]
 
     candidates = []
@@ -269,9 +394,10 @@ def pick_model_candidates(api_key, requested_model=""):
         candidates.append(("v1beta", clean))
         candidates.append(("v1", clean))
 
-    for item in preferred:
-        if item not in candidates:
-            candidates.append(item)
+    for ver, name in preferred:
+        if not discovered_names or name in discovered_names:
+            if (ver, name) not in candidates:
+                candidates.append((ver, name))
 
     if discovered:
         for ver, name in discovered:
@@ -279,7 +405,7 @@ def pick_model_candidates(api_key, requested_model=""):
             if pair not in candidates:
                 candidates.append(pair)
 
-    return candidates
+    return candidates or preferred
 
 
 def process_chat_query(body, api_key):
@@ -290,7 +416,7 @@ def process_chat_query(body, api_key):
 
     if not api_key:
         return 401, {
-            "error": "Missing Gemini API Key. Please provide GEMINI_API_KEY in your .env, Vercel environment, or in the widget settings."
+            "error": "Missing Gemini API Key. Please provide GEMINI_API_KEY in your .env or Vercel environment."
         }
 
     dashboard_type = body.get("dashboard", "program").lower()
@@ -300,10 +426,11 @@ def process_chat_query(body, api_key):
     system_instruction_text = build_system_instruction(dashboard_type, active_filters)
 
     contents = []
-    for msg in history[-8:]:
+    # Keep only the last 4 messages (2 turns) to minimize input token consumption
+    for msg in history[-4:]:
         role = "user" if msg.get("role") in ("user", "human") else "model"
         text = msg.get("text") or msg.get("content") or ""
-        if text:
+        if text and text != prompt:
             contents.append({
                 "role": role,
                 "parts": [{"text": text}]
@@ -320,9 +447,9 @@ def process_chat_query(body, api_key):
         },
         "contents": contents,
         "generationConfig": {
-            "temperature": 0.2,
-            "maxOutputTokens": 2048,
-            "topP": 0.95
+            "temperature": 0.1,
+            "maxOutputTokens": 550,
+            "topP": 0.9
         }
     }
 
@@ -340,21 +467,20 @@ def process_chat_query(body, api_key):
                 data=req_data,
                 headers={"Content-Type": "application/json"}
             )
-            # 15s per model attempt allows rapid failover if a model is congested
             with urllib.request.urlopen(req, timeout=15) as resp:
                 resp_data = json.loads(resp.read().decode("utf-8"))
                 reply_text = ""
                 cand = resp_data.get("candidates", [])
                 if cand:
                     parts_resp = cand[0].get("content", {}).get("parts", [])
-                    reply_text = "".join([p.get("text", "") for p in parts_resp])
+                    reply_text = "".join([p.get("text", "") for p in parts_resp if not p.get("thought")])
 
                 if not reply_text:
-                    reply_text = "I received your query but was unable to generate an answer from the dataset."
+                    reply_text = "Unable to generate an answer from the dataset."
 
                 print(f"[api/chat] ✓ Success with {api_version}/models/{model_name}!")
                 return 200, {
-                    "reply": reply_text,
+                    "reply": reply_text.strip(),
                     "model": model_name,
                     "apiVersion": api_version,
                     "dashboard": dashboard_type,
@@ -384,7 +510,6 @@ def process_chat_query(body, api_key):
                 or "overloaded" in error_msg.lower()
             )
             if is_retryable:
-                print(f"[api/chat] ↻ Model {model_name} returned {e.code} ({error_msg[:60]}...). Failover to next candidate...")
                 continue
             return e.code, {"error": error_msg}
 

@@ -7,8 +7,8 @@
   <meta name="description" content="Real-time Quality Check (QC) performance dashboard for Bosch Visual Merchandising program, featuring audit scores, compliance metrics, AOM rankings, and rejection analysis.">
 
   <!-- External Design System & Fonts -->
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="ai-assistant.css?v=2.1">
+  <link rel="stylesheet" href="style.css?v=2.2">
+  <link rel="stylesheet" href="ai-assistant.css?v=2.2">
 
   <!-- SheetJS & Chart.js -->
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
@@ -100,11 +100,45 @@
     <!-- MAIN DASHBOARD CONTENT -->
     <main id="dashboard">
 
-      <!-- CASCADING FILTERS CONTAINER -->
-      <section class="filters-container" id="filterContainer" aria-label="Filters">
-        <div class="filters-bar-row" id="filterBar"></div>
-        <div class="active-filters-chips" id="activeChips"></div>
-      </section>
+      <!-- LEFT-SIDEBAR COLLAPSIBLE FILTERS (Collapsed by default, 90-degree rotated tab button) -->
+      <div class="filters-sidebar-backdrop" id="filtersSidebarBackdrop" onclick="toggleFiltersSidebar(false)"></div>
+      <aside class="filters-sidebar is-collapsed" id="filterContainer" aria-label="Filters">
+        <button type="button"
+                class="filters-sidebar-toggle-btn"
+                id="btnToggleFiltersSidebar"
+                onclick="toggleFiltersSidebar()"
+                aria-expanded="false"
+                title="Expand Filters">
+          <span class="filters-toggle-chevron" id="filtersToggleChevron">❯</span>
+          <svg class="filters-toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          <span class="filters-toggle-text-wrap">
+            <span class="filters-toggle-text">FILTERS</span>
+          </span>
+          <span class="filters-toggle-badge" id="filtersToggleBadge" style="display:none;">0</span>
+        </button>
+
+        <div class="filters-sidebar-panel">
+          <div class="filters-sidebar-header">
+            <div class="filters-title-compact">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+              </svg>
+              <span>Filters</span>
+            </div>
+            <div class="filters-sidebar-header-right">
+              <button type="button" class="filters-sidebar-collapse-btn" onclick="toggleFiltersSidebar(false)" title="Collapse Filters">
+                <span>❮</span>
+                <span>Collapse</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="filters-bar-row" id="filterBar"></div>
+          <div class="active-filters-chips" id="activeChips"></div>
+        </div>
+      </aside>
 
       <!-- KPI METRICS GRID -->
       <section class="section" aria-label="Key Performance Indicators">
@@ -1635,11 +1669,6 @@
       initFiltersHTML(){
         const bar = document.getElementById('filterBar');
         bar.innerHTML = `
-          <div class="filters-title-compact">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-            <span>Filters</span>
-          </div>
-
           <div class="filter-item-compact">
             <span class="filter-label-inline">Sub Region</span>
             <select class="filter-select-compact" id="fBranch"><option value="">All Regions</option></select>
@@ -1676,7 +1705,7 @@
           </div>
 
           <div class="filters-actions-compact">
-            <button class="btn-clear-filter" onclick="UI.resetAllFilters()">Clear</button>
+            <button type="button" class="btn-clear-filter" onclick="UI.resetAllFilters()">Reset Filters</button>
           </div>
         `;
 
@@ -1749,6 +1778,15 @@
         const chipsBox = document.getElementById('activeChips');
         const labelMap = { branch: 'Sub Region', aom: 'AOM', empName: 'VM', category: 'Category', classification: 'Class', dateFrom: 'From Date', dateTo: 'To Date' };
         const active = Object.entries(State.filters).filter(([k, v]) => Boolean(v));
+        const badgeEl = document.getElementById('filtersToggleBadge');
+        if (badgeEl) {
+          if (active.length > 0) {
+            badgeEl.style.display = 'inline-flex';
+            badgeEl.textContent = active.length;
+          } else {
+            badgeEl.style.display = 'none';
+          }
+        }
         if(!active.length){
           chipsBox.innerHTML = '';
           return;
@@ -2104,6 +2142,45 @@
       URL.revokeObjectURL(url);
     }
 
+    /* ---------------------- LEFT-SIDEBAR FILTERS EXPAND / COLLAPSE ---------------------- */
+    function toggleFiltersSidebar(forceOpen) {
+      const sidebar = document.getElementById('filterContainer');
+      const backdrop = document.getElementById('filtersSidebarBackdrop');
+      const btn = document.getElementById('btnToggleFiltersSidebar');
+      const chevron = document.getElementById('filtersToggleChevron');
+      if (!sidebar) return;
+
+      const currentlyCollapsed = sidebar.classList.contains('is-collapsed');
+      const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : currentlyCollapsed;
+
+      if (shouldOpen) {
+        sidebar.classList.remove('is-collapsed');
+        if (backdrop) backdrop.classList.add('is-open');
+        if (btn) {
+          btn.setAttribute('aria-expanded', 'true');
+          btn.title = 'Collapse Filters';
+        }
+        if (chevron) chevron.textContent = '❮';
+      } else {
+        sidebar.classList.add('is-collapsed');
+        if (backdrop) backdrop.classList.remove('is-open');
+        if (btn) {
+          btn.setAttribute('aria-expanded', 'false');
+          btn.title = 'Expand Filters';
+        }
+        if (chevron) chevron.textContent = '❯';
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const sidebar = document.getElementById('filterContainer');
+        if (sidebar && !sidebar.classList.contains('is-collapsed')) {
+          toggleFiltersSidebar(false);
+        }
+      }
+    });
+
     /* ---------------------- INITIALIZATION ---------------------- */
     document.addEventListener('DOMContentLoaded', () => {
       initTheme();
@@ -2123,6 +2200,6 @@
   </script>
 
   <!-- Bosch Gemini AI Copilot -->
-  <script src="ai-assistant.js?v=2.1"></script>
+  <script src="ai-assistant.js?v=2.2"></script>
 </body>
 </html>
