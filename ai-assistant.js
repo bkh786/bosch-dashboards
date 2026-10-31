@@ -527,7 +527,7 @@
           <div class="bosch-ai-dot"></div>
           <div class="bosch-ai-dot"></div>
           <div class="bosch-ai-dot"></div>
-          <span style="font-size:11px;color:#94a3b8;margin-left:6px;">Consulting pre-loaded dataset...</span>
+          <span style="font-size:11px;color:var(--ink-faint,#64748b);margin-left:6px;">Consulting pre-loaded dataset...</span>
         </div>
       </div>
     `;

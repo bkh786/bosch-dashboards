@@ -1,14 +1,13 @@
 /* =====================================================================
    BOSCH DASHBOARDS — AI COPILOT ASSISTANT STYLES (ai-assistant.css)
-   Ultra-premium analytical copilot interface:
-   - Deep emerald/slate dark glassmorphism (persistent high-contrast design)
-   - Expandable drawer (normal 440px -> expanded 860px)
-   - High-density formatted tables, metric callouts, and clean typography
-   - Screen-aware active filter banner with live sync refresh
-   - Live connection indicator (green: Connected & Live / red: Error)
+   Theme- synchronized with Bosch Brand Identity & Page Theme:
+   - Bosch Red (#e21a22 -> #b9151b) primary accents matching the Filters tab & Bosch logo
+   - Deep Navy Bosch header (--header-bg) with Bosch Red top accent bar
+   - Seamless Daylight (body.light-theme) & Dark Mode (body.dark-theme) adaptation
+   - Expandable drawer (normal 440px -> expanded 880px)
    ===================================================================== */
 
-/* Floating Launcher Button (Bottom Right) */
+/* Floating Launcher Button (Bottom Right — Matches Bosch Red Filters Button) */
 .bosch-ai-launcher {
   position: fixed;
   bottom: 24px;
@@ -18,21 +17,22 @@
   align-items: center;
   gap: 10px;
   padding: 8px 18px 8px 10px;
-  background: linear-gradient(135deg, #072e25 0%, #031c16 100%);
+  background: linear-gradient(135deg, var(--bosch-red, #e21a22) 0%, #b9151b 100%);
   color: #ffffff;
-  border: 1px solid rgba(16, 185, 129, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 999px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 20px rgba(16, 185, 129, 0.25);
+  box-shadow: 0 10px 28px rgba(226, 26, 34, 0.38), 0 4px 12px rgba(0, 0, 0, 0.22);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-body, 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif);
   user-select: none;
 }
 
 .bosch-ai-launcher:hover {
   transform: translateY(-3px) scale(1.02);
-  border-color: rgba(52, 211, 153, 0.8);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(16, 185, 129, 0.45);
+  background: linear-gradient(135deg, #f02029 0%, #c8161d 100%);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 14px 36px rgba(226, 26, 34, 0.52), 0 6px 16px rgba(0, 0, 0, 0.28);
 }
 
 .bosch-ai-launcher:active {
@@ -43,13 +43,13 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(16, 185, 129, 0.2);
-  border: 1px solid rgba(16, 185, 129, 0.5);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.38);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #34d399;
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+  color: #ffffff;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.25);
 }
 
 .bosch-ai-launcher-icon svg {
@@ -58,24 +58,25 @@
 
 .bosch-ai-launcher-title {
   font-size: 13.5px;
-  font-weight: 700;
-  letter-spacing: 0.2px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
   color: #ffffff;
   line-height: 1.2;
 }
 
 .bosch-ai-pulse-dot {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   background: #10b981;
+  border: 1.5px solid #ffffff;
   border-radius: 50%;
-  box-shadow: 0 0 10px #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.9);
   animation: boschDotPulse 2s infinite ease-in-out;
 }
 
 .bosch-ai-pulse-dot.error {
-  background: #ef4444;
-  box-shadow: 0 0 10px #ef4444;
+  background: #fde047;
+  box-shadow: 0 0 8px #fde047;
 }
 
 @keyframes boschAiPulse {
@@ -85,11 +86,11 @@
 
 @keyframes boschDotPulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.35; transform: scale(0.85); }
+  50% { opacity: 0.55; transform: scale(0.88); }
 }
 
 /* =====================================================================
-   AI Chat Drawer Window (Normal: 440px | Expanded: 880px)
+   AI Chat Drawer Window (Adapts to Page Light / Dark Theme)
    ===================================================================== */
 .bosch-ai-drawer {
   position: fixed;
@@ -101,13 +102,13 @@
   z-index: 10000;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #091a16 0%, #051411 100%);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  border-radius: 20px;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.75), 0 0 40px rgba(16, 185, 129, 0.15);
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--surface-solid, #ffffff);
+  color: var(--ink, #0f172a);
+  border: 1px solid var(--surface-border, rgba(15, 23, 42, 0.12));
+  border-top: 3px solid var(--bosch-red, #e21a22);
+  border-radius: 18px;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.28), 0 4px 20px rgba(226, 26, 34, 0.12);
+  font-family: var(--font-body, 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif);
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
@@ -115,7 +116,12 @@
   transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.25s ease;
+              opacity 0.25s ease,
+              background 0.25s ease;
+}
+
+body.dark-theme .bosch-ai-drawer {
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.72), 0 0 32px rgba(226, 26, 34, 0.16);
 }
 
 .bosch-ai-drawer.open {
@@ -131,35 +137,36 @@
 }
 
 /* =====================================================================
-   Drawer Header
+   Drawer Header (Matches Dashboard Main Brand Header)
    ===================================================================== */
 .bosch-ai-header {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px;
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(0, 0, 0, 0.25) 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 13px 16px;
+  background: var(--header-bg, linear-gradient(90deg, #0e172a 0%, #1a233a 50%, #0e172a 100%));
+  border-bottom: 1px solid var(--header-border, rgba(255, 255, 255, 0.12));
+  color: #ffffff;
 }
 
 .bosch-ai-header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 11px;
 }
 
 .bosch-ai-avatar {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: rgba(16, 185, 129, 0.16);
-  border: 1px solid rgba(16, 185, 129, 0.35);
+  background: linear-gradient(135deg, var(--bosch-red, #e21a22) 0%, #b9151b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #34d399;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(226, 26, 34, 0.35);
 }
 
 .bosch-ai-header-info {
@@ -169,23 +176,24 @@
 
 .bosch-ai-header-title {
   font-size: 14.5px;
-  font-weight: 700;
+  font-weight: 800;
   color: #ffffff;
   line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 
 .bosch-ai-header-subtitle {
   font-size: 11px;
   font-weight: 500;
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.72);
   letter-spacing: 0.2px;
 }
 
-/* Status Pill (Green for Connected, Red for Error) */
+/* Status Pill (Matches Header "Live data connected" Pill) */
 .bosch-ai-status-pill {
   font-size: 11px;
   font-weight: 600;
-  padding: 4px 12px;
+  padding: 4px 11px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -195,24 +203,24 @@
   cursor: pointer;
   background: transparent;
   border: 1px solid transparent;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
 }
 
 .bosch-ai-status-pill:hover {
-  filter: brightness(1.15);
+  filter: brightness(1.12);
   transform: translateY(-1px);
 }
 
 .bosch-ai-status-pill.connected {
-  background: rgba(16, 185, 129, 0.12);
+  background: rgba(16, 185, 129, 0.18);
   color: #34d399;
-  border-color: rgba(16, 185, 129, 0.35);
+  border-color: rgba(16, 185, 129, 0.45);
 }
 
 .bosch-ai-status-pill.error {
-  background: rgba(239, 68, 68, 0.12);
-  color: #f87171;
-  border-color: rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.5);
 }
 
 .bosch-ai-status-dot {
@@ -236,13 +244,13 @@
 .bosch-ai-header-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
 .bosch-ai-btn-icon {
-  background: transparent;
-  border: none;
-  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
   padding: 6px;
   border-radius: 8px;
   cursor: pointer;
@@ -253,7 +261,8 @@
 }
 
 .bosch-ai-btn-icon:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--bosch-red, #e21a22);
+  border-color: var(--bosch-red, #e21a22);
   color: #ffffff;
 }
 
@@ -265,27 +274,27 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 8px 18px;
-  background: rgba(0, 0, 0, 0.35);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 8px 16px;
+  background: var(--surface-hover, #f1f5f9);
+  border-bottom: 1px solid var(--surface-border, rgba(15, 23, 42, 0.09));
   font-size: 11.5px;
 }
 
 .bosch-ai-active-tag {
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  color: #34d399;
-  font-weight: 700;
+  background: var(--bosch-red-soft, rgba(226, 26, 34, 0.12));
+  border: 1px solid rgba(226, 26, 34, 0.35);
+  color: var(--bosch-red, #e21a22);
+  font-weight: 800;
   font-size: 10px;
   letter-spacing: 0.5px;
-  padding: 2px 7px;
+  padding: 2px 8px;
   border-radius: 5px;
   white-space: nowrap;
 }
 
 .bosch-ai-active-text {
-  color: #e2e8f0;
-  font-weight: 500;
+  color: var(--ink, #0f172a);
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -295,7 +304,7 @@
 .bosch-ai-active-refresh {
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: var(--ink-faint, #64748b);
   cursor: pointer;
   padding: 3px;
   border-radius: 4px;
@@ -306,7 +315,7 @@
 }
 
 .bosch-ai-active-refresh:hover {
-  color: #34d399;
+  color: var(--bosch-red, #e21a22);
   transform: rotate(90deg);
 }
 
@@ -317,6 +326,7 @@
   flex: 1;
   overflow-y: auto;
   padding: 16px;
+  background: var(--bg-page, #f8fafc);
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -328,36 +338,39 @@
 }
 
 .bosch-ai-messages::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(226, 26, 34, 0.35);
   border-radius: 4px;
 }
 
-/* Welcome Card (Matches Screenshot 1 & 2) */
+/* Welcome Card (Matches Page Card & Bosch Brand Styling) */
 .bosch-ai-welcome-card {
-  border: 1px solid rgba(16, 185, 129, 0.22);
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.06) 0%, rgba(15, 23, 42, 0.5) 100%);
-  border-radius: 14px;
+  border: 1px solid var(--surface-border, rgba(15, 23, 42, 0.09));
+  border-left: 4px solid var(--bosch-red, #e21a22);
+  background: var(--surface-solid, #ffffff);
+  border-radius: 12px;
   padding: 16px 18px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.06));
   animation: boschMsgFadeIn 0.3s ease-out;
 }
 
 .bosch-ai-welcome-title {
   font-size: 14.5px;
-  font-weight: 700;
-  color: #f1f5f9;
+  font-weight: 800;
+  color: var(--ink, #0f172a);
   margin-bottom: 6px;
 }
 
 .bosch-ai-welcome-sub {
   font-size: 12.5px;
-  color: #94a3b8;
+  color: var(--ink-soft, #334155);
   line-height: 1.5;
   margin-bottom: 12px;
 }
 
 .bosch-ai-welcome-sub strong {
-  color: #34d399;
+  color: var(--bosch-red, #e21a22);
+  font-weight: 700;
 }
 
 .bosch-ai-welcome-features {
@@ -368,7 +381,7 @@
   flex-direction: column;
   gap: 8px;
   font-size: 12px;
-  color: #cbd5e1;
+  color: var(--ink-soft, #334155);
 }
 
 .bosch-ai-welcome-features li {
@@ -381,48 +394,49 @@
   position: absolute;
   left: 0;
   top: 0;
-  color: #10b981;
+  color: var(--bosch-red, #e21a22);
   font-size: 10px;
 }
 
 .bosch-ai-welcome-features strong {
-  color: #34d399;
-  font-weight: 600;
+  color: var(--ink, #0f172a);
+  font-weight: 700;
 }
 
 .bosch-ai-welcome-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
   margin-top: 12px;
 }
 
 .bosch-ai-chip {
-  padding: 6px 13px;
+  padding: 6px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #cbd5e1;
+  background: var(--surface-hover, #f1f5f9);
+  border: 1px solid var(--surface-border, rgba(15, 23, 42, 0.12));
+  color: var(--ink, #0f172a);
   font-size: 11.5px;
-  font-weight: 500;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
 }
 
 .bosch-ai-chip:hover {
-  background: rgba(16, 185, 129, 0.16);
-  border-color: rgba(16, 185, 129, 0.45);
-  color: #34d399;
+  background: var(--bosch-red-soft, rgba(226, 26, 34, 0.12));
+  border-color: var(--bosch-red, #e21a22);
+  color: var(--bosch-red, #e21a22);
   transform: translateY(-1.5px);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+  box-shadow: 0 3px 10px rgba(226, 26, 34, 0.14);
 }
 
 /* Message Item */
 .bosch-ai-msg {
   display: flex;
   gap: 10px;
-  max-width: 95%;
+  max-width: 96%;
   animation: boschMsgFadeIn 0.25s ease-out;
 }
 
@@ -453,37 +467,42 @@
 }
 
 .bosch-ai-msg.assistant .bosch-ai-msg-avatar {
-  background: rgba(16, 185, 129, 0.2);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  color: #34d399;
+  background: var(--bosch-red-soft, rgba(226, 26, 34, 0.14));
+  border: 1px solid rgba(226, 26, 34, 0.35);
+  color: var(--bosch-red, #e21a22);
 }
 
 .bosch-ai-msg.user .bosch-ai-msg-avatar {
-  background: #334155;
+  background: #1e293b;
   color: #ffffff;
 }
 
 .bosch-ai-msg-bubble {
-  padding: 12px 16px;
+  padding: 11px 15px;
   border-radius: 14px;
   font-size: 12.5px;
-  line-height: 1.6;
+  line-height: 1.55;
   word-break: break-word;
   max-width: 100%;
 }
 
 .bosch-ai-msg.user .bosch-ai-msg-bubble {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  background: linear-gradient(135deg, var(--bosch-red, #e21a22) 0%, #b9151b 100%);
   color: #ffffff;
   border-bottom-right-radius: 4px;
-  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+  box-shadow: 0 4px 12px rgba(226, 26, 34, 0.28);
+}
+
+.bosch-ai-msg.user .bosch-ai-msg-bubble strong {
+  color: #ffffff;
 }
 
 .bosch-ai-msg.assistant .bosch-ai-msg-bubble {
-  background: rgba(15, 28, 24, 0.7);
-  color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface-solid, #ffffff);
+  color: var(--ink, #0f172a);
+  border: 1px solid var(--surface-border, rgba(15, 23, 42, 0.1));
   border-bottom-left-radius: 4px;
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.06));
   width: 100%;
 }
 
@@ -493,11 +512,10 @@
 .bosch-ai-table-wrap {
   width: 100%;
   overflow-x: auto;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(8, 18, 16, 0.85);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid var(--surface-border, rgba(15, 23, 42, 0.1));
+  background: var(--surface, #ffffff);
 }
 
 .bosch-ai-table-wrap table {
@@ -508,21 +526,21 @@
 }
 
 .bosch-ai-table-wrap th {
-  background: rgba(16, 185, 129, 0.16);
-  color: #34d399;
-  font-weight: 700;
+  background: var(--bosch-red-soft, rgba(226, 26, 34, 0.1));
+  color: var(--bosch-red, #e21a22);
+  font-weight: 800;
   font-size: 10.5px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
-  padding: 9px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--surface-border, rgba(15, 23, 42, 0.1));
   white-space: nowrap;
 }
 
 .bosch-ai-table-wrap td {
-  padding: 8px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: #e2e8f0;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--surface-border-subtle, rgba(15, 23, 42, 0.05));
+  color: var(--ink, #0f172a);
   white-space: nowrap;
 }
 
@@ -531,15 +549,15 @@
 }
 
 .bosch-ai-table-wrap tr:hover td {
-  background: rgba(16, 185, 129, 0.08);
+  background: var(--surface-hover, #f1f5f9);
 }
 
 /* Headings in Assistant Message */
 .bosch-ai-h3 {
-  font-size: 13.5px;
-  font-weight: 700;
-  color: #34d399;
-  margin: 12px 0 6px 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--bosch-red, #e21a22);
+  margin: 10px 0 5px 0;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -547,28 +565,28 @@
 
 .bosch-ai-h4 {
   font-size: 12.5px;
-  font-weight: 700;
-  color: #f1f5f9;
-  margin: 10px 0 4px 0;
-  border-left: 3px solid #10b981;
+  font-weight: 800;
+  color: var(--ink, #0f172a);
+  margin: 8px 0 4px 0;
+  border-left: 3px solid var(--bosch-red, #e21a22);
   padding-left: 8px;
 }
 
 .bosch-ai-msg-bubble p {
-  margin: 0 0 8px 0;
+  margin: 0 0 7px 0;
 }
 
 .bosch-ai-msg-bubble p:last-child {
   margin-bottom: 0;
 }
 
-.bosch-ai-msg-bubble strong {
-  color: #ffffff;
+.bosch-ai-msg.assistant .bosch-ai-msg-bubble strong {
+  color: var(--ink, #0f172a);
   font-weight: 700;
 }
 
 .bosch-ai-msg-bubble ul, .bosch-ai-msg-bubble ol {
-  margin: 6px 0 8px 18px;
+  margin: 4px 0 6px 18px;
   padding: 0;
 }
 
@@ -578,23 +596,24 @@
 
 /* Code block & inline code */
 .bosch-ai-inline-code {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2px 6px;
+  background: var(--surface-hover, #f1f5f9);
+  border: 1px solid var(--surface-border, rgba(15, 23, 42, 0.1));
+  padding: 1px 5px;
   border-radius: 4px;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
   font-size: 11px;
-  color: #38bdf8;
+  color: var(--bosch-red, #e21a22);
 }
 
 .bosch-ai-code-block {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--surface-hover, #f1f5f9);
+  border: 1px solid var(--surface-border, rgba(15, 23, 42, 0.1));
   border-radius: 8px;
   padding: 10px 14px;
   overflow-x: auto;
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: var(--font-mono, 'IBM Plex Mono', monospace);
   font-size: 11px;
-  color: #e2e8f0;
+  color: var(--ink, #0f172a);
   margin: 8px 0;
 }
 
@@ -603,13 +622,13 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 6px 10px;
+  padding: 4px 6px;
 }
 
 .bosch-ai-dot {
   width: 6px;
   height: 6px;
-  background: #34d399;
+  background: var(--bosch-red, #e21a22);
   border-radius: 50%;
   animation: boschTypingBounce 1.4s infinite ease-in-out both;
 }
@@ -623,12 +642,12 @@
 }
 
 /* =====================================================================
-   Input Footer (Matching Screenshot 1 & 2)
+   Input Footer (Matches Page Surface & Bosch Red Action Button)
    ===================================================================== */
 .bosch-ai-footer {
   padding: 12px 16px 14px 16px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(9, 26, 22, 0.98) 100%);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--surface-solid, #ffffff);
+  border-top: 1px solid var(--surface-border, rgba(15, 23, 42, 0.09));
 }
 
 .bosch-ai-input-form {
@@ -639,23 +658,24 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(13, 27, 23, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 14px;
-  padding: 7px 10px 7px 14px;
+  background: var(--surface-hover, #f1f5f9);
+  border: 1px solid var(--surface-border, rgba(15, 23, 42, 0.14));
+  border-radius: 12px;
+  padding: 6px 8px 6px 14px;
   transition: all 0.2s ease;
 }
 
 .bosch-ai-input-box:focus-within {
-  border-color: rgba(16, 185, 129, 0.6);
-  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  background: var(--surface, #ffffff);
+  border-color: var(--bosch-red, #e21a22);
+  box-shadow: 0 0 0 3px var(--bosch-red-soft, rgba(226, 26, 34, 0.14));
 }
 
 .bosch-ai-textarea {
   flex: 1;
   background: transparent;
   border: none;
-  color: #ffffff;
+  color: var(--ink, #0f172a);
   font-family: inherit;
   font-size: 13px;
   line-height: 1.4;
@@ -666,14 +686,14 @@
 }
 
 .bosch-ai-textarea::placeholder {
-  color: #64748b;
+  color: var(--ink-faint, #64748b);
 }
 
 .bosch-ai-send-btn {
   width: 34px;
   height: 34px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  border-radius: 9px;
+  background: linear-gradient(135deg, var(--bosch-red, #e21a22) 0%, #b9151b 100%);
   border: none;
   color: #ffffff;
   display: flex;
@@ -682,12 +702,13 @@
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 12px rgba(226, 26, 34, 0.32);
 }
 
 .bosch-ai-send-btn:hover {
   transform: scale(1.06);
-  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
+  background: linear-gradient(135deg, #f02029 0%, #c8161d 100%);
+  box-shadow: 0 6px 16px rgba(226, 26, 34, 0.45);
 }
 
 .bosch-ai-send-btn:active {
@@ -703,9 +724,9 @@
 
 .bosch-ai-footer-note {
   font-size: 10.5px;
-  color: #64748b;
+  color: var(--ink-faint, #64748b);
   text-align: center;
-  margin-top: 8px;
+  margin-top: 7px;
   letter-spacing: 0.2px;
 }
 
@@ -723,7 +744,7 @@
     height: 85vh;
     max-width: 100vw;
     max-height: 85vh;
-    border-radius: 20px 20px 0 0;
+    border-radius: 18px 18px 0 0;
   }
   .bosch-ai-drawer.expanded {
     width: 100vw;
