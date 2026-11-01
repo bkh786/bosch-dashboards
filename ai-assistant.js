@@ -247,25 +247,25 @@
   function injectWidget() {
     state.dashboardType = detectDashboardType();
 
-    // Launcher Button (Matches Screenshot: AI Copilot pill with sparkle icon & green dot)
-    const launcher = document.createElement('div');
-    launcher.id = 'boschAiLauncher';
-    launcher.className = 'bosch-ai-launcher';
+    // Right-Edge Vertical Tab Launcher Button
+    const launcher = document.createElement('button');
+    launcher.type = 'button';
+    launcher.id = 'aiCopilotLauncher';
+    launcher.className = 'ai-copilot-launcher bosch-ai-launcher';
+    launcher.setAttribute('aria-label', 'Toggle AI Copilot');
+    launcher.setAttribute('aria-expanded', 'false');
+    launcher.title = 'AI Copilot';
     launcher.innerHTML = `
-      <div class="bosch-ai-launcher-icon">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="2" x2="12" y2="6"></line>
-          <line x1="12" y1="18" x2="12" y2="22"></line>
-          <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
-          <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
-          <line x1="2" y1="12" x2="6" y2="12"></line>
-          <line x1="18" y1="12" x2="22" y2="12"></line>
-          <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
-          <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+      <svg class="ai-copilot-chevron" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6"></polyline>
+      </svg>
+      <div class="ai-copilot-launcher-icon bosch-ai-launcher-icon">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L13.8 8.2L20 10L13.8 11.8L12 18L10.2 11.8L4 10L10.2 8.2L12 2Z"></path>
         </svg>
       </div>
-      <span class="bosch-ai-launcher-title">AI Copilot</span>
-      <div class="bosch-ai-pulse-dot" id="boschAiPulseDot" title="Live &amp; Connected"></div>
+      <span class="ai-copilot-launcher-text bosch-ai-launcher-title">AI Copilot</span>
+      <span class="ai-copilot-status-dot bosch-ai-pulse-dot" id="boschAiPulseDot" title="Live connected"></span>
     `;
 
     // Drawer Container
@@ -365,7 +365,7 @@
 
   // Bind UI Events
   function bindEvents() {
-    const launcher = document.getElementById('boschAiLauncher');
+    const launcher = document.getElementById('aiCopilotLauncher') || document.getElementById('boschAiLauncher');
     const drawer = document.getElementById('boschAiDrawer');
     const btnClose = document.getElementById('boschAiBtnClose');
     const btnClear = document.getElementById('boschAiBtnClear');
@@ -376,19 +376,38 @@
     const textarea = document.getElementById('boschAiTextarea');
     const messagesContainer = document.getElementById('boschAiMessages');
 
-    // Toggle drawer open / close
-    launcher.addEventListener('click', () => {
-      state.isOpen = !state.isOpen;
+    function toggleDrawer(forceOpen) {
+      state.isOpen = typeof forceOpen === 'boolean' ? forceOpen : !state.isOpen;
       drawer.classList.toggle('open', state.isOpen);
+      if (launcher) {
+        launcher.classList.toggle('open', state.isOpen);
+        launcher.setAttribute('aria-expanded', state.isOpen ? 'true' : 'false');
+        launcher.title = state.isOpen ? 'Collapse AI Copilot' : 'Expand AI Copilot';
+      }
       if (state.isOpen) {
         updateActiveView();
         setTimeout(() => textarea.focus(), 150);
       }
-    });
+    }
 
-    btnClose.addEventListener('click', () => {
-      state.isOpen = false;
-      drawer.classList.remove('open');
+    // Toggle drawer open / close
+    if (launcher) {
+      launcher.addEventListener('click', () => {
+        toggleDrawer();
+      });
+    }
+
+    if (btnClose) {
+      btnClose.addEventListener('click', () => {
+        toggleDrawer(false);
+      });
+    }
+
+    // Close on Escape key press
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && state.isOpen) {
+        toggleDrawer(false);
+      }
     });
 
     // Expand / Collapse Drawer Window
