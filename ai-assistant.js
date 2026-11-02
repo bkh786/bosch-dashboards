@@ -601,6 +601,7 @@
         const errData = await res.json().catch(() => ({}));
         const errMessage = errData.error || `Server responded with status ${res.status}`;
         appendMessage('assistant', `⚠️ **Error:** ${errMessage}`);
+        checkHealth();
         return;
       }
 

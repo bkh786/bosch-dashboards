@@ -379,13 +379,18 @@ def get_available_google_models(api_key):
 def pick_model_candidates(api_key, requested_model=""):
     """Return ordered list of fast, low-token Flash models first."""
     discovered = get_available_google_models(api_key)
-    discovered_names = {name for _, name in discovered}
 
+    # Models that are verified active, responsive, and quota-available
     preferred = [
-        ("v1beta", "gemini-flash-lite-latest"),
-        ("v1beta", "gemini-flash-latest"),
-        ("v1beta", "gemini-3.5-flash-lite"),
-        ("v1beta", "gemini-3.8-flash"),
+        ("v1beta", "gemini-3.5-flash"),
+        ("v1beta", "gemini-3.6-flash"),
+        ("v1beta", "gemini-3-flash-preview"),
+        ("v1beta", "gemma-4-26b-a4b-it"),
+    ]
+
+    skip_tags = [
+        "2.5-flash", "2.5-pro", "1.5-flash", "antigravity-preview",
+        "banana", "argon", "computer-use", "robotics", "customtools"
     ]
 
     candidates = []
@@ -394,13 +399,14 @@ def pick_model_candidates(api_key, requested_model=""):
         candidates.append(("v1beta", clean))
         candidates.append(("v1", clean))
 
-    for ver, name in preferred:
-        if not discovered_names or name in discovered_names:
-            if (ver, name) not in candidates:
-                candidates.append((ver, name))
+    for item in preferred:
+        if item not in candidates:
+            candidates.append(item)
 
     if discovered:
         for ver, name in discovered:
+            if any(tag in name.lower() for tag in skip_tags):
+                continue
             pair = (ver, name)
             if pair not in candidates:
                 candidates.append(pair)
@@ -457,7 +463,8 @@ def process_chat_query(body, api_key):
     last_error_code = 500
     last_error_msg = "Failed to communicate with Gemini API"
 
-    for api_version, model_name in candidates:
+    # Try top 3 fast candidates (8s timeout per attempt avoids Vercel function timeout)
+    for api_version, model_name in candidates[:3]:
         gemini_url = f"https://generativelanguage.googleapis.com/{api_version}/models/{model_name}:generateContent?key={api_key}"
         print(f"[api/chat] Attempting {api_version}/models/{model_name}...")
         try:
@@ -467,7 +474,7 @@ def process_chat_query(body, api_key):
                 data=req_data,
                 headers={"Content-Type": "application/json"}
             )
-            with urllib.request.urlopen(req, timeout=15) as resp:
+            with urllib.request.urlopen(req, timeout=8) as resp:
                 resp_data = json.loads(resp.read().decode("utf-8"))
                 reply_text = ""
                 cand = resp_data.get("candidates", [])

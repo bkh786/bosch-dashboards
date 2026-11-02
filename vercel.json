@@ -1,6 +1,11 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "functions": {
+    "api/*.py": {
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
     { "source": "/qc", "destination": "/qc.html" },
     { "source": "/qc/", "destination": "/qc.html" },
