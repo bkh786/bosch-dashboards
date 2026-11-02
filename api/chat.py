@@ -6,13 +6,14 @@ without re-querying external files on every visitor prompt.
 """
 
 from http.server import BaseHTTPRequestHandler
-import urllib.request
-import urllib.error
-import urllib.parse
 import json
+import math
 import os
 import sys
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
 
 # Reference project root
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -100,27 +101,50 @@ def get_qc_data():
         return None
 
 
+def safe_float(val, default=0.0):
+    """Safely convert any value (None, str, '0xf', NaN, inf) to float."""
+    if val is None:
+        return default
+    try:
+        f = float(val)
+        if math.isnan(f) or math.isinf(f):
+            return default
+        return f
+    except (ValueError, TypeError):
+        return default
+
+
+def safe_int(val, default=0):
+    """Safely convert any value to int."""
+    if val is None:
+        return default
+    try:
+        return int(float(val))
+    except (ValueError, TypeError):
+        return default
+
+
 def _summarize_vm_pool(vms_list):
     """Compute aggregate KPIs for a list of VM records."""
     if not vms_list:
         return {}
     n = len(vms_list)
-    cov_tgt = sum(float(v.get("Coverage Target") or 0) for v in vms_list)
-    cov_ach = sum(float(v.get("Coverage Achievement") or 0) for v in vms_list)
-    cov_pend = sum(float(v.get("Coverage Pending") or 0) for v in vms_list)
-    vis_tgt = sum(float(v.get("Visit Target") or 0) for v in vms_list)
-    vis_ach = sum(float(v.get("Visits Achieved") or 0) for v in vms_list)
-    prod_vis = sum(float(v.get("Productive Visits") or 0) for v in vms_list)
-    cata_tgt = sum(float(v.get("Cat A Target") or 0) for v in vms_list)
-    cata_1st = sum(float(v.get("Cat A 1st visit") or 0) for v in vms_list)
-    cata_2nd = sum(float(v.get("Cat A 2nd Visit") or 0) for v in vms_list)
-    catb_tgt = sum(float(v.get("Cat B Target") or 0) for v in vms_list)
-    catb_ach = sum(float(v.get("Cat B Achievement") or 0) for v in vms_list)
-    md_tgt = sum(float(v.get("Target Man-days") or 0) for v in vms_list)
-    md_ach = sum(float(v.get("Man-days Achieved") or 0) for v in vms_list)
+    cov_tgt = sum(safe_float(v.get("Coverage Target")) for v in vms_list)
+    cov_ach = sum(safe_float(v.get("Coverage Achievement")) for v in vms_list)
+    cov_pend = sum(safe_float(v.get("Coverage Pending")) for v in vms_list)
+    vis_tgt = sum(safe_float(v.get("Visit Target")) for v in vms_list)
+    vis_ach = sum(safe_float(v.get("Visits Achieved")) for v in vms_list)
+    prod_vis = sum(safe_float(v.get("Productive Visits")) for v in vms_list)
+    cata_tgt = sum(safe_float(v.get("Cat A Target")) for v in vms_list)
+    cata_1st = sum(safe_float(v.get("Cat A 1st visit")) for v in vms_list)
+    cata_2nd = sum(safe_float(v.get("Cat A 2nd Visit")) for v in vms_list)
+    catb_tgt = sum(safe_float(v.get("Cat B Target")) for v in vms_list)
+    catb_ach = sum(safe_float(v.get("Cat B Achievement")) for v in vms_list)
+    md_tgt = sum(safe_float(v.get("Target Man-days")) for v in vms_list)
+    md_ach = sum(safe_float(v.get("Man-days Achieved")) for v in vms_list)
 
-    adh_vals = [float(v.get("First Visit Time Adherence (11:30 AM)") or 0) for v in vms_list]
-    fin_vals = [float(v.get("Final Achievement") or 0) for v in vms_list]
+    adh_vals = [safe_float(v.get("First Visit Time Adherence (11:30 AM)")) for v in vms_list]
+    fin_vals = [safe_float(v.get("Final Achievement")) for v in vms_list]
 
     cov_pct = round((cov_ach / cov_tgt * 100), 1) if cov_tgt else 0.0
     vis_pct = round((vis_ach / vis_tgt * 100), 1) if vis_tgt else 0.0
@@ -139,24 +163,24 @@ def _summarize_vm_pool(vms_list):
 
     return {
         "vms": n,
-        "cov_tgt": int(cov_tgt),
-        "cov_ach": int(cov_ach),
-        "cov_pend": int(cov_pend),
+        "cov_tgt": safe_int(cov_tgt),
+        "cov_ach": safe_int(cov_ach),
+        "cov_pend": safe_int(cov_pend),
         "cov_pct": cov_pct,
-        "vis_tgt": int(vis_tgt),
-        "vis_ach": int(vis_ach),
+        "vis_tgt": safe_int(vis_tgt),
+        "vis_ach": safe_int(vis_ach),
         "vis_pct": vis_pct,
         "prod_pct": prod_pct,
-        "cata_tgt": int(cata_tgt),
-        "cata_1st": int(cata_1st),
+        "cata_tgt": safe_int(cata_tgt),
+        "cata_1st": safe_int(cata_1st),
         "cata_1st_pct": cata_1st_pct,
-        "cata_2nd": int(cata_2nd),
+        "cata_2nd": safe_int(cata_2nd),
         "cata_2nd_pct": cata_2nd_pct,
-        "catb_tgt": int(catb_tgt),
-        "catb_ach": int(catb_ach),
+        "catb_tgt": safe_int(catb_tgt),
+        "catb_ach": safe_int(catb_ach),
         "catb_pct": catb_pct,
-        "md_tgt": int(md_tgt),
-        "md_ach": int(md_ach),
+        "md_tgt": safe_int(md_tgt),
+        "md_ach": safe_int(md_ach),
         "md_pct": md_pct,
         "avg_prod": avg_prod,
         "avg_adh": avg_adh,
@@ -243,37 +267,71 @@ def build_system_instruction(dashboard_type="program", active_filters=None):
             aoms = prog_data.get("aoms", [])
             if aoms:
                 parts.append("#### AOM SUMMARY:\nRank|AOM|Town|Cov%|CatA%|Mandays%|Prod|11:30Adh%|Final%\n")
-                for a in sorted(aoms, key=lambda x: x.get("Rank", 99)):
-                    cov = round((a.get("Coverage %") or 0) * 100, 1)
-                    cat_a = round((a.get("Cat A Coverage") or 0) * 100, 1)
-                    md = round((a.get("Achi Mandays %") or 0) * 100, 1)
-                    prod = round(a.get("Productivity") or 0, 2)
-                    adh = round((a.get("First Visit Time Adherence (11:30 AM)") or 0) * 100, 1)
-                    fin = round((a.get("Final Achievement") or 0) * 100, 1)
-                    parts.append(f"{a.get('Rank')}|{a.get('Aom Name')}|{a.get('Base Town')}|{cov}%|{cat_a}%|{md}%|{prod}|{adh}%|{fin}%\n")
+                for a in sorted(aoms, key=lambda x: safe_int(x.get("Rank"), 99)):
+                    cov = round(safe_float(a.get("Coverage %")) * 100, 1)
+                    cat_a = round(safe_float(a.get("Cat A Coverage")) * 100, 1)
+                    md = round(safe_float(a.get("Achi Mandays %")) * 100, 1)
+                    prod = round(safe_float(a.get("Productivity")), 2)
+                    adh = round(safe_float(a.get("First Visit Time Adherence (11:30 AM)")) * 100, 1)
+                    fin = round(safe_float(a.get("Final Achievement")) * 100, 1)
+                    parts.append(f"{safe_int(a.get('Rank'))}|{a.get('Aom Name')}|{a.get('Base Town')}|{cov}%|{cat_a}%|{md}%|{prod}|{adh}%|{fin}%\n")
                 parts.append("\n")
 
-            # Active Month VM Table (34 rows instead of 102)
+            # Active Month VM Table
             if month_vms:
                 parts.append(f"#### VM RANKINGS ({target_month}, {len(month_vms)} VMs):\n")
                 parts.append("Rank|VM|AOM|Region|State|Cov%(Ach/Tgt)|Vis(Ach/Tgt)|CatA1%|CatA2%|CatB%|Prod|11:30%|Final%\n")
-                for v in sorted(month_vms, key=lambda x: x.get("Rank") or 999):
-                    cov = round((v.get("Coverage Achievement %") or 0) * 100, 1)
-                    c_ach = int(v.get("Coverage Achievement") or 0)
-                    c_tgt = int(v.get("Coverage Target") or 0)
-                    v_ach = int(v.get("Visits Achieved") or 0)
-                    v_tgt = int(v.get("Visit Target") or 0)
-                    cat1 = round((v.get("Cat A 1st Visit %") or 0) * 100, 1)
-                    cat2 = round((v.get("Cat A 2nd Visit %") or 0) * 100, 1)
-                    catb = round((v.get("Cat B Coverage %") or 0) * 100, 1)
-                    prod_avg = round(v.get("Avg. Productivity") or 0, 2)
-                    adh = round((v.get("First Visit Time Adherence (11:30 AM)") or 0) * 100, 1)
-                    fin = round((v.get("Final Achievement") or 0) * 100, 1)
+                for v in sorted(month_vms, key=lambda x: safe_int(x.get("Rank"), 999)):
+                    cov = round(safe_float(v.get("Coverage Achievement %")) * 100, 1)
+                    c_ach = safe_int(v.get("Coverage Achievement"))
+                    c_tgt = safe_int(v.get("Coverage Target"))
+                    v_ach = safe_int(v.get("Visits Achieved"))
+                    v_tgt = safe_int(v.get("Visit Target"))
+                    cat1 = round(safe_float(v.get("Cat A 1st Visit %")) * 100, 1)
+                    cat2 = round(safe_float(v.get("Cat A 2nd Visit %")) * 100, 1)
+                    catb = round(safe_float(v.get("Cat B Coverage %")) * 100, 1)
+                    prod_avg = round(safe_float(v.get("Avg. Productivity")), 2)
+                    adh = round(safe_float(v.get("First Visit Time Adherence (11:30 AM)")) * 100, 1)
+                    fin = round(safe_float(v.get("Final Achievement")) * 100, 1)
                     vm_name = (v.get("VM Name") or "").strip()
                     parts.append(
-                        f"{int(v.get('Rank') or 0)}|{vm_name}|{v.get('AOM Name')}|{v.get('Region')}|{v.get('State')}|"
+                        f"{safe_int(v.get('Rank'))}|{vm_name}|{v.get('AOM Name')}|{v.get('Region')}|{v.get('State')}|"
                         f"{cov}%({c_ach}/{c_tgt})|{v_ach}/{v_tgt}|{cat1}%|{cat2}%|{catb}%|{prod_avg}|{adh}%|{fin}%\n"
                     )
+                parts.append("\n")
+
+            # Multi-month VM Coverage History (Aug'26 -> Sep'26 -> Oct'26) for trend & shortfall questions
+            months_order = ["Aug'26", "Sep'26", "Oct'26"]
+            by_vm_hist = {}
+            for v in all_vms:
+                m = v.get("Month")
+                vm_name = (v.get("VM Name") or "").strip()
+                if vm_name and m in months_order:
+                    cov_pct_val = round(safe_float(v.get("Coverage Achievement %")) * 100, 1)
+                    by_vm_hist.setdefault(vm_name, {})[m] = {
+                        "cov": cov_pct_val,
+                        "aom": v.get("AOM Name") or "",
+                        "adh": round(safe_float(v.get("First Visit Time Adherence (11:30 AM)")) * 100, 1),
+                        "prod": round(safe_float(v.get("Avg. Productivity")), 2),
+                        "cat2": round(safe_float(v.get("Cat A 2nd Visit %")) * 100, 1),
+                    }
+            if by_vm_hist:
+                parts.append("#### VM 3-MONTH COVERAGE & SHORTFALL SUMMARY (Aug'26 -> Sep'26 -> Oct'26):\nVM|AOM|Aug%|Sep%|Oct%|Key Shortfall Lever\n")
+                for vm_name, mdata in sorted(by_vm_hist.items()):
+                    aug_cov = mdata.get("Aug'26", {}).get("cov", "N/A")
+                    sep_cov = mdata.get("Sep'26", {}).get("cov", "N/A")
+                    oct_cov = mdata.get("Oct'26", {}).get("cov", "N/A")
+                    aom = mdata.get("Oct'26", {}).get("aom") or mdata.get("Sep'26", {}).get("aom") or ""
+                    oct_info = mdata.get("Oct'26") or {}
+                    levers = []
+                    if oct_info.get("adh", 100) < 85:
+                        levers.append("Low 11:30 Adherence")
+                    if oct_info.get("cat2", 100) < 80:
+                        levers.append("Low Cat A 2nd Visits")
+                    if oct_info.get("prod", 4.0) < 3.8:
+                        levers.append("Low Productivity")
+                    lever_str = ", ".join(levers) if levers else "On Track"
+                    parts.append(f"{vm_name}|{aom}|{aug_cov}%|{sep_cov}%|{oct_cov}%|{lever_str}\n")
                 parts.append("\n")
 
     if dashboard_type in ("qc", "all"):
@@ -382,10 +440,10 @@ def pick_model_candidates(api_key, requested_model=""):
 
     # Models that are verified active, responsive, and quota-available
     preferred = [
-        ("v1beta", "gemini-3.5-flash"),
-        ("v1beta", "gemini-3.6-flash"),
         ("v1beta", "gemini-3-flash-preview"),
-        ("v1beta", "gemma-4-26b-a4b-it"),
+        ("v1beta", "gemini-3.5-flash-lite"),
+        ("v1beta", "gemini-3.5-flash"),
+        ("v1beta", "gemini-3.1-flash-lite"),
     ]
 
     skip_tags = [
@@ -454,7 +512,7 @@ def process_chat_query(body, api_key):
         "contents": contents,
         "generationConfig": {
             "temperature": 0.1,
-            "maxOutputTokens": 550,
+            "maxOutputTokens": 1800,
             "topP": 0.9
         }
     }
@@ -541,30 +599,46 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        api_key = resolve_api_key(header_key=self.headers.get("x-gemini-api-key"))
-        status_info = get_status_dict(api_key)
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.end_headers()
-        self.wfile.write(json.dumps(status_info).encode("utf-8"))
+        try:
+            api_key = resolve_api_key(header_key=self.headers.get("x-gemini-api-key"))
+            status_info = get_status_dict(api_key)
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps(status_info).encode("utf-8"))
+        except Exception as ex:
+            self.send_response(500)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": f"Health check failed: {str(ex)}"}).encode("utf-8"))
 
     def do_POST(self):
-        content_length = int(self.headers.get("Content-Length", 0))
-        raw_body = self.rfile.read(content_length).decode("utf-8") if content_length > 0 else "{}"
         try:
-            body = json.loads(raw_body)
-        except Exception:
-            body = {}
+            content_length = int(self.headers.get("Content-Length", 0))
+            raw_body = self.rfile.read(content_length).decode("utf-8") if content_length > 0 else "{}"
+            try:
+                body = json.loads(raw_body)
+            except Exception:
+                body = {}
 
-        api_key = resolve_api_key(
-            override_key=body.get("apiKey"),
-            header_key=self.headers.get("x-gemini-api-key")
-        )
+            api_key = resolve_api_key(
+                override_key=body.get("apiKey"),
+                header_key=self.headers.get("x-gemini-api-key")
+            )
 
-        status_code, result = process_chat_query(body, api_key)
-        self.send_response(status_code)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.end_headers()
-        self.wfile.write(json.dumps(result).encode("utf-8"))
+            status_code, result = process_chat_query(body, api_key)
+            self.send_response(status_code)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps(result).encode("utf-8"))
+        except Exception as ex:
+            import traceback
+            traceback.print_exc()
+            self.send_response(500)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": f"Internal server error: {str(ex)}"}).encode("utf-8"))
