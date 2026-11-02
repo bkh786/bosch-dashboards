@@ -307,31 +307,52 @@ def build_system_instruction(dashboard_type="program", active_filters=None):
                 m = v.get("Month")
                 vm_name = (v.get("VM Name") or "").strip()
                 if vm_name and m in months_order:
-                    cov_pct_val = round(safe_float(v.get("Coverage Achievement %")) * 100, 1)
+                    c_tgt = safe_float(v.get("Coverage Target"))
+                    c_ach = safe_float(v.get("Coverage Achievement"))
+                    cov_pct_val = round((c_ach / c_tgt) * 100, 1) if c_tgt > 0 else 0.0
+
+                    ca_tgt = safe_float(v.get("Cat A Target"))
+                    ca_2nd = safe_float(v.get("Cat A 2nd Visit"))
+                    ca2_pct = round((ca_2nd / ca_tgt) * 100, 1) if ca_tgt > 0 else 0.0
+
+                    adh = round(safe_float(v.get("First Visit Time Adherence (11:30 AM)")) * 100, 1)
+                    pend = safe_int(v.get("Coverage Pending"))
+
                     by_vm_hist.setdefault(vm_name, {})[m] = {
                         "cov": cov_pct_val,
                         "aom": v.get("AOM Name") or "",
-                        "adh": round(safe_float(v.get("First Visit Time Adherence (11:30 AM)")) * 100, 1),
-                        "prod": round(safe_float(v.get("Avg. Productivity")), 2),
-                        "cat2": round(safe_float(v.get("Cat A 2nd Visit %")) * 100, 1),
+                        "adh": adh,
+                        "pend": pend,
+                        "cat2": ca2_pct,
                     }
+
             if by_vm_hist:
                 parts.append("#### VM 3-MONTH COVERAGE & SHORTFALL SUMMARY (Aug'26 -> Sep'26 -> Oct'26):\nVM|AOM|Aug%|Sep%|Oct%|Key Shortfall Lever\n")
                 for vm_name, mdata in sorted(by_vm_hist.items()):
-                    aug_cov = mdata.get("Aug'26", {}).get("cov", "N/A")
-                    sep_cov = mdata.get("Sep'26", {}).get("cov", "N/A")
-                    oct_cov = mdata.get("Oct'26", {}).get("cov", "N/A")
+                    aug_cov = mdata.get("Aug'26", {}).get("cov")
+                    sep_cov = mdata.get("Sep'26", {}).get("cov")
+                    oct_cov = mdata.get("Oct'26", {}).get("cov")
+
+                    aug_s = f"{aug_cov}%" if aug_cov is not None else "N/A"
+                    sep_s = f"{sep_cov}%" if sep_cov is not None else "N/A"
+                    oct_s = f"{oct_cov}%" if oct_cov is not None else "N/A"
+
                     aom = mdata.get("Oct'26", {}).get("aom") or mdata.get("Sep'26", {}).get("aom") or ""
                     oct_info = mdata.get("Oct'26") or {}
+
                     levers = []
-                    if oct_info.get("adh", 100) < 85:
-                        levers.append("Low 11:30 Adherence")
-                    if oct_info.get("cat2", 100) < 80:
-                        levers.append("Low Cat A 2nd Visits")
-                    if oct_info.get("prod", 4.0) < 3.8:
-                        levers.append("Low Productivity")
-                    lever_str = ", ".join(levers) if levers else "On Track"
-                    parts.append(f"{vm_name}|{aom}|{aug_cov}%|{sep_cov}%|{oct_cov}%|{lever_str}\n")
+                    if oct_info:
+                        p_val = oct_info.get("pend", 0)
+                        a_val = oct_info.get("adh", 100)
+                        c2_val = oct_info.get("cat2", 100)
+                        if p_val > 0 and (oct_cov is not None and oct_cov < 99.0):
+                            if a_val < 85:
+                                levers.append(f"Low 11:30 Adh ({a_val}%)")
+                            if c2_val < 60:
+                                levers.append(f"Low Cat A 2nd ({c2_val}%)")
+                            levers.append(f"{p_val} Stores Pending")
+                    lever_str = ", ".join(levers) if levers else "Target Achieved"
+                    parts.append(f"{vm_name}|{aom}|{aug_s}|{sep_s}|{oct_s}|{lever_str}\n")
                 parts.append("\n")
 
     if dashboard_type in ("qc", "all"):
@@ -440,10 +461,10 @@ def pick_model_candidates(api_key, requested_model=""):
 
     # Models that are verified active, responsive, and quota-available
     preferred = [
-        ("v1beta", "gemini-3-flash-preview"),
         ("v1beta", "gemini-3.5-flash-lite"),
-        ("v1beta", "gemini-3.5-flash"),
         ("v1beta", "gemini-3.1-flash-lite"),
+        ("v1beta", "gemini-3-flash-preview"),
+        ("v1beta", "gemini-3.5-flash"),
     ]
 
     skip_tags = [
@@ -490,58 +511,70 @@ def process_chat_query(body, api_key):
     system_instruction_text = build_system_instruction(dashboard_type, active_filters)
 
     contents = []
-    # Keep only the last 4 messages (2 turns) to minimize input token consumption
+    # Build clean conversation history (avoid adjacent duplicates or empty text)
+    last_role = None
     for msg in history[-4:]:
         role = "user" if msg.get("role") in ("user", "human") else "model"
-        text = msg.get("text") or msg.get("content") or ""
-        if text and text != prompt:
+        text = (msg.get("text") or msg.get("content") or "").strip()
+        if text and text != prompt and role != last_role:
             contents.append({
                 "role": role,
                 "parts": [{"text": text}]
             })
+            last_role = role
 
     contents.append({
         "role": "user",
         "parts": [{"text": prompt}]
     })
 
-    gemini_payload = {
-        "system_instruction": {
-            "parts": [{"text": system_instruction_text}]
-        },
-        "contents": contents,
-        "generationConfig": {
-            "temperature": 0.1,
-            "maxOutputTokens": 1800,
-            "topP": 0.9
-        }
-    }
-
     candidates = pick_model_candidates(api_key, body.get("model", ""))
     last_error_code = 500
     last_error_msg = "Failed to communicate with Gemini API"
 
-    # Try top 3 fast candidates (8s timeout per attempt avoids Vercel function timeout)
-    for api_version, model_name in candidates[:3]:
+    # Try fast candidates
+    for api_version, model_name in candidates[:4]:
         gemini_url = f"https://generativelanguage.googleapis.com/{api_version}/models/{model_name}:generateContent?key={api_key}"
         print(f"[api/chat] Attempting {api_version}/models/{model_name}...")
         try:
+            gen_cfg = {
+                "temperature": 0.1,
+                "maxOutputTokens": 2500,
+                "topP": 0.9
+            }
+            if "preview" in model_name:
+                gen_cfg["thinkingConfig"] = {"thinkingBudget": 0}
+
+            gemini_payload = {
+                "system_instruction": {
+                    "parts": [{"text": system_instruction_text}]
+                },
+                "contents": contents,
+                "generationConfig": gen_cfg
+            }
+
             req_data = json.dumps(gemini_payload).encode("utf-8")
             req = urllib.request.Request(
                 gemini_url,
                 data=req_data,
                 headers={"Content-Type": "application/json"}
             )
-            with urllib.request.urlopen(req, timeout=8) as resp:
+            with urllib.request.urlopen(req, timeout=10) as resp:
                 resp_data = json.loads(resp.read().decode("utf-8"))
                 reply_text = ""
                 cand = resp_data.get("candidates", [])
                 if cand:
+                    finish_reason = cand[0].get("finishReason")
+                    if finish_reason == "MAX_TOKENS":
+                        print(f"[api/chat] ✕ {model_name} response truncated by MAX_TOKENS. Trying next candidate...")
+                        continue
+
                     parts_resp = cand[0].get("content", {}).get("parts", [])
                     reply_text = "".join([p.get("text", "") for p in parts_resp if not p.get("thought")])
 
-                if not reply_text:
-                    reply_text = "Unable to generate an answer from the dataset."
+                if not reply_text or not reply_text.strip():
+                    print(f"[api/chat] ✕ {model_name} produced empty response. Trying next candidate...")
+                    continue
 
                 print(f"[api/chat] ✓ Success with {api_version}/models/{model_name}!")
                 return 200, {

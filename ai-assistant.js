@@ -562,7 +562,6 @@
   // Send message to serverless /api/chat
   async function handleSendMessage(query) {
     appendMessage('user', query);
-    state.history.push({ role: 'user', text: query });
 
     state.isLoading = true;
     const sendBtn = document.getElementById('boschAiSendBtn');
@@ -571,11 +570,15 @@
 
     const activeFilters = getActiveFilters();
 
+    // Preserve prior turns for conversational context
+    const priorHistory = state.history.slice(-4);
+    state.history.push({ role: 'user', text: query });
+
     const payload = {
       prompt: query,
       dashboard: state.dashboardType,
       activeFilters: activeFilters,
-      history: state.history.slice(-4)
+      history: priorHistory
     };
 
     try {
