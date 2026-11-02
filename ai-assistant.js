@@ -125,19 +125,35 @@
     });
 
     // Numbered lists (1. 2. 3.)
-    html = html.replace(/^\s*\d+\.\s+(.*)$/gm, '<oli>$1</oli>');
-    html = html.replace(/(<oli>.*<\/oli>(\n|(?=<oli>)))/g, '<ol>$1</ol>');
-    html = html.replace(/<\/ol>\n?<ol>/g, '');
-    html = html.replace(/<\/?oli>/g, match => match === '<oli>' ? '<li>' : '</li>');
+    html = html.replace(/(?:^[ \t]*\d+\.\s+.*$\r?\n?)+/gm, function (match) {
+      const items = match.trim().split('\n').map(l => {
+        const text = l.replace(/^\s*\d+\.\s+/, '').trim();
+        return `<li>${text}</li>`;
+      }).join('');
+      return `<ol>${items}</ol>`;
+    });
 
     // Unordered lists (- or *) — parsed BEFORE single-asterisk italic
-    html = html.replace(/^\s*[-*]\s+(.*)$/gm, '<uli>$1</uli>');
-    html = html.replace(/(<uli>.*<\/uli>(\n|(?=<uli>)))/g, '<ul>$1</ul>');
-    html = html.replace(/<\/ul>\n?<ul>/g, '');
-    html = html.replace(/<\/?uli>/g, match => match === '<uli>' ? '<li>' : '</li>');
+    html = html.replace(/(?:^[ \t]*[-*]\s+.*$\r?\n?)+/gm, function (match) {
+      const items = match.trim().split('\n').map(l => {
+        const text = l.replace(/^\s*[-*]\s+/, '').trim();
+        return `<li>${text}</li>`;
+      }).join('');
+      return `<ul>${items}</ul>`;
+    });
 
     // Single-line Italic *text* (only after bullet lists are converted)
     html = html.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+
+    // Normalize newlines around block tags
+    const blockTags = ['<h3', '<h4', '<ul', '<ol', '<div class="bosch-ai-table-wrap"', '<pre'];
+    blockTags.forEach(tag => {
+      html = html.split(tag).join('\n\n' + tag);
+    });
+    const blockEndTags = ['</h3>', '</h4>', '</ul>', '</ol>', '</div>', '</pre>'];
+    blockEndTags.forEach(tag => {
+      html = html.split(tag).join(tag + '\n\n');
+    });
 
     // Paragraphs
     const lines = html.split('\n\n');

@@ -640,6 +640,10 @@ body.dark-theme .bosch-ai-drawer {
   margin-bottom: 4px;
 }
 
+.bosch-ai-msg-bubble li:last-child {
+  margin-bottom: 0;
+}
+
 /* Code block & inline code */
 .bosch-ai-inline-code {
   background: var(--surface-hover, #f1f5f9);
